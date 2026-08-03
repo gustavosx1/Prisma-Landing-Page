@@ -1,4 +1,5 @@
-import { Zap } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 const LINKS = {
   Produto: [
@@ -15,7 +16,7 @@ const LINKS = {
   ],
   Legal: [
     { label: "Termos de Uso",  href: "#termos" },
-    { label: "Privacidade",    href: "#privacidade" },
+    { label: "Privacidade",    href: "/privacidade" },
     { label: "Cookies",        href: "#cookies" },
     { label: "LGPD",           href: "#lgpd" },
   ],
@@ -37,18 +38,24 @@ export function Footer() {
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand column */}
           <div className="col-span-2 sm:col-span-4 lg:col-span-2">
-            <a
+            <Link
               href="/"
               aria-label="Prisma News — Página inicial"
               className="flex items-center gap-2 mb-4"
             >
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-fuchsia-500 flex items-center justify-center">
-                <Zap className="w-4 h-4 text-white" fill="white" aria-hidden="true" />
+              <div className="relative h-8 w-8 overflow-hidden rounded-lg ring-1 ring-purple-400/45">
+                <Image
+                  src="/logo.jpg"
+                  alt="Logo Prisma News"
+                  fill
+                  sizes="32px"
+                  className="object-cover"
+                />
               </div>
               <span className="font-bold text-lg text-white">
                 Prisma <span className="text-purple-400">News</span>
               </span>
-            </a>
+            </Link>
             <p className="text-slate-400 text-sm leading-relaxed max-w-xs mb-6">
               Inteligência editorial para quem quer entender os fatos — não
               apenas a versão do algoritmo.
@@ -79,12 +86,21 @@ export function Footer() {
               <ul className="space-y-3">
                 {items.map((item) => (
                   <li key={item.label}>
-                    <a
-                      href={item.href}
-                      className="text-sm text-slate-400 hover:text-white transition-colors"
-                    >
-                      {item.label}
-                    </a>
+                    {item.href.startsWith("/") ? (
+                      <Link
+                        href={item.href}
+                        className="text-sm text-slate-400 hover:text-white transition-colors"
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={item.href}
+                        className="text-sm text-slate-400 hover:text-white transition-colors"
+                      >
+                        {item.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>

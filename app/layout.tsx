@@ -56,7 +56,7 @@ const jsonLd = {
       "@id": `${SITE_URL}/#organization`,
       name: "Prisma News",
       url: SITE_URL,
-      logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.svg` },
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.jpg` },
       sameAs: ["https://twitter.com/prismanews","https://instagram.com/prismanews","https://linkedin.com/company/prismanews"],
     },
     {

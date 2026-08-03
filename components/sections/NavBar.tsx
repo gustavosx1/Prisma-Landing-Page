@@ -2,8 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Zap } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { trackEvent } from "@/lib/analytics";
+import { APP_DOWNLOAD_URL } from "@/lib/appDownload";
 
 const NAV_LINKS = [
   { label: "Como funciona", href: "#como-funciona" },
@@ -39,18 +42,25 @@ export function NavBar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         {/* Logo */}
-        <a
+        <Link
           href="/"
           aria-label="Prisma News — Página inicial"
           className="flex items-center gap-2 group"
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-fuchsia-500 flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.4)]">
-            <Zap className="w-4 h-4 text-white" fill="white" aria-hidden="true" />
+          <div className="relative h-8 w-8 overflow-hidden rounded-lg ring-1 ring-purple-400/45 shadow-[0_0_20px_rgba(168,85,247,0.35)]">
+            <Image
+              src="/logo.jpg"
+              alt="Logo Prisma News"
+              fill
+              sizes="32px"
+              className="object-cover"
+              priority
+            />
           </div>
           <span className="font-bold text-lg text-white tracking-tight">
             Prisma <span className="text-purple-400">News</span>
           </span>
-        </a>
+        </Link>
 
         {/* Desktop nav */}
         <nav className="hidden lg:flex items-center gap-8" aria-label="Navegação principal">
@@ -67,11 +77,10 @@ export function NavBar() {
 
         {/* Desktop CTAs */}
         <div className="hidden lg:flex items-center gap-3">
-          <a href="#entrar" className="text-sm text-slate-300 hover:text-white transition-colors px-4 py-2 font-medium">
-            Entrar
-          </a>
           <a
-            href="#comecar"
+            href={APP_DOWNLOAD_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={() => handleCTA("navbar")}
             className="text-sm font-semibold px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white transition-all duration-200 shadow-[0_0_20px_rgba(139,92,246,0.35)] hover:shadow-[0_0_32px_rgba(139,92,246,0.55)]"
           >
@@ -113,14 +122,9 @@ export function NavBar() {
               ))}
               <div className="pt-3 mt-3 border-t border-purple-900/30 space-y-2">
                 <a
-                  href="#entrar"
-                  onClick={() => setOpen(false)}
-                  className="block px-4 py-3 text-center text-slate-300 hover:text-white rounded-xl transition-colors font-medium"
-                >
-                  Entrar
-                </a>
-                <a
-                  href="#comecar"
+                  href={APP_DOWNLOAD_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => { setOpen(false); handleCTA("navbar_mobile"); }}
                   className="block px-4 py-3 bg-purple-600 hover:bg-purple-500 text-white text-center rounded-xl transition-colors font-semibold"
                 >

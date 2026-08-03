@@ -11,6 +11,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { trackEvent, initScrollDepth } from "@/lib/analytics";
+import { APP_DOWNLOAD_URL } from "@/lib/appDownload";
 
 const PERSPECTIVES = [
   {
@@ -125,7 +126,9 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.3 }}
             >
               <a
-                href="#comecar"
+                href={APP_DOWNLOAD_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={() => trackEvent("hero_cta_click", { location: "hero" })}
                 aria-label="Começar grátis — sem cartão de crédito"
                 className="group inline-flex items-center justify-center gap-2 px-7 py-4 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-2xl text-base transition-all duration-200 shadow-[0_0_40px_rgba(139,92,246,0.4)] hover:shadow-[0_0_60px_rgba(139,92,246,0.6)]"
@@ -134,7 +137,9 @@ export function Hero() {
                 <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
               </a>
               <a
-                href="#demo"
+                href={APP_DOWNLOAD_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={() => trackEvent("demo_click", { location: "hero" })}
                 aria-label="Ver demonstração do produto"
                 className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 hover:border-purple-500/40 text-white font-semibold rounded-2xl text-base transition-all duration-200"

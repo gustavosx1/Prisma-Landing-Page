@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Check, X, Zap } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { APP_DOWNLOAD_URL } from "@/lib/appDownload";
 
 type PlanFeature = { text: string; included: boolean };
 
@@ -12,7 +13,6 @@ const PLANS: {
   period: string;
   description: string;
   cta: string;
-  ctaHref: string;
   highlight: boolean;
   badge?: string;
   features: PlanFeature[];
@@ -23,7 +23,6 @@ const PLANS: {
     period: "para sempre",
     description: "Para começar a ver os dois lados.",
     cta: "Começar grátis",
-    ctaHref: "#comecar",
     highlight: false,
     features: [
       { text: "3 eventos por dia",                         included: true  },
@@ -43,7 +42,6 @@ const PLANS: {
     period: "por mês",
     description: "Para quem quer o quadro completo, sempre.",
     cta: "Assinar Premium",
-    ctaHref: "#assinar",
     highlight: true,
     badge: "Mais popular",
     features: [
@@ -167,7 +165,9 @@ export function Premium() {
               </ul>
 
               <a
-                href={plan.ctaHref}
+                href={APP_DOWNLOAD_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={() =>
                   trackEvent("pricing_cta_click", { plan: plan.name, location: "pricing" })
                 }

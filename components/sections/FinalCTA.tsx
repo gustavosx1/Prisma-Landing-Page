@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { APP_DOWNLOAD_URL } from "@/lib/appDownload";
 
 export function FinalCTA() {
   return (
@@ -54,7 +55,9 @@ export function FinalCTA() {
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="#comecar"
+              href={APP_DOWNLOAD_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() =>
                 trackEvent("hero_cta_click", { location: "final_cta" })
               }
@@ -68,7 +71,9 @@ export function FinalCTA() {
               />
             </a>
             <a
-              href="#assinar"
+              href={APP_DOWNLOAD_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() =>
                 trackEvent("pricing_cta_click", {
                   plan: "Premium",
