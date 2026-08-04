@@ -41,17 +41,15 @@ export function Footer() {
             <Link
               href="/"
               aria-label="Prisma News — Página inicial"
-              className="flex items-center gap-2 mb-4"
+              className="flex items-center gap-2.5 mb-4"
             >
-              <div className="relative h-8 w-8 overflow-hidden rounded-lg ring-1 ring-purple-400/45">
-                <Image
-                  src="/logo.jpg"
-                  alt="Logo Prisma News"
-                  fill
-                  sizes="32px"
-                  className="object-cover"
-                />
-              </div>
+              <Image
+                src="/logo.jpg"
+                alt="Logo Prisma News"
+                width={34}
+                height={34}
+                className="logo-glow h-8 w-auto object-contain"
+              />
               <span className="font-bold text-lg text-white">
                 Prisma <span className="text-purple-400">News</span>
               </span>

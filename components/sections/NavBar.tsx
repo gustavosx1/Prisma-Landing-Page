@@ -45,18 +45,16 @@ export function NavBar() {
         <Link
           href="/"
           aria-label="Prisma News — Página inicial"
-          className="flex items-center gap-2 group"
+          className="flex items-center gap-2.5 group"
         >
-          <div className="relative h-8 w-8 overflow-hidden rounded-lg ring-1 ring-purple-400/45 shadow-[0_0_20px_rgba(168,85,247,0.35)]">
-            <Image
-              src="/logo.jpg"
-              alt="Logo Prisma News"
-              fill
-              sizes="32px"
-              className="object-cover"
-              priority
-            />
-          </div>
+          <Image
+            src="/logo.svg"
+            alt="Logo Prisma News"
+            width={34}
+            height={34}
+            className="logo-glow h-8 w-auto"
+            priority
+          />
           <span className="font-bold text-lg text-white tracking-tight">
             Prisma <span className="text-purple-400">News</span>
           </span>
