@@ -6,7 +6,7 @@ const SITE_URL = "https://prismanews.com.br";
 export const metadata: Metadata = {
   title: "Política de Privacidade",
   description:
-    "Política de Privacidade da Spectrum (Prisma News), em conformidade com a LGPD.",
+    "Política de Privacidade do Prisma News, em conformidade com a LGPD.",
   alternates: {
     canonical: `${SITE_URL}/privacidade`,
   },
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     url: `${SITE_URL}/privacidade`,
     title: "Política de Privacidade — Prisma News",
     description:
-      "Entenda como coletamos, usamos e protegemos seus dados no Spectrum, em conformidade com a LGPD.",
+      "Entenda como coletamos, usamos e protegemos seus dados no Prisma News, em conformidade com a LGPD.",
     siteName: "Prisma News",
   },
   robots: {
@@ -27,8 +27,7 @@ export const metadata: Metadata = {
 
 const legalBases = [
   "Execução de contrato (art. 7º, V) — para fornecer a assinatura premium",
-  "Legítimo interesse (art. 7º, IX) — para melhorias do serviço e segurança",
-  "Consentimento (art. 7º, I) — quando aplicável, como em comunicações opcionais",
+  "Legítimo interesse (art. 7º, IX) — para manter a segurança e o funcionamento do serviço",
 ];
 
 const dataRights = [
@@ -45,22 +44,40 @@ const thirdParties = [
   {
     name: "Supabase",
     purpose: "Armazenamento de banco de dados e autenticação",
-    data: "E-mail, preferências de conta",
-  },
-  {
-    name: "Google Gemini API",
-    purpose: "Processamento de IA para classificação de notícias",
-    data: "Conteúdo jornalístico agregado",
+    data: "E-mail, ID de usuário e token de push associado à conta",
   },
   {
     name: "RevenueCat",
     purpose: "Gerenciamento de assinaturas premium",
-    data: "Status de assinatura, identificador de usuário",
+    data: "ID de usuário, produto Premium, status, renovação e expiração da assinatura",
   },
   {
     name: "Google Play / Apple App Store",
     purpose: "Processamento de pagamento e cobrança",
-    data: "Dados de pagamento (tratados exclusivamente pela loja)",
+    data: "Nenhum dado financeiro é recebido pelo aplicativo; o pagamento é tratado exclusivamente pela loja",
+  },
+];
+
+const appPrivacyData = [
+  {
+    category: "Endereço de e-mail (Email Address)",
+    use: "Criar e autenticar a conta",
+    purpose: "Funcionalidade do app (App Functionality)",
+  },
+  {
+    category: "ID de usuário (User ID)",
+    use: "Identificar a conta e vincular o perfil Premium e a assinatura",
+    purpose: "Funcionalidade do app (App Functionality)",
+  },
+  {
+    category: "ID do dispositivo (Device ID)",
+    use: "Associar o token de push do Expo à conta para enviar notificações",
+    purpose: "Funcionalidade do app (App Functionality)",
+  },
+  {
+    category: "Histórico de compras (Purchase History)",
+    use: "Gerenciar o produto Premium, o status, a renovação e a expiração via RevenueCat",
+    purpose: "Funcionalidade do app (App Functionality)",
   },
 ];
 
@@ -81,17 +98,17 @@ export default function PrivacyPolicyPage() {
               Política de Privacidade — Prisma News
             </h1>
             <p className="mt-3 text-sm text-purple-200">
-              <strong>Última atualização:</strong> 03/08/2026
+              <strong>Última atualização:</strong> 03/09/2026
             </p>
             <p className="mt-4 leading-relaxed text-slate-200">
-              Esta Política de Privacidade descreve como o aplicativo <strong>Spectrum</strong>
+              Esta Política de Privacidade descreve como o aplicativo <strong>Prisma News</strong>
               (&quot;nós&quot;, &quot;aplicativo&quot;), operado por <strong>GUSTAVO DOS SANTOS BANDEIRA ROCHA</strong>,
               CNPJ <strong>67.897.516/0001-51</strong>, coleta, usa, armazena e protege os dados de
               quem utiliza o serviço, em conformidade com a Lei Geral de Proteção de Dados (Lei nº
               13.709/2018 — LGPD).
             </p>
             <p className="mt-3 leading-relaxed text-slate-200">
-              Ao usar o Spectrum, você concorda com os termos descritos aqui.
+              Ao usar o Prisma News, você concorda com os termos descritos aqui.
             </p>
           </header>
 
@@ -118,33 +135,28 @@ export default function PrivacyPolicyPage() {
 
             <div>
               <h2 className="text-2xl font-bold text-white">2. Quais dados coletamos</h2>
-              <h3 className="mt-4 text-xl font-semibold text-purple-200">2.1 Uso básico do aplicativo (sem conta)</h3>
               <p className="mt-3 leading-relaxed text-slate-200">
-                O Spectrum pode ser utilizado sem necessidade de cadastro para consultar notícias
-                agregadas e suas classificações no espectro político e no Factômetro. Nesse modo, não
-                coletamos dados pessoais identificáveis, apenas dados técnicos mínimos necessários ao
-                funcionamento (ex.: identificador de instalação, versão do app, sistema operacional),
-                usados apenas para diagnóstico e estabilidade.
+                Coletamos somente os dados pessoais necessários para o funcionamento da conta, dos
+                recursos Premium, das notificações e da assinatura:
               </p>
-
-              <h3 className="mt-6 text-xl font-semibold text-purple-200">2.2 Cadastro para recursos premium</h3>
-              <p className="mt-3 leading-relaxed text-slate-200">Caso você opte por assinar recursos premium, coletamos:</p>
               <ul className="mt-3 list-disc space-y-2 pl-6 text-slate-200 marker:text-purple-300">
-                <li>E-mail (para criação e autenticação de conta)</li>
-                <li>Status e histórico da assinatura (gerenciado pelas lojas de aplicativo, ver seção 4)</li>
-                <li>Preferências de uso dentro do app (ex.: fontes favoritas, filtros salvos), se aplicável</li>
+                <li><strong>E-mail:</strong> para criação e autenticação da conta.</li>
+                <li><strong>ID de usuário:</strong> para identificar a conta e vinculá-la ao perfil Premium e à assinatura.</li>
+                <li><strong>ID do dispositivo:</strong> o token de push do Expo, armazenado no backend e associado ao ID de usuário para o envio de notificações.</li>
+                <li><strong>Histórico de compras:</strong> produto Premium, status, renovação e expiração da assinatura, gerenciados via RevenueCat.</li>
               </ul>
+              <h3 className="mt-6 text-xl font-semibold text-purple-200">2.1 Dados que não coletamos</h3>
               <p className="mt-3 leading-relaxed text-slate-200">
-                Não coletamos dados de cartão de crédito ou informações financeiras diretamente. Todo o
-                processamento de pagamento é feito pela Google Play e/ou Apple App Store.
+                Não coletamos informações de pagamento ou cartão, dados sensíveis, localização,
+                contatos, fotos, histórico de navegação, dados de analytics, relatórios de falha ou
+                dados de publicidade. A busca é usada apenas para atender à solicitação no momento e
+                não é armazenada como histórico de buscas.
               </p>
 
-              <h3 className="mt-6 text-xl font-semibold text-purple-200">2.3 Dados processados por inteligência artificial</h3>
+              <h3 className="mt-6 text-xl font-semibold text-purple-200">2.2 Pagamentos</h3>
               <p className="mt-3 leading-relaxed text-slate-200">
-                Para gerar a classificação de espectro político e o Factômetro, o conteúdo das notícias
-                agregadas (texto público de veículos de imprensa) é processado por meio da API do Gemini
-                (Google). Esse processamento é feito sobre o conteúdo jornalístico em si, não sobre dados
-                pessoais do usuário.
+                Não recebemos nem armazenamos dados financeiros ou de cartão. Todo o processamento de
+                pagamento é realizado pela Apple App Store e/ou Google Play.
               </p>
             </div>
 
@@ -152,17 +164,47 @@ export default function PrivacyPolicyPage() {
               <h2 className="text-2xl font-bold text-white">3. Como usamos os dados</h2>
               <p className="mt-3 leading-relaxed text-slate-200">Usamos os dados coletados para:</p>
               <ul className="mt-3 list-disc space-y-2 pl-6 text-slate-200 marker:text-purple-300">
-                <li>Viabilizar o funcionamento do aplicativo e da conta premium</li>
-                <li>Processar e validar assinaturas junto às lojas</li>
-                <li>Melhorar a precisão do sistema de classificação e fact-checking</li>
-                <li>Comunicar mudanças relevantes no serviço (ex.: e-mails transacionais)</li>
+                <li>Criar, autenticar e identificar a conta</li>
+                <li>Viabilizar os recursos Premium e verificar o estado da assinatura</li>
+                <li>Enviar notificações por meio do token de push associado à conta</li>
                 <li>Cumprir obrigações legais e responder a solicitações de autoridades, quando exigido</li>
               </ul>
-              <p className="mt-3 leading-relaxed text-slate-200">Não vendemos dados pessoais a terceiros.</p>
+              <p className="mt-3 leading-relaxed text-slate-200">Não vendemos dados pessoais, não fazemos publicidade direcionada e não rastreamos usuários.</p>
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold text-white">4. Compartilhamento com terceiros</h2>
+              <h2 className="text-2xl font-bold text-white">4. Declaração de privacidade do app</h2>
+              <p className="mt-3 leading-relaxed text-slate-200">
+                Todos os dados abaixo são vinculados ao usuário e não são usados para rastreamento.
+              </p>
+              <div className="mt-4 overflow-x-auto rounded-xl border border-purple-800/40 bg-[#0a0320]">
+                <table className="min-w-full border-collapse text-left text-sm">
+                  <thead className="bg-purple-900/30 text-purple-100">
+                    <tr>
+                      <th className="px-4 py-3 font-semibold">Categoria Apple</th>
+                      <th className="px-4 py-3 font-semibold">Uso</th>
+                      <th className="px-4 py-3 font-semibold">Finalidade</th>
+                      <th className="px-4 py-3 font-semibold">Vinculado ao usuário</th>
+                      <th className="px-4 py-3 font-semibold">Rastreamento</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {appPrivacyData.map((data) => (
+                      <tr key={data.category} className="border-t border-purple-900/30">
+                        <td className="px-4 py-3 font-medium text-white">{data.category}</td>
+                        <td className="px-4 py-3 text-slate-200">{data.use}</td>
+                        <td className="px-4 py-3 text-slate-200">{data.purpose}</td>
+                        <td className="px-4 py-3 text-slate-200">Sim</td>
+                        <td className="px-4 py-3 text-slate-200">Não</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-bold text-white">5. Compartilhamento com terceiros</h2>
               <div className="mt-4 overflow-x-auto rounded-xl border border-purple-800/40 bg-[#0a0320]">
                 <table className="min-w-full border-collapse text-left text-sm">
                   <thead className="bg-purple-900/30 text-purple-100">
@@ -188,15 +230,10 @@ export default function PrivacyPolicyPage() {
                 (transferência internacional de dados), sempre observando padrões de proteção compatíveis
                 com a LGPD.
               </p>
-              <p className="mt-3 leading-relaxed text-slate-200">
-                Podemos adicionar futuramente ferramentas de analytics (ex.: Firebase Analytics) para
-                entender uso agregado do app. Caso isso ocorra, esta política será atualizada antes da
-                mudança entrar em vigor.
-              </p>
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold text-white">5. Base legal (LGPD)</h2>
+              <h2 className="text-2xl font-bold text-white">6. Base legal (LGPD)</h2>
               <p className="mt-3 leading-relaxed text-slate-200">Tratamos dados pessoais com base em:</p>
               <ul className="mt-3 list-disc space-y-2 pl-6 text-slate-200 marker:text-purple-300">
                 {legalBases.map((base) => (
@@ -206,7 +243,7 @@ export default function PrivacyPolicyPage() {
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold text-white">6. Seus direitos como titular de dados</h2>
+              <h2 className="text-2xl font-bold text-white">7. Seus direitos como titular de dados</h2>
               <p className="mt-3 leading-relaxed text-slate-200">
                 Conforme os artigos 17 a 22 da LGPD, você pode solicitar, a qualquer momento:
               </p>
@@ -222,7 +259,7 @@ export default function PrivacyPolicyPage() {
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold text-white">7. Retenção e exclusão de dados</h2>
+              <h2 className="text-2xl font-bold text-white">8. Retenção e exclusão de dados</h2>
               <p className="mt-3 leading-relaxed text-slate-200">
                 Mantemos dados de conta enquanto a assinatura estiver ativa ou enquanto for necessário
                 para cumprir obrigações legais. Você pode solicitar a exclusão da sua conta e dados
@@ -231,16 +268,16 @@ export default function PrivacyPolicyPage() {
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold text-white">8. Crianças e adolescentes</h2>
+              <h2 className="text-2xl font-bold text-white">9. Crianças e adolescentes</h2>
               <p className="mt-3 leading-relaxed text-slate-200">
-                O Spectrum não é direcionado a menores de 18 anos e não coletamos intencionalmente dados
+                O Prisma News não é direcionado a menores de 18 anos e não coletamos intencionalmente dados
                 de menores de 13 anos. Caso identifiquemos coleta acidental de dados de uma criança,
                 tomaremos medidas para excluí-los.
               </p>
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold text-white">9. Segurança</h2>
+              <h2 className="text-2xl font-bold text-white">10. Segurança</h2>
               <p className="mt-3 leading-relaxed text-slate-200">
                 Adotamos medidas técnicas e organizacionais razoáveis para proteger os dados contra
                 acesso não autorizado, perda ou alteração, incluindo autenticação segura e criptografia
@@ -249,7 +286,7 @@ export default function PrivacyPolicyPage() {
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold text-white">10. Alterações nesta política</h2>
+              <h2 className="text-2xl font-bold text-white">11. Alterações nesta política</h2>
               <p className="mt-3 leading-relaxed text-slate-200">
                 Podemos atualizar esta Política de Privacidade periodicamente. Alterações relevantes serão
                 comunicadas dentro do aplicativo ou por e-mail, quando aplicável. A data da última
@@ -258,7 +295,7 @@ export default function PrivacyPolicyPage() {
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold text-white">11. Contato</h2>
+              <h2 className="text-2xl font-bold text-white">12. Contato</h2>
               <p className="mt-3 leading-relaxed text-slate-200">
                 Dúvidas, solicitações ou reclamações sobre esta política:{" "}
                 <a

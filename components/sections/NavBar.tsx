@@ -55,7 +55,7 @@ export function NavBar() {
             className="logo-glow h-8 w-auto"
             priority
           />
-          <span className="font-bold text-lg text-white tracking-tight">
+          <span className="font-[family:var(--font-poppins)] text-lg font-extrabold tracking-tight text-white">
             Prisma <span className="text-purple-400">News</span>
           </span>
         </Link>

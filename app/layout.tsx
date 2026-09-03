@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
+import { Manrope, Poppins } from "next/font/google";
 import "./globals.css";
 
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
+
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: "800",
   display: "swap",
 });
 
@@ -73,7 +80,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className={`${manrope.variable} h-full`}>
+    <html lang="pt-BR" className={`${manrope.variable} ${poppins.variable} h-full`}>
       <head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
