@@ -9,30 +9,30 @@ const STEPS = [
     Icon: ScanSearch,
     title: "Evento detectado",
     description:
-      "Nossa plataforma identifica automaticamente os eventos relevantes do dia, agrupando coberturas de mais de 200 veículos. Você vê o que aconteceu — não uma versão editada dele.",
-    detail: "Atualizado em tempo real, curado por algoritmo + equipe editorial.",
+      "Nossa plataforma organiza eventos relevantes e reúne matérias dos 20 veículos jornalísticos brasileiros acompanhados. Você compara a cobertura — não apenas manchetes isoladas.",
+    detail: "A organização combina recursos automatizados com curadoria editorial.",
   },
   {
     num: "02",
     Icon: Columns2,
     title: "Cobertura comparada por espectro",
     description:
-      "Cada evento é apresentado com três perspectivas editoriais: esquerda, centro e direita. Você lê como cada segmento enquadra o mesmo fato — e enxerga as diferenças.",
-    detail: "Classificação metodológica baseada em posicionamento editorial documentado.",
+      "Cada evento reúne veículos classificados por tendências editoriais de esquerda, centro e direita. A classificação se refere ao histórico editorial do veículo, não determina o conteúdo de cada matéria.",
+    detail: "Categorias aproximadas, baseadas em posicionamento editorial documentado.",
   },
   {
     num: "03",
     Icon: Lightbulb,
     title: "Blindspots e convergências revelados",
     description:
-      "O que ninguém está falando? Onde todas as perspectivas concordam? Identificamos pontos cegos, lacunas de cobertura e os consensos escondidos nas divergências.",
+      "O que pode estar faltando na cobertura? Onde as perspectivas convergem? A análise aponta possíveis lacunas e pontos em comum para ajudar você a investigar.",
     detail: "Ferramenta exclusiva para leitores Premium.",
   },
 ];
 
 const FLOW = [
   "Evento real acontece",
-  "200+ fontes capturadas",
+  "20 veículos consultados",
   "Classificação editorial",
   "Blindspots detectados",
   "Você entende o quadro completo",
@@ -108,7 +108,7 @@ export function Solution() {
 
         {/* Visual flow */}
         <motion.div
-          className="mt-20 p-6 sm:p-8 rounded-3xl bg-purple-900/[0.09] border border-purple-800/20"
+          className="process-flow mt-20 p-6 sm:p-8 rounded-3xl bg-purple-900/[0.09] border border-purple-800/20"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
@@ -117,12 +117,12 @@ export function Solution() {
         >
           <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-4">
             {FLOW.map((label, i) => (
-              <div key={label} className="flex items-center gap-3 sm:gap-4">
-                <span className="text-sm font-semibold text-white px-4 py-2 rounded-xl bg-purple-900/40 border border-purple-700/30 whitespace-nowrap">
+              <div key={label} className="process-flow-item flex items-center gap-3 sm:gap-4">
+                <span className="process-flow-step text-sm font-bold px-4 py-2 rounded-xl whitespace-nowrap">
                   {label}
                 </span>
                 {i < FLOW.length - 1 && (
-                  <span className="text-purple-500 text-lg" aria-hidden="true">→</span>
+                  <span className="process-flow-arrow text-lg font-bold" aria-hidden="true">→</span>
                 )}
               </div>
             ))}

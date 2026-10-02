@@ -31,32 +31,33 @@ const TESTIMONIALS = [
 ];
 
 const LOGOS = [
-  "Folha de S.Paulo",
-  "Estadão",
-  "Piauí",
-  "The Intercept Brasil",
-  "Nexo Jornal",
-  "Agência Pública",
+  "Brasil de Fato",
+  "Intercept",
+  "Folha",
+  "UOL",
+  "Metrópoles",
+  "O Antagonista",
+  "Jovem Pan",
 ];
 
 const METHODOLOGY = [
   {
     label: "Esquerda",
-    desc: "Ênfase em justiça social, critica poderes econômicos e concentração de renda.",
+    desc: "Exemplos entre os veículos acompanhados: Brasil de Fato e Intercept.",
   },
   {
     label: "Centro",
-    desc: "Foco em pluralidade, evita posicionamento ideológico explícito.",
+    desc: "Exemplos entre os veículos acompanhados: Folha, UOL e Metrópoles.",
   },
   {
     label: "Direita",
-    desc: "Ênfase em livre mercado, instituições e estabilidade fiscal.",
+    desc: "Exemplos entre os veículos acompanhados: O Antagonista e Jovem Pan.",
   },
 ];
 
 const TRUST_ANCHORS = [
   { value: "100%", label: "Não-partidário",     sub: "Sem financiamento político" },
-  { value: "200+", label: "Fontes monitoradas", sub: "Diversidade garantida" },
+  { value: "20", label: "Veículos brasileiros", sub: "Entre os mais conhecidos" },
   { value: "Aberta", label: "Metodologia",      sub: "Documentada e auditável" },
 ];
 
@@ -127,7 +128,7 @@ export function Trust() {
           transition={{ duration: 0.6 }}
         >
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-8">
-            Monitoramos veículos reconhecidos como
+            Acompanhamos 20 veículos jornalísticos brasileiros. Alguns exemplos:
           </p>
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
             {LOGOS.map((logo) => (
@@ -158,7 +159,7 @@ export function Trust() {
                 Como classificamos as perspectivas?
               </h3>
               <p className="text-slate-400 leading-relaxed mb-6">
-                A classificação editorial do Prisma News é baseada em análise documentada do posicionamento histórico dos veículos — não em percepção ou intuição. Usamos metodologia acadêmica de análise de mídia, complementada por revisão editorial humana e atualizada periodicamente.
+                A classificação é uma leitura aproximada de tendências editoriais observadas no histórico de cada veículo; ela não define a orientação de cada jornalista nem determina o conteúdo de uma matéria específica. Os exemplos abaixo ajudam a entender as categorias, que podem ser revistas conforme a linha editorial evolui.
               </p>
               <div className="grid sm:grid-cols-3 gap-4">
                 {METHODOLOGY.map((m) => (

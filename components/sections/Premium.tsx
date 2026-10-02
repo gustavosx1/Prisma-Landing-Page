@@ -28,14 +28,14 @@ const PLANS: {
       { text: "Histórico de 7 dias",                       included: true  },
       { text: "Detector de blindspots",                    included: false },
       { text: "Análise aprofundada",                       included: false },
-      { text: "Fact-check e contexto histórico",           included: false },
+      { text: "Busca assistida em fontes oficiais",       included: false },
       { text: "Alertas temáticos personalizados",          included: false },
       { text: "Export de análises (PDF/Markdown)",         included: false },
     ],
   },
   {
     name: "Premium",
-    price: "19,90",
+    price: "9,90",
     period: "por mês",
     description: "Para quem quer o quadro completo, sempre.",
     highlight: true,
@@ -47,7 +47,7 @@ const PLANS: {
       { text: "Histórico completo",                        included: true },
       { text: "Detector de blindspots",                    included: true },
       { text: "Análise aprofundada",                       included: true },
-      { text: "Fact-check e contexto histórico",           included: true },
+      { text: "Busca assistida em fontes oficiais",       included: true },
       { text: "Alertas temáticos personalizados",          included: true },
       { text: "Export de análises (PDF/Markdown)",         included: true },
     ],
@@ -100,6 +100,26 @@ export function Premium() {
           </p>
         </motion.div>
 
+        <motion.aside
+          className="promo-card mx-auto mb-12 max-w-4xl rounded-3xl border p-6 text-center sm:p-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          aria-label="Promoção de lançamento válida durante outubro de 2026"
+        >
+          <p className="promo-eyebrow mb-2 text-sm font-bold uppercase tracking-[0.16em]">
+            Oferta de lançamento · outubro de 2026
+          </p>
+          <h3 className="mb-2 text-2xl font-extrabold sm:text-3xl">
+            Primeiro mês por <span>R$ 2,90</span>
+          </h3>
+          <p className="mx-auto max-w-2xl text-sm leading-relaxed sm:text-base">
+            Para novos usuários que assinarem durante outubro de 2026. A partir do segundo mês,
+            o Premium renova por R$ 9,90/mês. Confira as condições exibidas na loja antes de assinar.
+          </p>
+        </motion.aside>
+
         {/* Plan cards */}
         <div className="grid sm:grid-cols-2 gap-6 lg:gap-8">
           {PLANS.map((plan, i) => (
@@ -130,7 +150,7 @@ export function Premium() {
                 <p className="text-sm text-slate-400 mb-5">{plan.description}</p>
                 <div className="flex items-baseline gap-2">
                   <span className="text-4xl font-extrabold text-white">
-                    {plan.price ? `R$${plan.price}` : "Grátis"}
+                    {plan.price ? `R$ ${plan.price}` : "Grátis"}
                   </span>
                   <span className="text-slate-400 text-sm">/{plan.period}</span>
                 </div>

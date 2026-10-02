@@ -16,15 +16,19 @@ const FAQS = [
   },
   {
     q: "Quais fontes são utilizadas?",
-    a: "Monitoramos mais de 200 veículos jornalísticos brasileiros e internacionais com cobertura relevante para o Brasil. Incluímos veículos de diferentes espectros, tamanhos e formatos — de portais independentes a grandes grupos de comunicação. A lista completa é pública e auditável.",
+    a: "Acompanhamos 20 veículos jornalísticos brasileiros conhecidos. Entre os exemplos estão Brasil de Fato, Intercept, Folha, UOL, Metrópoles, O Antagonista e Jovem Pan. As categorias esquerda, centro e direita descrevem tendências editoriais aproximadas do veículo, não cada matéria individual.",
   },
   {
     q: "O que exatamente é um 'blindspot'?",
     a: "Blindspots são aspectos relevantes de um evento que nenhuma das perspectivas monitoradas está cobrindo — ou que apenas uma menciona enquanto as outras ignoram. Identificar blindspots é fundamental para perceber lacunas sistêmicas de cobertura antes de formar uma opinião.",
   },
   {
+    q: "O Prisma News faz fact-checking automático?",
+    a: "Não. A LLM ajuda a buscar fontes primárias oficiais que possam confirmar uma informação. Essa busca serve como referência para a apuração, mas não verifica automaticamente se uma afirmação é verdadeira nem substitui análise editorial.",
+  },
+  {
     q: "Qual a diferença entre o plano Grátis e o Premium?",
-    a: "No plano Grátis, você tem acesso a até 3 eventos por dia com perspectivas básicas. No Premium, o acesso é ilimitado e inclui: análise aprofundada, detector de blindspots, fact-check, contexto histórico, histórico completo de eventos, alertas temáticos personalizados e export de análises.",
+    a: "No plano Grátis, você tem acesso a até 3 eventos por dia com perspectivas básicas. O Premium custa R$ 9,90 por mês e inclui acesso ilimitado, análise aprofundada, detector de blindspots, contexto histórico, histórico completo de eventos, alertas temáticos personalizados, export de análises e busca assistida por LLM em fontes primárias oficiais. Essa busca não é um fact-check automatizado nem garante a veracidade de informações.",
   },
   {
     q: "Posso cancelar o Premium quando quiser?",

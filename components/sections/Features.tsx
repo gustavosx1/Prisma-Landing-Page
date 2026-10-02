@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { LayoutGrid, SlidersHorizontal, EyeOff, Shield, Star, Bell } from "lucide-react";
+import { LayoutGrid, SlidersHorizontal, EyeOff, Shield, Search, Bell } from "lucide-react";
 
 const FEATURES = [
   {
@@ -41,10 +41,10 @@ const FEATURES = [
     premium: false,
   },
   {
-    Icon: Star,
-    title: "Análise e fact-check",
+    Icon: Search,
+    title: "Busca em fontes oficiais",
     description:
-      "Acesso a análises aprofundadas, verificação de afirmações-chave e contexto histórico completo para cada evento. Mais do que manchetes: compreensão real.",
+      "A LLM ajuda a localizar fontes primárias oficiais que possam confirmar uma informação. Essa busca apoia a apuração, mas não é um fact-check automatizado nem garante a veracidade de uma afirmação.",
     gradient: "from-amber-500 to-orange-600",
     glow: "shadow-[0_0_28px_rgba(245,158,11,0.2)]",
     premium: true,

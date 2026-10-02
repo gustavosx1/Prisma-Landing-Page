@@ -25,10 +25,10 @@ export const metadata: Metadata = {
     template: "%s | Prisma News",
   },
   description:
-    "Compare perspectivas editoriais em segundos. Descubra o que a sua timeline escondia com análise por espectro, detecção de blindspots e fontes verificadas.",
+    "Compare perspectivas editoriais em segundos. Descubra o que a sua timeline escondia com análise por espectro, detecção de blindspots e busca assistida em fontes primárias oficiais.",
   keywords: [
     "jornalismo", "notícias", "análise editorial", "perspectivas",
-    "media literacy", "viés de mídia", "fact-check", "comparação de cobertura",
+    "media literacy", "viés de mídia", "fontes primárias oficiais", "comparação de cobertura",
   ],
   authors: [{ name: "Prisma News" }],
   creator: "Prisma News",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     url: SITE_URL,
     siteName: "Prisma News",
     title: "Prisma News — Veja o evento inteiro, não só um lado",
-    description: "Compare perspectivas editoriais em segundos. Análise por espectro editorial, detecção de blindspots e fontes diversas.",
+    description: "Compare perspectivas editoriais em segundos. Análise por espectro editorial, detecção de blindspots e busca assistida em fontes primárias oficiais.",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Prisma News — Inteligência editorial" }],
   },
   twitter: {
@@ -63,7 +63,7 @@ const jsonLd = {
       "@id": `${SITE_URL}/#organization`,
       name: "Prisma News",
       url: SITE_URL,
-      logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.jpg` },
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.svg` },
       sameAs: ["https://twitter.com/prismanews","https://instagram.com/prismanews","https://linkedin.com/company/prismanews"],
     },
     {

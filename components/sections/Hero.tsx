@@ -14,32 +14,32 @@ import { StoreButtons } from "@/components/sections/StoreButtons";
 const PERSPECTIVES = [
   {
     label: "Esquerda",
-    activeBg: "bg-rose-600",
-    textColor: "text-rose-400",
+    activeBg: "bg-purple-700",
+    textColor: "text-purple-600",
     text: '"Para especialistas progressistas, a reforma representa uma vitória das elites econômicas. A nova estrutura beneficia quem já concentra riqueza e penaliza quem mais precisa de proteção social."',
-    source: "Fonte: Brasil de Fato, Le Monde Diplomatique BR",
+    source: "Exemplos de veículos: Brasil de Fato, Intercept",
   },
   {
     label: "Centro",
     activeBg: "bg-purple-600",
     textColor: "text-purple-400",
     text: '"A reforma moderniza o sistema tributário, mas especialistas divergem quanto à progressividade. O impacto real depende da regulamentação, ainda em disputa no Congresso."',
-    source: "Fonte: Estadão, Valor Econômico, Reuters Brasil",
+    source: "Exemplos de veículos: Folha, UOL, Metrópoles",
   },
   {
     label: "Direita",
-    activeBg: "bg-sky-600",
-    textColor: "text-sky-400",
+    activeBg: "bg-purple-700",
+    textColor: "text-purple-600",
     text: '"A aprovação sinaliza estabilidade fiscal e deve atrair investimentos. A simplificação do sistema beneficia empresas e pode gerar crescimento e empregos no médio prazo."',
-    source: "Fonte: Veja, CNN Brasil, InfoMoney",
+    source: "Exemplos de veículos: O Antagonista, Jovem Pan",
   },
 ];
 
 const STATS = [
-  { value: "500+", label: "Eventos por semana" },
+  { value: "20",   label: "Veículos brasileiros" },
   { value: "3×",   label: "Perspectivas por evento" },
-  { value: "200+", label: "Fontes monitoradas" },
-  { value: "100%", label: "Não-partidário" },
+  { value: "Fontes", label: "Primárias oficiais" },
+  { value: "LLM", label: "Busca de referências" },
 ];
 
 export function Hero() {
@@ -113,7 +113,7 @@ export function Hero() {
             >
               Compare perspectivas editoriais em segundos e descubra o que a
               sua timeline escondia — com análise por espectro, detecção de
-              blindspots e fontes verificadas.
+              blindspots e busca assistida por LLM em fontes primárias oficiais que possam ajudar a confirmar informações; essa busca não substitui uma verificação editorial.
             </motion.p>
 
             {/* CTAs */}
@@ -160,12 +160,12 @@ export function Hero() {
                 <span className="w-2 h-2 rounded-full bg-purple-400 mt-2 flex-shrink-0 animate-pulse" aria-hidden="true" />
                 <div>
                   <p className="text-[10px] font-bold text-purple-400 uppercase tracking-widest mb-1">
-                    Evento em destaque
+                    Exemplo ilustrativo · evento em destaque
                   </p>
                   <h2 className="text-white font-bold text-base sm:text-lg leading-snug">
                     Reforma tributária aprovada pelo Congresso Nacional
                   </h2>
-                  <p className="text-xs text-slate-500 mt-1">Hoje, 14h32 · 23 veículos cobriram</p>
+                  <p className="text-xs text-slate-500 mt-1">Hoje, 14h32 · cobertura entre os 20 veículos</p>
                 </div>
               </div>
 
@@ -225,7 +225,7 @@ export function Hero() {
                 </span>
                 <span className="flex items-center gap-1.5 text-xs text-slate-400">
                   <Eye className="w-3.5 h-3.5" aria-hidden="true" />
-                  7 fontes
+                  20 veículos
                 </span>
                 <span className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
                   <TrendingUp className="w-3.5 h-3.5" aria-hidden="true" />

@@ -29,7 +29,7 @@ export default function TermsOfUsePage() {
   const summaryBullets = [
     "O Prisma News oferece conteúdo gratuito e premium, com acesso por conta e assinatura recorrente.",
     "Ao usar o app, você aceita estes Termos de Uso e a Política de Privacidade do serviço.",
-    "A assinatura premium pode ser mensal ou anual, com renovação automática conforme a loja de aplicativos.",
+    "A assinatura Premium mensal custa R$ 9,90, com renovação automática conforme as condições da loja de aplicativos.",
     "Os preços e condições de assinatura são definidos pela Apple App Store e Google Play, conforme o dispositivo.",
     "Você pode cancelar a renovação automática diretamente na loja em que adquiriu a assinatura.",
     "O conteúdo do app é editorial, informativo e não substitui orientação profissional ou aconselhamento específico.",
@@ -115,16 +115,22 @@ export default function TermsOfUsePage() {
               <h2 className="text-2xl font-bold text-white">4. Assinaturas e cobrança</h2>
               <p className="mt-3 leading-relaxed text-slate-200">
                 O Prisma News pode oferecer acesso a conteúdos e recursos Premium por meio de assinatura recorrente.
-                A assinatura pode ser disponibilizada em diferentes periodicidades, como mensal ou anual, conforme a
-                oferta ativa na loja em que a compra foi realizada.
+                A assinatura Premium é mensal e custa R$ 9,90, exceto por ofertas promocionais válidas. O preço e as
+                condições aplicáveis são apresentados pela loja antes da confirmação da compra.
               </p>
               <ul className="mt-3 list-disc space-y-2 pl-6 text-slate-200 marker:text-purple-300">
-                <li>Os preços, condições de oferta, periodicidade e disponibilidade dos planos são definidos pela Apple App Store ou Google Play.</li>
+                <li>Os preços, condições de oferta e disponibilidade dos planos são apresentados pela Apple App Store ou Google Play antes da compra.</li>
                 <li>A cobrança é processada exclusivamente pela loja de aplicativos e não diretamente pelo aplicativo, salvo quando expressamente informado.</li>
                 <li>A assinatura é renovada automaticamente ao fim de cada ciclo, a menos que o usuário a cancele antes do vencimento do período vigente.</li>
                 <li>O valor da assinatura pode ser alterado por decisão da loja ou do titular do serviço, conforme as regras da plataforma e as notificações aplicáveis.</li>
-                <li>Testes gratuitos, descontos, promoções ou ofertas especiais, quando disponíveis, estarão sujeitos às condições específicas informadas na compra.</li>
+                <li>Durante outubro de 2026, novos usuários podem obter o primeiro mês do Premium por R$ 2,90; a partir do segundo mês, a assinatura mensal renova por R$ 9,90, conforme as condições e a disponibilidade apresentadas na loja no momento da compra.</li>
+                <li>Outros testes gratuitos, descontos, promoções ou ofertas especiais, quando disponíveis, estarão sujeitos às condições específicas informadas na compra.</li>
               </ul>
+              <p className="mt-3 leading-relaxed text-slate-200">
+                Recursos de busca assistida por inteligência artificial podem localizar fontes primárias oficiais que
+                ajudem a confirmar informações. Essa consulta não constitui fact-check automatizado, não garante a
+                veracidade de uma afirmação e não substitui análise editorial ou avaliação crítica das fontes.
+              </p>
               <p className="mt-3 leading-relaxed text-slate-200">
                 O usuário reconhece que ao iniciar uma assinatura, entende que a cobrança será feita de acordo com o
                 método de pagamento habilitado na loja de aplicativos e de acordo com as políticas daquela plataforma.
