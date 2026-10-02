@@ -39,7 +39,7 @@ const STATS = [
   { value: "20",   label: "Veículos brasileiros" },
   { value: "3×",   label: "Perspectivas por evento" },
   { value: "Fontes", label: "Primárias oficiais" },
-  { value: "LLM", label: "Busca de referências" },
+  { value: "100%", label: "Não-partidário" },
 ];
 
 export function Hero() {

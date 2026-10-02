@@ -55,8 +55,7 @@ export function FinalCTA() {
 
           {/* Reassurance */}
           <p className="text-sm text-slate-500">
-            Grátis para sempre no plano básico&nbsp;·&nbsp;Sem cartão de
-            crédito&nbsp;·&nbsp;Cancele quando quiser
+            Grátis para sempre no plano básico&nbsp;·&nbsp;Cancele quando quiser
           </p>
         </motion.div>
       </div>
