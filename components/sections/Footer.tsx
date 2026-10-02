@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { StoreButtons } from "@/components/sections/StoreButtons";
 
 const LINKS = {
   Produto: [
@@ -58,6 +59,7 @@ export function Footer() {
               Inteligência editorial para quem quer entender os fatos — não
               apenas a versão do algoritmo.
             </p>
+            <StoreButtons location="footer" compact className="mb-6" />
             {/* Social */}
             <div className="flex items-center gap-3">
               {SOCIALS.map((s) => (

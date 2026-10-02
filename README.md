@@ -1,14 +1,6 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Environment Variables
-
-Create a `.env.local` file based on `.env.example` and configure:
-
-```bash
-NEXT_PUBLIC_APP_DOWNLOAD_URL=https://link-para-seu-app.com
-```
-
-All landing page CTA buttons use this URL as the app download destination.
+Os links oficiais para download do aplicativo estão centralizados em `lib/appDownload.ts` e são usados nos botões de toda a página.
 
 ## Getting Started
 

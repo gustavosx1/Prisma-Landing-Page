@@ -80,7 +80,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className={`${manrope.variable} ${poppins.variable} h-full`}>
+    <html lang="pt-BR" className={`${manrope.variable} ${poppins.variable} h-full site-theme`}>
       <head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>

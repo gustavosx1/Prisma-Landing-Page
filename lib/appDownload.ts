@@ -1,2 +1,3 @@
-export const APP_DOWNLOAD_URL =
-  process.env.NEXT_PUBLIC_APP_DOWNLOAD_URL || "#";
+export const APP_STORE_URL = "https://apps.apple.com/app/6798351794";
+export const GOOGLE_PLAY_URL =
+  "https://play.google.com/store/apps/details?id=br.com.prismanews.app";

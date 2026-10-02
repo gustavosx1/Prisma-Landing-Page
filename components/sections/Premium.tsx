@@ -2,8 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Check, X, Zap } from "lucide-react";
-import { trackEvent } from "@/lib/analytics";
-import { APP_DOWNLOAD_URL } from "@/lib/appDownload";
+import { StoreButtons } from "@/components/sections/StoreButtons";
 
 type PlanFeature = { text: string; included: boolean };
 
@@ -12,7 +11,6 @@ const PLANS: {
   price: string | null;
   period: string;
   description: string;
-  cta: string;
   highlight: boolean;
   badge?: string;
   features: PlanFeature[];
@@ -22,7 +20,6 @@ const PLANS: {
     price: null,
     period: "para sempre",
     description: "Para começar a ver os dois lados.",
-    cta: "Começar grátis",
     highlight: false,
     features: [
       { text: "3 eventos por dia",                         included: true  },
@@ -41,7 +38,6 @@ const PLANS: {
     price: "19,90",
     period: "por mês",
     description: "Para quem quer o quadro completo, sempre.",
-    cta: "Assinar Premium",
     highlight: true,
     badge: "Mais popular",
     features: [
@@ -69,7 +65,7 @@ export function Premium() {
   return (
     <section
       id="precos"
-      className="py-20 lg:py-32 bg-[#080118] relative overflow-hidden"
+      className="pricing-section py-20 lg:py-32 bg-[#080118] relative overflow-hidden"
       aria-labelledby="pricing-heading"
     >
       {/* BG glow */}
@@ -164,23 +160,7 @@ export function Premium() {
                 ))}
               </ul>
 
-              <a
-                href={APP_DOWNLOAD_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() =>
-                  trackEvent("pricing_cta_click", { plan: plan.name, location: "pricing" })
-                }
-                aria-label={`${plan.cta} — Plano ${plan.name}`}
-                className={[
-                  "block w-full py-4 rounded-2xl font-bold text-center transition-all duration-200",
-                  plan.highlight
-                    ? "bg-purple-600 hover:bg-purple-500 text-white shadow-[0_0_30px_rgba(139,92,246,0.4)] hover:shadow-[0_0_50px_rgba(139,92,246,0.6)]"
-                    : "bg-white/[0.07] hover:bg-white/[0.11] text-white border border-white/10 hover:border-purple-500/30",
-                ].join(" ")}
-              >
-                {plan.cta}
-              </a>
+              <StoreButtons location={`pricing_${plan.name.toLowerCase()}`} />
             </motion.div>
           ))}
         </div>

@@ -36,7 +36,7 @@ const FAQS = [
   },
   {
     q: "Existe um aplicativo para iOS e Android?",
-    a: "O app está em desenvolvimento e será lançado em breve. Por enquanto, a versão web mobile oferece a experiência completa, incluindo suporte a PWA (você pode adicionar o Prisma News à tela inicial do seu celular).",
+    a: "Sim. O Prisma News está disponível para iPhone e Android. Use os botões de download no site para abrir a página oficial do aplicativo na App Store ou no Google Play.",
   },
   {
     q: "Com que frequência os eventos são atualizados?",

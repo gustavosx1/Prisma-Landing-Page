@@ -3,74 +3,305 @@
 @theme {
   --font-sans: var(--font-manrope);
 
-  /* Brand – purple spectrum */
-  --color-brand-50:  #faf5ff;
-  --color-brand-100: #f3e8ff;
-  --color-brand-200: #e9d5ff;
-  --color-brand-300: #d8b4fe;
-  --color-brand-400: #c084fc;
-  --color-brand-500: #a855f7;
-  --color-brand-600: #9333ea;
-  --color-brand-700: #7e22ce;
-  --color-brand-800: #6b21a8;
-  --color-brand-900: #581c87;
-  --color-brand-950: #3b0764;
+  --color-brand-50: #f8f7fb;
+  --color-brand-100: #efedf5;
+  --color-brand-200: #dfdbe9;
+  --color-brand-300: #c6bfd9;
+  --color-brand-400: #a99fc5;
+  --color-brand-500: #786aaa;
+  --color-brand-600: #695c98;
+  --color-brand-700: #584c82;
+  --color-brand-800: #453d68;
+  --color-brand-900: #302b47;
+  --color-brand-950: #211e30;
 
-  /* Electric accent */
-  --color-electric-400: #e879f9;
-  --color-electric-500: #d946ef;
-  --color-electric-600: #c026d3;
+  --color-purple-50: #f8f7fb;
+  --color-purple-100: #efedf5;
+  --color-purple-200: #dfdbe9;
+  --color-purple-300: #c6bfd9;
+  --color-purple-400: #a99fc5;
+  --color-purple-500: #897cae;
+  --color-purple-600: #786aaa;
+  --color-purple-700: #695c98;
+  --color-purple-800: #584c82;
+  --color-purple-900: #453d68;
+  --color-purple-950: #302b47;
+  --color-violet-400: #a99fc5;
+  --color-violet-500: #897cae;
+  --color-violet-600: #786aaa;
+  --color-violet-700: #695c98;
+  --color-violet-800: #584c82;
+  --color-violet-900: #453d68;
+  --color-fuchsia-300: #c6bfd9;
+  --color-fuchsia-400: #a99fc5;
+  --color-fuchsia-500: #897cae;
+  --color-fuchsia-600: #786aaa;
+  --color-fuchsia-700: #695c98;
+  --color-fuchsia-800: #584c82;
+  --color-fuchsia-900: #453d68;
+  --color-rose-400: #9984a0;
+  --color-rose-500: #806a89;
+  --color-rose-600: #705a79;
+  --color-pink-400: #a38aa2;
+  --color-pink-500: #89708b;
+  --color-pink-600: #745c77;
+  --color-sky-400: #8595a7;
+  --color-sky-500: #718396;
+  --color-sky-600: #607286;
+  --color-blue-600: #63718a;
+  --color-amber-400: #a28c68;
+  --color-amber-500: #927b57;
+  --color-orange-600: #846e53;
+  --color-emerald-300: #82988a;
+  --color-emerald-400: #6f8878;
+  --color-emerald-500: #5f7869;
+  --color-teal-600: #5d7e7b;
 
-  /* Custom dark surfaces */
-  --color-surface:          #060111;
-  --color-surface-card:     #0c0324;
-  --color-surface-elevated: #130540;
+  --color-electric-400: #a99fc5;
+  --color-electric-500: #897cae;
+  --color-electric-600: #695c98;
+
+  --color-surface: #ffffff;
+  --color-surface-card: #ffffff;
+  --color-surface-elevated: #f7f6fa;
 }
 
 /* ─── Base ──────────────────────────────────────── */
 body {
   background-color: var(--color-surface);
-  color: #f1eeff;
+  color: #302d38;
   font-family: var(--font-manrope), 'Manrope', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* ─── Scrollbar ──────────────────────────────────── */
-::-webkit-scrollbar          { width: 4px; }
-::-webkit-scrollbar-track    { background: var(--color-surface); }
-::-webkit-scrollbar-thumb    { background: var(--color-brand-800); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--color-brand-600); }
+::-webkit-scrollbar          { width: 6px; }
+::-webkit-scrollbar-track    { background: #f7f6fa; }
+::-webkit-scrollbar-thumb    { background: #c6bfd9; border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: #786aaa; }
 
 /* ─── Selection ──────────────────────────────────── */
-::selection { background: var(--color-brand-700); color: #fff; }
+::selection { background: #dfdbe9; color: #302d38; }
 
 /* ─── Focus ──────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid var(--color-brand-400);
+  outline: 2px solid #786aaa;
   outline-offset: 3px;
   border-radius: 4px;
 }
 
-/* ─── Logo glow ──────────────────────────────────── */
+/* ─── Brand motion ───────────────────────────────── */
 @keyframes logoGlowPulse {
   0%,
   100% {
-    filter: drop-shadow(0 6px 10px rgba(168, 85, 247, 0.28))
-      drop-shadow(0 0 0 rgba(236, 72, 153, 0));
+    filter: drop-shadow(0 3px 8px rgba(72, 61, 104, 0.12));
     transform: translateY(0);
   }
 
   50% {
-    filter: drop-shadow(0 12px 24px rgba(168, 85, 247, 0.45))
-      drop-shadow(0 0 16px rgba(236, 72, 153, 0.3));
-    transform: translateY(-1px);
+    filter: drop-shadow(0 4px 10px rgba(72, 61, 104, 0.18));
+    transform: translateY(0);
   }
 }
 
 .logo-glow {
-  animation: logoGlowPulse 2.8s ease-in-out infinite;
+  animation: logoGlowPulse 4s ease-in-out infinite;
   will-change: filter, transform;
+}
+
+/* ─── Prisma light visual system ─────────────────── */
+.site-theme {
+  --ink: #302d38;
+  --muted: #6e6b76;
+  --line: #e9e6ef;
+  --lilac: #786aaa;
+  --lilac-soft: #f1eff6;
+}
+
+.site-theme main > section {
+  background-color: #fff !important;
+  color: var(--ink);
+}
+
+.site-theme main > section:nth-of-type(even) {
+  background-color: #f8f7fa !important;
+}
+
+.site-theme main > section [class~="text-white"],
+.site-theme footer [class~="text-white"],
+.site-theme header [class~="text-white"] {
+  color: #302d38 !important;
+}
+
+.site-theme [class~="text-slate-200"],
+.site-theme [class~="text-slate-300"] { color: #514e59 !important; }
+.site-theme [class~="text-slate-400"] { color: #6e6b76 !important; }
+.site-theme [class~="text-slate-500"] { color: #7d7a85 !important; }
+.site-theme [class~="text-slate-600"] { color: #898691 !important; }
+.site-theme [class~="text-purple-200"] { color: #655a85 !important; }
+.site-theme [class~="text-purple-300"],
+.site-theme [class~="text-purple-400"] { color: #786aaa !important; }
+.site-theme [class~="text-fuchsia-300"],
+.site-theme [class~="text-fuchsia-400"],
+.site-theme [class~="text-violet-300"],
+.site-theme [class~="text-violet-400"] { color: #786aaa !important; }
+
+.site-theme [class*="bg-[#060111]"],
+.site-theme [class*="bg-[#04000f]"],
+.site-theme [class*="bg-[#07011a]"],
+.site-theme [class*="bg-[#080118]"],
+.site-theme [class*="bg-[#08011a]"],
+.site-theme [class*="bg-[#0c0324]"],
+.site-theme [class*="bg-[#0a0120]"],
+.site-theme [class*="bg-[#120920]"] {
+  background-color: #fff !important;
+}
+
+.site-theme [class*="bg-purple-950"],
+.site-theme [class*="bg-purple-900/"],
+.site-theme [class*="bg-violet-900/"],
+.site-theme [class*="bg-fuchsia-900/"] {
+  background-color: #f1eff6 !important;
+}
+
+.site-theme [class*="border-purple-"],
+.site-theme [class*="border-fuchsia-"],
+.site-theme [class*="border-violet-"],
+.site-theme [class*="border-white/"] {
+  border-color: #e5e1ec !important;
+}
+
+.site-theme [class~="text-white"][class*="bg-purple-"],
+.site-theme [class~="text-white"][class*="bg-rose-"],
+.site-theme [class~="text-white"][class*="bg-sky-"],
+.site-theme [class~="text-white"][class*="bg-fuchsia-"],
+.site-theme [class~="text-white"][class*="bg-violet-"],
+.site-theme [class~="text-white"][class*="bg-gradient-to-"],
+.site-theme [class*="bg-gradient-to-br"] [class~="text-white"] {
+  color: #fff !important;
+}
+
+.site-theme header {
+  color: var(--ink);
+  background-color: rgb(255 255 255 / 94%) !important;
+  backdrop-filter: blur(18px);
+}
+
+.site-theme header[class*="bg-[#060111]"] {
+  background-color: rgb(255 255 255 / 94%) !important;
+  border-color: #e9e6ef !important;
+  box-shadow: 0 8px 24px rgb(38 32 53 / 5%) !important;
+}
+
+.site-theme header nav a { color: #625f6a !important; }
+.site-theme header nav a:hover { color: #786aaa !important; }
+.site-theme header button { color: #625f6a !important; }
+.site-theme header [class*="bg-[#060111]"] {
+  background-color: rgb(255 255 255 / 98%) !important;
+}
+
+.site-theme footer {
+  background-color: #f8f7fa !important;
+  border-color: #e9e6ef !important;
+}
+
+.site-theme .hero-section {
+  background: linear-gradient(140deg, #fff 48%, #f5f3f8 100%) !important;
+}
+
+.site-theme .hero-section > [aria-hidden="true"] { display: none; }
+.site-theme .hero-product-card {
+  background: #fff !important;
+  border-color: #e7e3ed !important;
+  box-shadow: 0 24px 70px rgb(44 37 63 / 10%) !important;
+}
+
+.site-theme main section [class*="bg-gradient-to-r"][class*="from-purple-"],
+.site-theme main section [class*="bg-gradient-to-r"][class*="from-fuchsia-"] {
+  background-image: linear-gradient(90deg, #786aaa, #9589b5) !important;
+}
+
+.site-theme main section [class*="bg-gradient-to-br"] {
+  background-image: linear-gradient(135deg, #9589b5, #786aaa) !important;
+}
+
+.site-theme .pricing-section [class*="bg-gradient-to-b"] {
+  background: linear-gradient(180deg, #f1eff6, #fff) !important;
+}
+
+.site-theme .pricing-section,
+.site-theme .final-cta-section {
+  background: #f8f7fa !important;
+}
+
+.site-theme .pricing-section > [aria-hidden="true"],
+.site-theme .final-cta-section > [aria-hidden="true"] { display: none; }
+
+.store-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.store-button {
+  display: inline-flex;
+  min-height: 3.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  border: 1px solid #dcd7e7;
+  border-radius: 0.9rem;
+  background: #fff;
+  padding: 0.75rem 1rem;
+  color: #332f3e;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.2;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.store-button:hover {
+  transform: translateY(-1px);
+  border-color: #a99fc5;
+  background: #faf9fc;
+  box-shadow: 0 8px 22px rgb(58 48 84 / 9%);
+}
+
+.store-button-icon { width: 1.25rem; height: 1.25rem; color: #786aaa; }
+.store-buttons-compact { gap: 0.5rem; }
+.store-buttons-compact .store-button { min-height: 2.6rem; padding: 0.55rem 0.8rem; font-size: 0.78rem; }
+.store-buttons-compact .store-button-icon { width: 1rem; height: 1rem; }
+
+.legal-page {
+  min-height: 100vh;
+  background: #f8f7fa !important;
+  color: #514e59;
+}
+
+.legal-page article {
+  border: 1px solid #e9e6ef !important;
+  background: #fff !important;
+  color: #514e59 !important;
+  box-shadow: 0 18px 50px rgb(38 32 53 / 6%) !important;
+}
+
+.legal-page article h1,
+.legal-page article h2,
+.legal-page article h3 { color: #302d38 !important; }
+.legal-page article p,
+.legal-page article li,
+.legal-page article td,
+.legal-page article th { color: #514e59 !important; }
+.legal-page article a,
+.legal-page > div > a { color: #695c98 !important; }
+
+@media (max-width: 640px) {
+  .store-buttons { flex-direction: column; align-items: stretch; }
+  .store-button { width: 100%; }
+  .store-buttons-compact { flex-direction: row; }
+  .store-buttons-compact .store-button { width: auto; }
 }
 
 /* ─── Reduced motion ─────────────────────────────── */

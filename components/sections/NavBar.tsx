@@ -5,8 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { trackEvent } from "@/lib/analytics";
-import { APP_DOWNLOAD_URL } from "@/lib/appDownload";
+import { StoreButtons } from "@/components/sections/StoreButtons";
 
 const NAV_LINKS = [
   { label: "Como funciona", href: "#como-funciona" },
@@ -24,9 +23,6 @@ export function NavBar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  const handleCTA = (location: string) =>
-    trackEvent("hero_cta_click", { location });
 
   return (
     <motion.header
@@ -74,16 +70,8 @@ export function NavBar() {
         </nav>
 
         {/* Desktop CTAs */}
-        <div className="hidden lg:flex items-center gap-3">
-          <a
-            href={APP_DOWNLOAD_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => handleCTA("navbar")}
-            className="text-sm font-semibold px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white transition-all duration-200 shadow-[0_0_20px_rgba(139,92,246,0.35)] hover:shadow-[0_0_32px_rgba(139,92,246,0.55)]"
-          >
-            Começar grátis
-          </a>
+        <div className="hidden lg:flex items-center">
+          <StoreButtons location="navbar" compact />
         </div>
 
         {/* Mobile toggle */}
@@ -118,16 +106,8 @@ export function NavBar() {
                   {l.label}
                 </a>
               ))}
-              <div className="pt-3 mt-3 border-t border-purple-900/30 space-y-2">
-                <a
-                  href={APP_DOWNLOAD_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => { setOpen(false); handleCTA("navbar_mobile"); }}
-                  className="block px-4 py-3 bg-purple-600 hover:bg-purple-500 text-white text-center rounded-xl transition-colors font-semibold"
-                >
-                  Começar grátis
-                </a>
+              <div className="pt-3 mt-3 border-t border-purple-900/30">
+                <StoreButtons location="navbar_mobile" />
               </div>
             </nav>
           </motion.div>

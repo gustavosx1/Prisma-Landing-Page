@@ -3,15 +3,13 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
-  ArrowRight,
-  Play,
   CheckCircle2,
   AlertTriangle,
   Eye,
   TrendingUp,
 } from "lucide-react";
-import { trackEvent, initScrollDepth } from "@/lib/analytics";
-import { APP_DOWNLOAD_URL } from "@/lib/appDownload";
+import { initScrollDepth } from "@/lib/analytics";
+import { StoreButtons } from "@/components/sections/StoreButtons";
 
 const PERSPECTIVES = [
   {
@@ -59,7 +57,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex flex-col overflow-hidden bg-[#060111]">
+    <section className="hero-section relative min-h-screen flex flex-col overflow-hidden bg-[#060111]">
       {/* Atmospheric background */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-950/70 via-[#060111] to-fuchsia-950/20" />
@@ -125,28 +123,7 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <a
-                href={APP_DOWNLOAD_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackEvent("hero_cta_click", { location: "hero" })}
-                aria-label="Começar grátis — sem cartão de crédito"
-                className="group inline-flex items-center justify-center gap-2 px-7 py-4 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-2xl text-base transition-all duration-200 shadow-[0_0_40px_rgba(139,92,246,0.4)] hover:shadow-[0_0_60px_rgba(139,92,246,0.6)]"
-              >
-                Começar grátis
-                <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
-              </a>
-              <a
-                href={APP_DOWNLOAD_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackEvent("demo_click", { location: "hero" })}
-                aria-label="Ver demonstração do produto"
-                className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 hover:border-purple-500/40 text-white font-semibold rounded-2xl text-base transition-all duration-200"
-              >
-                <Play className="w-4 h-4 text-purple-400" aria-hidden="true" fill="currentColor" />
-                Ver demonstração
-              </a>
+              <StoreButtons location="hero" />
             </motion.div>
 
             {/* Microproof */}
@@ -177,7 +154,7 @@ export function Hero() {
             <div className="absolute inset-0 bg-purple-600/20 rounded-3xl blur-3xl scale-95 pointer-events-none" aria-hidden="true" />
 
             {/* Card */}
-            <div className="relative bg-[#0c0324]/80 backdrop-blur-xl border border-purple-800/30 rounded-3xl p-5 sm:p-6 shadow-[0_0_80px_rgba(88,28,135,0.3)]">
+            <div className="hero-product-card relative bg-[#0c0324]/80 backdrop-blur-xl border border-purple-800/30 rounded-3xl p-5 sm:p-6 shadow-[0_0_80px_rgba(88,28,135,0.3)]">
               {/* Event header */}
               <div className="flex items-start gap-3 mb-5">
                 <span className="w-2 h-2 rounded-full bg-purple-400 mt-2 flex-shrink-0 animate-pulse" aria-hidden="true" />

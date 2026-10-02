@@ -1,14 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import { trackEvent } from "@/lib/analytics";
-import { APP_DOWNLOAD_URL } from "@/lib/appDownload";
+import { StoreButtons } from "@/components/sections/StoreButtons";
 
 export function FinalCTA() {
   return (
     <section
-      className="py-20 lg:py-32 relative overflow-hidden bg-[#07011a]"
+      className="final-cta-section py-20 lg:py-32 relative overflow-hidden bg-[#07011a]"
       aria-labelledby="final-cta-heading"
     >
       {/* Gradient atmosphere */}
@@ -53,39 +51,7 @@ export function FinalCTA() {
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href={APP_DOWNLOAD_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() =>
-                trackEvent("hero_cta_click", { location: "final_cta" })
-              }
-              aria-label="Começar grátis — sem cartão de crédito"
-              className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-2xl text-base transition-all duration-200 shadow-[0_0_50px_rgba(139,92,246,0.4)] hover:shadow-[0_0_70px_rgba(139,92,246,0.6)]"
-            >
-              Começar grátis agora
-              <ArrowRight
-                className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1"
-                aria-hidden="true"
-              />
-            </a>
-            <a
-              href={APP_DOWNLOAD_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() =>
-                trackEvent("pricing_cta_click", {
-                  plan: "Premium",
-                  location: "final_cta",
-                })
-              }
-              aria-label="Assinar plano Premium"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/[0.06] hover:bg-white/[0.1] border border-white/10 hover:border-purple-500/40 text-white font-semibold rounded-2xl text-base transition-all duration-200"
-            >
-              Assinar Premium
-            </a>
-          </div>
+          <StoreButtons location="final_cta" className="justify-center" />
 
           {/* Reassurance */}
           <p className="text-sm text-slate-500">
