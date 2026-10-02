@@ -1,32 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Camera } from "lucide-react";
 import { StoreButtons } from "@/components/sections/StoreButtons";
 
-const LINKS = {
-  Produto: [
-    { label: "Recursos",       href: "#recursos" },
-    { label: "Como funciona",  href: "#como-funciona" },
-    { label: "Preços",         href: "#precos" },
-    { label: "Roadmap",        href: "#roadmap" },
-  ],
-  Empresa: [
-    { label: "Sobre",          href: "#sobre" },
-    { label: "Metodologia",    href: "#metodologia" },
-    { label: "Blog",           href: "#blog" },
-    { label: "Imprensa",       href: "#imprensa" },
-  ],
-  Legal: [
-    { label: "Termos de Uso",  href: "#termos" },
-    { label: "Privacidade",    href: "/privacidade" },
-    { label: "Cookies",        href: "#cookies" },
-    { label: "LGPD",           href: "#lgpd" },
-  ],
-};
-
-const SOCIALS = [
-  { label: "Twitter / X",  href: "https://twitter.com/prismanews",           icon: "𝕏" },
-  { label: "Instagram",    href: "https://instagram.com/prismanews",          icon: "◈" },
-  { label: "LinkedIn",     href: "https://linkedin.com/company/prismanews",   icon: "in" },
+const LEGAL_LINKS = [
+  { label: "Termos de Uso", href: "/termos-de-uso" },
+  { label: "Privacidade", href: "/privacidade" },
 ];
 
 export function Footer() {
@@ -36,9 +15,9 @@ export function Footer() {
       role="contentinfo"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
+        <div className="grid gap-10 sm:grid-cols-3 sm:gap-12">
           {/* Brand column */}
-          <div className="col-span-2 sm:col-span-4 lg:col-span-2">
+          <div className="sm:col-span-2">
             <Link
               href="/"
               aria-label="Prisma News — Página inicial"
@@ -60,52 +39,35 @@ export function Footer() {
               apenas a versão do algoritmo.
             </p>
             <StoreButtons location="footer" compact className="mb-6" />
-            {/* Social */}
-            <div className="flex items-center gap-3">
-              {SOCIALS.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  aria-label={s.label}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-xl bg-purple-900/30 border border-purple-800/30 flex items-center justify-center text-slate-400 hover:text-white hover:border-purple-600/50 transition-all duration-200 text-sm font-bold"
-                >
-                  {s.icon}
-                </a>
-              ))}
-            </div>
+            <a
+              href="https://www.instagram.com/prismanewsoficial/"
+              aria-label="Instagram @prismanewsoficial"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-slate-400 transition-colors hover:text-purple-500"
+            >
+              <Camera aria-hidden="true" className="h-5 w-5" />
+              @prismanewsoficial
+            </a>
           </div>
 
-          {/* Link columns */}
-          {Object.entries(LINKS).map(([category, items]) => (
-            <div key={category}>
-              <h3 className="text-xs font-bold text-white uppercase tracking-widest mb-4">
-                {category}
-              </h3>
-              <ul className="space-y-3">
-                {items.map((item) => (
-                  <li key={item.label}>
-                    {item.href.startsWith("/") ? (
-                      <Link
-                        href={item.href}
-                        className="text-sm text-slate-400 hover:text-white transition-colors"
-                      >
-                        {item.label}
-                      </Link>
-                    ) : (
-                      <a
-                        href={item.href}
-                        className="text-sm text-slate-400 hover:text-white transition-colors"
-                      >
-                        {item.label}
-                      </a>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <nav aria-label="Links legais">
+            <h3 className="text-xs font-bold text-white uppercase tracking-widest mb-4">
+              Informações legais
+            </h3>
+            <ul className="space-y-3">
+              {LEGAL_LINKS.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="text-sm text-slate-400 transition-colors hover:text-white"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
 
         {/* Bottom bar */}
