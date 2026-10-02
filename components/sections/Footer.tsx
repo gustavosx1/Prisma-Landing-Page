@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Camera } from "lucide-react";
 import { StoreButtons } from "@/components/sections/StoreButtons";
 
 const LEGAL_LINKS = [
@@ -10,57 +9,64 @@ const LEGAL_LINKS = [
 
 export function Footer() {
   return (
-    <footer
-      className="bg-[#04000f] border-t border-purple-900/30"
-      role="contentinfo"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid gap-10 sm:grid-cols-3 sm:gap-12">
+    <footer className="footer-shell border-t" role="contentinfo">
+      <div className="mx-auto max-w-7xl px-5 py-12 sm:px-6 sm:py-14 lg:px-8">
+        <div className="footer-main grid gap-10 border-b pb-10 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
           {/* Brand column */}
-          <div className="sm:col-span-2">
+          <div className="footer-brand">
             <Link
               href="/"
               aria-label="Prisma News — Página inicial"
-              className="flex items-center gap-2.5 mb-4"
+              className="mb-3 inline-flex items-center gap-3"
             >
               <Image
                 src="/logo.svg"
                 alt="Logo Prisma News"
                 width={34}
                 height={34}
-                className="logo-glow h-8 w-auto object-contain"
+                className="h-9 w-auto object-contain"
               />
-              <span className="font-bold text-lg text-white">
-                Prisma <span className="text-purple-400">News</span>
+              <span className="text-lg font-extrabold tracking-tight text-slate-900">
+                Prisma <span className="text-purple-500">News</span>
               </span>
             </Link>
-            <p className="text-slate-400 text-sm leading-relaxed max-w-xs mb-6">
+            <p className="mb-5 max-w-sm text-sm leading-relaxed text-slate-600">
               Inteligência editorial para quem quer entender os fatos — não
               apenas a versão do algoritmo.
             </p>
-            <StoreButtons location="footer" compact className="mb-6" />
+            <StoreButtons location="footer" compact className="mb-5" />
             <a
               href="https://www.instagram.com/prismanewsoficial/"
               aria-label="Instagram @prismanewsoficial"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-slate-400 transition-colors hover:text-purple-500"
+              className="footer-instagram inline-flex items-center gap-2.5 rounded-xl border px-3.5 py-2 text-sm font-semibold transition-colors"
             >
-              <Camera aria-hidden="true" className="h-5 w-5" />
+              <svg
+                aria-hidden="true"
+                className="h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.8" />
+                <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.8" />
+                <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" />
+              </svg>
               @prismanewsoficial
             </a>
           </div>
 
-          <nav aria-label="Links legais">
-            <h3 className="text-xs font-bold text-white uppercase tracking-widest mb-4">
+          <nav className="footer-legal md:pt-2" aria-label="Links legais">
+            <h3 className="mb-4 text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
               Informações legais
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-2.5">
               {LEGAL_LINKS.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-sm text-slate-400 transition-colors hover:text-white"
+                    className="footer-legal-link inline-flex rounded-md py-1 text-sm font-medium transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -71,7 +77,7 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 pt-8 border-t border-purple-900/20 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500">
+        <div className="flex flex-col items-start justify-between gap-3 pt-6 text-xs text-slate-500 sm:flex-row sm:items-center">
           <p>© {new Date().getFullYear()} Prisma News. Todos os direitos reservados.</p>
           <p className="flex items-center gap-1.5">
             Feito com cuidado no Brasil{" "}

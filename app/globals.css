@@ -202,8 +202,49 @@ body {
 }
 
 .site-theme footer {
-  background-color: #f8f7fa !important;
-  border-color: #e9e6ef !important;
+  background: linear-gradient(180deg, #faf9fc 0%, #f4f2f7 100%) !important;
+  border-color: #e7e3ed !important;
+}
+
+.site-theme .footer-main {
+  border-color: #e7e3ed !important;
+}
+
+.site-theme .footer-brand {
+  border: 1px solid #e9e6ef;
+  border-radius: 1.25rem;
+  background: #fff;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgb(48 45 56 / 4%);
+}
+
+.site-theme .footer-legal {
+  border-left: 1px solid #e3dfeb;
+  padding-left: 2rem;
+}
+
+.site-theme .footer-legal-link {
+  color: #5f596e !important;
+}
+
+.site-theme .footer-legal-link:hover {
+  color: #695c98 !important;
+}
+
+.site-theme .footer-instagram {
+  border-color: #e1dbea;
+  background: #f8f6fb;
+  color: #655981 !important;
+}
+
+.site-theme .footer-instagram:hover {
+  border-color: #bdb3d1;
+  background: #f0edf6;
+  color: #574a79 !important;
+}
+
+.site-theme .footer-shell > div > div:last-child {
+  border-color: #e7e3ed !important;
 }
 
 .site-theme .hero-section {
@@ -336,6 +377,14 @@ body {
   .store-buttons-compact { flex-direction: row; }
   .store-buttons-compact .store-button { width: auto; }
   .process-flow > div { justify-content: flex-start; }
+}
+
+@media (max-width: 767px) {
+  .site-theme .footer-legal {
+    border-left: 0;
+    border-top: 1px solid #e3dfeb;
+    padding: 1.25rem 0 0;
+  }
 }
 
 /* ─── Reduced motion ─────────────────────────────── */
