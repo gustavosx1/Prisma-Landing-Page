@@ -4,7 +4,6 @@ import { Problem }      from "@/components/sections/Problem";
 import { Solution }     from "@/components/sections/Solution";
 import { Features }     from "@/components/sections/Features";
 import { WhyItMatters } from "@/components/sections/WhyItMatters";
-import { Trust }        from "@/components/sections/Trust";
 import { Premium }      from "@/components/sections/Premium";
 import { FAQ }          from "@/components/sections/FAQ";
 import { FinalCTA }     from "@/components/sections/FinalCTA";
@@ -26,7 +25,6 @@ export default function Home() {
         <Solution />
         <Features />
         <WhyItMatters />
-        <Trust />
         <Premium />
         <FAQ />
         <FinalCTA />

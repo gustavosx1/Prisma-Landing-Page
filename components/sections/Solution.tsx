@@ -17,8 +17,7 @@ const STEPS = [
     Icon: Columns2,
     title: "Cobertura comparada por espectro",
     description:
-      "Cada evento reúne veículos classificados por tendências editoriais de esquerda, centro e direita. A classificação se refere ao histórico editorial do veículo, não determina o conteúdo de cada matéria.",
-    detail: "Categorias aproximadas, baseadas em posicionamento editorial documentado.",
+      "Classificamos cada veículo pelas tendências editoriais observadas em seu histórico. Essa leitura é aproximada: não rotula cada jornalista ou matéria e pode ser revista à medida que a linha editorial muda.",
   },
   {
     num: "03",
@@ -99,9 +98,11 @@ export function Solution() {
               </div>
               <h3 className="text-xl font-bold text-white mb-3">{title}</h3>
               <p className="text-slate-400 leading-relaxed mb-4 text-[0.95rem]">{description}</p>
-              <p className="text-xs text-purple-400 font-medium border-l-2 border-purple-600/60 pl-3">
-                {detail}
-              </p>
+              {detail && (
+                <p className="text-xs text-purple-400 font-medium border-l-2 border-purple-600/60 pl-3">
+                  {detail}
+                </p>
+              )}
             </motion.article>
           ))}
         </div>
