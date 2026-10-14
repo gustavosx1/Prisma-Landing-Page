@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Poppins } from "next/font/google";
+import { Tracker } from "@/components/Tracker";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -84,7 +85,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
-      <body className="min-h-full antialiased">{children}</body>
+      <body className="min-h-full antialiased">
+        <Tracker />
+        {children}
+      </body>
     </html>
   );
 }
