@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope, Poppins } from "next/font/google";
 import { Tracker } from "@/components/Tracker";
+import { PageStateRestoration } from "@/components/PageStateRestoration";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -86,6 +87,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body className="min-h-full antialiased">
+        <PageStateRestoration />
         <Tracker />
         {children}
       </body>
