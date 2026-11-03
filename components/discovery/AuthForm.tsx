@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useMemo, useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -74,7 +75,7 @@ export function AuthForm() {
   return (
     <div className="auth-layout">
       <aside className="auth-story">
-        <span className="auth-story__mark" aria-hidden="true">P.</span>
+        <Image className="auth-story__logo" src="/logo.svg" alt="Prisma News" width={300} height={300} priority />
         <p className="auth-story__eyebrow">PRISMA NEWS · LEITURA EM CONTEXTO</p>
         <h2>O mundo não cabe em uma manchete.</h2>
         <p>Entre para explorar os acontecimentos por diferentes perspectivas e descobrir o que cada cobertura deixa em evidência.</p>
