@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { ArrowDownRight, ArrowRight, RefreshCw, Search, Sparkles } from "lucide-react";
+import { ArrowDownRight, ArrowRight, Eye, Layers3, LockKeyhole, RefreshCw, Search, Sparkles } from "lucide-react";
 import { sanitizePremiumFeed, sanitizePublicFeed, type Topic } from "@/lib/topics";
 import { AppPremiumCTA } from "@/components/discovery/AppPremiumCTA";
 
@@ -59,21 +59,51 @@ export function TopicsFeed() {
   }
 
   return (
-    <section className="discovery-section" id="topicos" aria-labelledby="topics-title">
+    <section className="discovery-section topics-page" id="topicos" aria-labelledby="topics-title">
       <div className="discovery-shell">
-        <div className="discovery-heading-row">
-          <div>
-            <h2 id="topics-title">Descubra os assuntos</h2>
-            <p className="discovery-lede">Um acontecimento, diferentes coberturas. Compare o que cada perspectiva destaca — e o que pode ficar de fora.</p>
+        <div className="topics-hero">
+          <div className="topics-hero__copy">
+            <p className="topics-kicker"><span aria-hidden="true" /> PRISMA NEWS <b>/</b> EXPLORAR
+            </p>
+            <h1 id="topics-title">Entenda o assunto <span>por todos os ângulos.</span></h1>
+            <p className="discovery-lede">Um acontecimento, diferentes coberturas. Compare o que cada perspectiva destaca — e descubra o contexto que uma manchete sozinha não mostra.</p>
+            <div className="topics-principles" aria-label="Como funciona a leitura Prisma">
+              <span><Eye size={16} aria-hidden="true" /> Perspectivas em contexto</span>
+              <span><Layers3 size={16} aria-hidden="true" /> Coberturas lado a lado</span>
+            </div>
           </div>
+          <aside className="topics-hero__visual" aria-label="Uma notícia pode ser observada por diferentes perspectivas">
+            <div className="topics-prism" aria-hidden="true"><i /><i /><i /></div>
+            <div className="topics-hero__visual-label"><Sparkles size={15} aria-hidden="true" /> LEITURA EM CONTEXTO</div>
+            <div className="topics-hero__spectrum" aria-hidden="true"><span /><span /><span /></div>
+            <p>Uma história.<br /><strong>Mais contexto para entender.</strong></p>
+            <span className="topics-hero__caption">Perspectivas diferentes, no mesmo lugar.</span>
+          </aside>
         </div>
 
-        <form className="discovery-search" onSubmit={submitSearch} role="search">
-          <label htmlFor="topic-search" className="sr-only">Buscar tópicos Premium</label>
-          <Search size={18} aria-hidden="true" />
-          <input id="topic-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={premium ? "Buscar por assunto, país ou tema" : "Busca disponível com Prisma Premium"} disabled={!premium} minLength={2} maxLength={120} />
-          <button type="submit" disabled={!premium || query.trim().length < 2}>Buscar</button>
-        </form>
+        <div className="topics-search-panel">
+          <div className="topics-search-panel__heading">
+            <div>
+              <span>Explore por tema</span>
+              <p>Encontre uma cobertura específica</p>
+            </div>
+            <span className="topics-premium-badge"><LockKeyhole size={13} aria-hidden="true" /> PREMIUM</span>
+          </div>
+          <form className="discovery-search" onSubmit={submitSearch} role="search">
+            <label htmlFor="topic-search" className="sr-only">Buscar tópicos Premium</label>
+            <Search size={19} aria-hidden="true" />
+            <input id="topic-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={premium ? "Buscar por assunto, país ou tema" : "Busca avançada disponível no Premium"} disabled={!premium} minLength={2} maxLength={120} />
+            <button type="submit" disabled={!premium || query.trim().length < 2}>Buscar <ArrowRight size={16} aria-hidden="true" /></button>
+          </form>
+        </div>
+
+        <div className="topics-list-heading">
+          <div>
+            <p className="topics-list-heading__eyebrow">AGORA EM DESTAQUE</p>
+            <h2>Assuntos para acompanhar</h2>
+          </div>
+          <span>Atualizado com frequência</span>
+        </div>
 
         {state === "loading" && topics.length === 0 && <div className="discovery-state" role="status" aria-live="polite">Carregando os tópicos mais recentes…</div>}
         {state === "error" && <div className="discovery-state discovery-state--error" role="alert"><p>Não foi possível carregar os tópicos agora.</p><button className="discovery-button discovery-button--outline" onClick={() => void load(0, activeQuery)}><RefreshCw size={16} aria-hidden="true" /> Tentar novamente</button></div>}
