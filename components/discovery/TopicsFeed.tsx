@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { ArrowDownRight, ArrowRight, Eye, Layers3, LockKeyhole, RefreshCw, Search, Sparkles } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { ArrowDownRight, ArrowLeft, ArrowRight, RefreshCw, Sparkles } from "lucide-react";
 import { sanitizePremiumFeed, sanitizePublicFeed, type Topic } from "@/lib/topics";
 import { AppPremiumCTA } from "@/components/discovery/AppPremiumCTA";
+import { TopicsLoading } from "@/components/discovery/TopicsLoading";
 
 type FeedState = "loading" | "ready" | "empty" | "error";
 type CategoryFilter = "tudo" | "economia" | "política" | "tecnologia" | "mundo" | "esportes";
@@ -53,28 +54,42 @@ function SpectrumRuler({ counts, showLabels = true }: { counts: Topic["perspecti
   );
 }
 
-function dateLabel(value: string | null) {
-  if (!value) return "Atualizado recentemente";
+function relativeTime(value: string | null) {
+  if (!value) return "Publicado recentemente";
   const parsed = new Date(value);
-  return Number.isNaN(parsed.getTime()) ? "Atualizado recentemente" : new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(parsed);
+  if (Number.isNaN(parsed.getTime())) return "Publicado recentemente";
+  const elapsed = Math.max(0, Date.now() - parsed.getTime());
+  if (elapsed < 60_000) return "Agora";
+  const units: [number, Intl.RelativeTimeFormatUnit][] = [
+    [60_000, "minute"], [3_600_000, "hour"], [86_400_000, "day"], [604_800_000, "week"], [2_592_000_000, "month"], [31_536_000_000, "year"],
+  ];
+  let unitIndex = 0;
+  while (unitIndex < units.length - 1 && elapsed >= units[unitIndex + 1][0]) unitIndex += 1;
+  const valueInUnit = Math.floor(elapsed / units[unitIndex][0]);
+  return new Intl.RelativeTimeFormat("pt-BR", { numeric: "always" }).format(-valueInUnit, units[unitIndex][1]);
+}
+
+function summaryPreview(value: string, maxLength = 120) {
+  const characters = Array.from(value.trim());
+  return characters.length > maxLength ? `${characters.slice(0, maxLength - 1).join("").trimEnd()}…` : value;
 }
 
 export function TopicsFeed() {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [state, setState] = useState<FeedState>("loading");
   const [premium, setPremium] = useState(false);
-  const [query, setQuery] = useState("");
-  const [activeQuery, setActiveQuery] = useState("");
   const [category, setCategory] = useState<CategoryFilter>("tudo");
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(false);
+  const [featuredIndex, setFeaturedIndex] = useState(0);
   const visibleTopics = topics.filter((topic) => matchesCategory(topic.categories, category));
+  const carouselTopics = visibleTopics.slice(0, 5);
+  const featuredTopic = carouselTopics[featuredIndex % Math.max(carouselTopics.length, 1)];
 
-  const load = useCallback(async (nextOffset = 0, search = "") => {
+  const load = useCallback(async (nextOffset = 0) => {
     setState("loading");
     try {
-      const params = new URLSearchParams({ limit: search ? "30" : "50", offset: String(nextOffset) });
-      if (search) params.set("q", search);
+      const params = new URLSearchParams({ limit: "50", offset: String(nextOffset) });
       const response = await fetch(`/api/topics?${params.toString()}`, { cache: "no-store" });
       const payload: unknown = await response.json();
       if (!response.ok) throw new Error("feed request failed");
@@ -84,7 +99,7 @@ export function TopicsFeed() {
       setPremium(isPremium);
       setTopics((current) => nextOffset === 0 ? incoming : [...current, ...incoming]);
       setOffset(nextOffset + incoming.length);
-      setHasMore(isPremium && incoming.length >= (search ? 30 : 50));
+      setHasMore(isPremium && incoming.length >= 50);
       setState(incoming.length || nextOffset > 0 ? "ready" : "empty");
     } catch {
       setState("error");
@@ -92,107 +107,74 @@ export function TopicsFeed() {
   }, []);
 
   useEffect(() => {
+    if (carouselTopics.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setInterval(() => setFeaturedIndex((current) => (current + 1) % carouselTopics.length), 6000);
+    return () => window.clearInterval(timer);
+  }, [carouselTopics.length]);
+
+  useEffect(() => {
     const timer = window.setTimeout(() => { void load(); }, 0);
     return () => window.clearTimeout(timer);
   }, [load]);
 
-  function submitSearch(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const value = query.trim();
-    if (value && value.length < 2) return;
-    setActiveQuery(value);
-    void load(0, value);
-  }
-
   return (
     <section className="discovery-section topics-page" id="topicos" aria-labelledby="topics-title">
       <div className="discovery-shell">
-        <div className="topics-hero">
-          <div className="topics-hero__copy">
-            <p className="topics-kicker"><span aria-hidden="true" /> PRISMA NEWS <b>/</b> EXPLORAR
-            </p>
-            <h1 id="topics-title">Entenda o assunto <span>por todos os ângulos.</span></h1>
-            <p className="discovery-lede">Um acontecimento, diferentes coberturas. Compare o que cada perspectiva destaca — e descubra o contexto que uma manchete sozinha não mostra.</p>
-            <div className="topics-principles" aria-label="Como funciona a leitura Prisma">
-              <span><Eye size={16} aria-hidden="true" /> Perspectivas em contexto</span>
-              <span><Layers3 size={16} aria-hidden="true" /> Coberturas lado a lado</span>
-            </div>
-          </div>
-          <aside className="topics-hero__visual" aria-label="Uma notícia pode ser observada por diferentes perspectivas">
-            <div className="topics-prism" aria-hidden="true"><i /><i /><i /></div>
-            <div className="topics-hero__visual-label"><Sparkles size={15} aria-hidden="true" /> LEITURA EM CONTEXTO</div>
-            <div className="topics-hero__spectrum" aria-hidden="true"><span /><span /><span /></div>
-            <p>Uma história.<br /><strong>Mais contexto para entender.</strong></p>
-            <span className="topics-hero__caption">Perspectivas diferentes, no mesmo lugar.</span>
-          </aside>
-        </div>
-
-        <div className="topics-search-panel">
-          <div className="topics-search-panel__heading">
-            <div>
-              <span>Explore por tema</span>
-              <p>Encontre uma cobertura específica</p>
-            </div>
-            <span className="topics-premium-badge"><LockKeyhole size={13} aria-hidden="true" /> PREMIUM</span>
-          </div>
-          <form className="discovery-search" onSubmit={submitSearch} role="search">
-            <label htmlFor="topic-search" className="sr-only">Buscar tópicos Premium</label>
-            <Search size={19} aria-hidden="true" />
-            <input id="topic-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={premium ? "Buscar por assunto, país ou tema" : "Busca avançada disponível no Premium"} disabled={!premium} minLength={2} maxLength={120} />
-            <button type="submit" disabled={!premium || query.trim().length < 2}>Buscar <ArrowRight size={16} aria-hidden="true" /></button>
-          </form>
-        </div>
-
         <div className="topics-list-heading">
           <div>
-            <p className="topics-list-heading__eyebrow">AGORA EM DESTAQUE</p>
-            <h2>Assuntos para acompanhar</h2>
+            <p className="topics-list-heading__eyebrow">PRISMA</p>
+            <h1 id="topics-title">Prisma - Feed</h1>
           </div>
-          <span>Atualizado com frequência</span>
+          <div className="topics-category-filters" role="group" aria-label="Filtrar tópicos por categoria">
+            {CATEGORY_FILTERS.map((item) => (
+              <button type="button" key={item} aria-pressed={category === item} onClick={() => { setCategory(item); setFeaturedIndex(0); }}>
+                {item === "tudo" ? "Tudo" : item.charAt(0).toUpperCase() + item.slice(1)}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="topics-category-filters" role="group" aria-label="Filtrar tópicos por categoria">
-          {CATEGORY_FILTERS.map((item) => (
-            <button type="button" key={item} aria-pressed={category === item} onClick={() => setCategory(item)}>
-              {item === "tudo" ? "Tudo" : item.charAt(0).toUpperCase() + item.slice(1)}
-            </button>
-          ))}
-        </div>
-
-        {state === "loading" && topics.length === 0 && <div className="discovery-state" role="status" aria-live="polite">Carregando os tópicos mais recentes…</div>}
-        {state === "error" && <div className="discovery-state discovery-state--error" role="alert"><p>Não foi possível carregar os tópicos agora.</p><button className="discovery-button discovery-button--outline" onClick={() => void load(0, activeQuery)}><RefreshCw size={16} aria-hidden="true" /> Tentar novamente</button></div>}
+        {state === "loading" && topics.length === 0 && <TopicsLoading />}
+        {state === "error" && <div className="discovery-state discovery-state--error" role="alert"><p>Não foi possível carregar os tópicos agora.</p><button className="discovery-button discovery-button--outline" onClick={() => void load()}><RefreshCw size={16} aria-hidden="true" /> Tentar novamente</button></div>}
         {state === "empty" && <div className="discovery-state">Ainda não há tópicos publicados. Volte em breve.</div>}
         {state === "ready" && topics.length > 0 && visibleTopics.length === 0 && <div className="discovery-state">Nenhum tópico nesta categoria por enquanto. Escolha outro tema para continuar explorando.</div>}
 
-        {visibleTopics.length > 0 && <Link className="featured-topic" href={`/topicos/${encodeURIComponent(visibleTopics[0].id)}`} aria-label={`Ver tópico em destaque: ${visibleTopics[0].title}`}>
-          {visibleTopics[0].imageUrl && <Image className="featured-topic__image" src={visibleTopics[0].imageUrl} alt="" fill sizes="(max-width: 760px) 100vw, 1180px" unoptimized />}
-          <span className="featured-topic__veil" aria-hidden="true" />
-          <span className="featured-topic__content">
-            <span className="featured-topic__tag"><Sparkles size={14} aria-hidden="true" /> Novo tópico em destaque</span>
-            <span className="featured-topic__date">{dateLabel(visibleTopics[0].publishedAt)}{visibleTopics[0].categories[0] ? ` · ${visibleTopics[0].categories[0]}` : ""}</span>
-            <strong>{visibleTopics[0].title}</strong>
-            <span className="featured-topic__summary">{visibleTopics[0].summary || "Leia e compare as principais perspectivas sobre este assunto."}</span>
-            <SpectrumRuler counts={visibleTopics[0].perspectiveCounts} />
-            <span className="featured-topic__action">Explorar cobertura <ArrowRight size={17} aria-hidden="true" /></span>
-          </span>
-        </Link>}
+        {featuredTopic && <section className="featured-carousel" aria-label="Tópicos em destaque" aria-roledescription="carrossel">
+          <Link className="featured-topic" href={`/topicos/${encodeURIComponent(featuredTopic.id)}`} aria-label={`Ver tópico em destaque: ${featuredTopic.title}`}>
+            <Image className="featured-topic__image" src={featuredTopic.imageUrl || "/fallback-banner.png"} alt="" fill sizes="(max-width: 760px) 100vw, 1180px" unoptimized priority />
+            <span className="featured-topic__veil" aria-hidden="true" />
+            <span className="featured-topic__content">
+              <span className="featured-topic__tag"><Sparkles size={14} aria-hidden="true" /> Em destaque · {featuredTopic.categories[0] || "Prisma News"}</span>
+              <time className="featured-topic__date" dateTime={featuredTopic.publishedAt ?? undefined}>{relativeTime(featuredTopic.publishedAt)}</time>
+              <strong>{featuredTopic.title}</strong>
+              <span className="featured-topic__summary">{summaryPreview(featuredTopic.summary || "Leia e compare as principais perspectivas sobre este assunto.")}</span>
+              <span className="featured-topic__action">Ler cobertura completa <ArrowRight size={17} aria-hidden="true" /></span>
+            </span>
+          </Link>
+          {carouselTopics.length > 1 && <div className="featured-carousel__controls">
+            <button type="button" aria-label="Tópico anterior" onClick={() => setFeaturedIndex((index) => (index - 1 + carouselTopics.length) % carouselTopics.length)}><ArrowLeft size={17} aria-hidden="true" /></button>
+            <div className="featured-carousel__dots" aria-label={`Tópico ${featuredIndex + 1} de ${carouselTopics.length}`}>
+              {carouselTopics.map((topic, index) => <button type="button" key={topic.id} aria-label={`Mostrar tópico ${index + 1}: ${topic.title}`} aria-current={index === featuredIndex ? "true" : undefined} onClick={() => setFeaturedIndex(index)} />)}
+            </div>
+            <button type="button" aria-label="Próximo tópico" onClick={() => setFeaturedIndex((index) => (index + 1) % carouselTopics.length)}><ArrowRight size={17} aria-hidden="true" /></button>
+          </div>}
+        </section>}
 
-        {visibleTopics.length > 1 && (
+        {visibleTopics.length > carouselTopics.length && (
           <div className="discovery-grid" aria-live="polite">
-            {visibleTopics.slice(1).map((topic, index) => (
+            {visibleTopics.slice(carouselTopics.length).map((topic, index) => (
               <article className={`topic-card topic-card--${index % 3}`} key={topic.id}>
                 <Link className="topic-card__link" href={`/topicos/${encodeURIComponent(topic.id)}`} aria-label={`Abrir tópico: ${topic.title}`}>
-                  <div className="topic-card__visual" style={topic.imageUrl ? { backgroundImage: `linear-gradient(180deg, transparent 38%, rgba(17,24,39,.7)), url("${topic.imageUrl.replaceAll('"', '')}")` } : undefined}>
-                    {topic.imageUrl && <Image className="topic-card__photo" src={topic.imageUrl} alt="" width={900} height={600} unoptimized />}
-                    {!topic.imageUrl && <span className="topic-card__visual-mark" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>}
+                  <div className="topic-card__visual">
+                    <Image className="topic-card__photo" src={topic.imageUrl || "/fallback.png"} alt="" fill sizes="(max-width: 700px) 100vw, 33vw" unoptimized />
                     <span className="topic-card__visual-label">Em perspectiva</span>
                   </div>
                   <div className="topic-card__body">
-                    <div className="topic-card__meta"><time>{dateLabel(topic.publishedAt)}</time>{topic.categories[0] && <span>{topic.categories[0]}</span>}</div>
+                    <div className="topic-card__meta"><time dateTime={topic.publishedAt ?? undefined}>{relativeTime(topic.publishedAt)}</time>{topic.categories[0] && <span>{topic.categories[0]}</span>}</div>
                     <h3>{topic.title}</h3>
-                    <p>{topic.summary || "Leia como diferentes veículos estão cobrindo este acontecimento."}</p>
+                    <p>{summaryPreview(topic.summary || "Leia como diferentes veículos estão cobrindo este acontecimento.")}</p>
                     <SpectrumRuler counts={topic.perspectiveCounts} />
-                    <div className="topic-card__foot"><span>{topic.articleCount ? `${topic.articleCount} matérias` : "Coberturas comparadas"}</span><span className="topic-card__open">Abrir análise <ArrowDownRight size={16} aria-hidden="true" /></span></div>
+                    <div className="topic-card__foot"><span>{topic.articleCount ? `${topic.articleCount} matérias` : "Coberturas comparadas"}</span><span className="topic-card__open">Ler cobertura completa <ArrowDownRight size={16} aria-hidden="true" /></span></div>
                   </div>
                 </Link>
               </article>
@@ -200,9 +182,9 @@ export function TopicsFeed() {
           </div>
         )}
 
-        {state === "loading" && topics.length > 0 && <p className="discovery-loading-more" role="status">Atualizando tópicos…</p>}
+        {state === "loading" && topics.length > 0 && <p className="discovery-loading-more" role="status">Atualizando assuntos…</p>}
         {!premium && topics.length > 0 && <div className="discovery-limit-note"><span>Você está vendo a prévia pública: até 3 tópicos.</span><Link href="/conta?returnTo=%2Ftopicos">Entrar na sua conta</Link></div>}
-        {premium && hasMore && <button className="discovery-button discovery-button--outline discovery-more" onClick={() => void load(offset, activeQuery)}>Carregar mais</button>}
+        {premium && hasMore && <button className="discovery-button discovery-button--outline discovery-more" onClick={() => void load(offset)} disabled={state === "loading"}>Carregar mais</button>}
         {!premium && <AppPremiumCTA />}
       </div>
     </section>

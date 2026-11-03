@@ -9,10 +9,7 @@ export function DiscoveryHeader() {
           <Image src="/logo.svg" alt="" width={34} height={34} priority />
           <span>Prisma <b>News</b></span>
         </Link>
-        <nav aria-label="Navegação de tópicos">
-          <Link href="/topicos">Descobrir</Link>
-          <Link className="discovery-header__download" href="/topicos#app-premium-title">Conheça o Premium</Link>
-        </nav>
+        <span className="discovery-header__edition">Perspectivas editoriais</span>
       </div>
     </header>
   );

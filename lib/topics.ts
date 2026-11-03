@@ -7,8 +7,10 @@ export type Topic = {
   categories: string[];
   articleCount: number | null;
   perspectiveCounts: { left: number; center: number; right: number };
-  perspectives: Partial<Record<"left" | "center" | "right", string>>;
-  articles: Partial<Record<"left" | "center" | "right", TopicArticle[]>>;
+  perspectives: Partial<Record<ArticlePerspective, string>>;
+  articles: Partial<Record<ArticlePerspective, TopicArticle[]>>;
+  lockedArticleCount?: number;
+  previewLimit?: number;
   fullSummary?: string;
   analysis?: string;
   blindspots?: string[];
@@ -16,12 +18,18 @@ export type Topic = {
   poll?: { question: string; options: string[] } | null;
 };
 
+export type ArticlePerspective = "left" | "center_left" | "center" | "center_right" | "right";
+
 export type TopicArticle = {
+  id: string;
   title: string;
   summary: string;
   source: string;
+  outletLogo: string | null;
+  author: string;
   publishedAt: string | null;
   url: string | null;
+  checked?: boolean;
 };
 
 type UnknownRecord = Record<string, unknown>;
@@ -56,15 +64,21 @@ function topicId(source: UnknownRecord): string {
 function topicArticle(value: unknown): TopicArticle | null {
   const source = record(value);
   if (!source) return null;
+  const outlet = record(source.outlet);
   const title = firstString(source, ["title", "headline"]);
   if (!title) return null;
   const url = safeUrl(firstString(source, ["url", "article_url", "link"]));
+  const outletLogo = safeUrl(firstString(source, ["outlet_logo", "outlet_image", "outletLogo", "image_url"]) || firstString(outlet ?? {}, ["outlet_logo", "outlet_image", "logo", "image_url"]));
   return {
+    id: firstString(source, ["id", "article_id", "uuid"]) || `${title}-${url ?? ""}`,
     title,
-    summary: firstString(source, ["preview", "summary", "excerpt", "description"]),
-    source: firstString(source, ["source_name", "source", "publisher"]),
+    summary: firstString(source, ["lead", "preview", "summary", "excerpt", "description"]),
+    source: firstString(outlet ?? {}, ["name"]) || firstString(source, ["source_name", "source", "publisher"]),
+    outletLogo,
+    author: firstString(source, ["author", "author_name"]),
     publishedAt: firstString(source, ["published_at", "publishedAt", "date"]) || null,
     url,
+    checked: typeof source.checked === "boolean" ? source.checked : undefined,
   };
 }
 
@@ -84,6 +98,34 @@ function perspectiveText(value: unknown): string {
   return source ? firstString(source, ["summary", "preview", "overview", "description"]) : "";
 }
 
+const ARTICLE_PERSPECTIVES: { key: ArticlePerspective; aliases: string[] }[] = [
+  { key: "left", aliases: ["left", "esquerda"] },
+  { key: "center_left", aliases: ["center_left", "center-left", "centro_esquerda", "centro-esquerda"] },
+  { key: "center", aliases: ["center", "centro"] },
+  { key: "center_right", aliases: ["center_right", "center-right", "centro_direita", "centro-direita"] },
+  { key: "right", aliases: ["right", "direita"] },
+];
+
+function sanitizeArticleGroups(source: UnknownRecord, limit: number): Partial<Record<ArticlePerspective, TopicArticle[]>> {
+  const groups = record(source.articles_by_perspective) ?? record(source.articles) ?? {};
+  const result: Partial<Record<ArticlePerspective, TopicArticle[]>> = {};
+  for (const { key, aliases } of ARTICLE_PERSPECTIVES) {
+    const raw = aliases.map((alias) => groups[alias] ?? source[`articles_${alias}`]).find(Array.isArray);
+    result[key] = articleList(raw, limit);
+  }
+  return result;
+}
+
+function paywallValues(source: UnknownRecord) {
+  const paywall = record(source.paywall) ?? {};
+  const locked = paywall.locked_article_count ?? source.lockedArticleCount;
+  const preview = paywall.preview_limit ?? source.previewLimit;
+  return {
+    lockedArticleCount: typeof locked === "number" && Number.isFinite(locked) && locked > 0 ? locked : 0,
+    previewLimit: typeof preview === "number" && Number.isFinite(preview) && preview > 0 ? Math.min(5, Math.floor(preview)) : 2,
+  };
+}
+
 export function sanitizePublicTopic(value: unknown): Topic | null {
   const source = record(value);
   if (!source) return null;
@@ -92,7 +134,6 @@ export function sanitizePublicTopic(value: unknown): Topic | null {
   if (!id || !title) return null;
 
   const perspectivesSource = record(source.perspectives) ?? record(source.spectrum) ?? {};
-  const articlesSource = record(source.articles_by_perspective) ?? record(source.articles) ?? {};
   const image = safeUrl(firstString(source, ["image_url", "imageUrl", "cover_image", "image"]));
   const count = source.article_count ?? source.articles_count;
   const blindspot = record(source.blindspot) ?? record(source.blind_spot) ?? {};
@@ -113,14 +154,12 @@ export function sanitizePublicTopic(value: unknown): Topic | null {
     },
     perspectives: {
       left: perspectiveText(perspectivesSource.left ?? perspectivesSource.esquerda ?? source.left_summary),
+      center_left: perspectiveText(perspectivesSource.center_left ?? perspectivesSource["center-left"] ?? source.center_left_summary),
       center: perspectiveText(perspectivesSource.center ?? perspectivesSource.centro ?? source.center_summary),
+      center_right: perspectiveText(perspectivesSource.center_right ?? perspectivesSource["center-right"] ?? source.center_right_summary),
       right: perspectiveText(perspectivesSource.right ?? perspectivesSource.direita ?? source.right_summary),
     },
-    articles: {
-      left: articleList(articlesSource.left ?? articlesSource.esquerda ?? source.left_articles),
-      center: articleList(articlesSource.center ?? articlesSource.centro ?? source.center_articles),
-      right: articleList(articlesSource.right ?? articlesSource.direita ?? source.right_articles),
-    },
+    articles: sanitizeArticleGroups(source, 3),
   };
 }
 
@@ -155,7 +194,14 @@ export function sanitizePremiumFeed(payload: unknown): Topic[] {
 export function sanitizePublicDetail(payload: unknown): Topic | null {
   const source = record(payload);
   if (!source) return null;
-  return sanitizePublicTopic(record(source.topic) ?? record(source.data) ?? source);
+  const detail = record(source.topic) ?? record(source.data) ?? source;
+  const topic = sanitizePublicTopic(detail);
+  if (!topic) return null;
+  const { lockedArticleCount, previewLimit } = paywallValues(detail);
+  topic.articles = sanitizeArticleGroups(detail, previewLimit);
+  topic.lockedArticleCount = lockedArticleCount;
+  topic.previewLimit = previewLimit;
+  return topic;
 }
 
 export function sanitizePremiumDetail(payload: unknown): Topic | null {
@@ -165,9 +211,9 @@ export function sanitizePremiumDetail(payload: unknown): Topic | null {
   const topic = sanitizePublicTopic(source);
   if (!topic) return null;
   const perspectives = record(source.perspectives) ?? record(source.spectrum) ?? {};
-  const groups = record(source.articles_by_perspective) ?? record(source.articles) ?? {};
   const official = record(source.official_source) ?? record(source.primary_source);
-  const pollSource = record(source.poll);
+  const pollSource = record(source.poll) ?? record(source.official_source_poll);
+  const { lockedArticleCount, previewLimit } = paywallValues(source);
   topic.summary = firstString(source, ["summary", "full_summary", "description"]) || topic.summary;
   topic.fullSummary = firstString(source, ["full_summary", "complete_summary", "summary_full"]);
   topic.analysis = firstString(source, ["analysis", "deep_analysis", "editorial_analysis"]);
@@ -182,14 +228,18 @@ export function sanitizePremiumDetail(payload: unknown): Topic | null {
   } : null;
   topic.perspectives = {
     left: perspectiveText(perspectives.left ?? perspectives.esquerda ?? source.left_analysis ?? source.left_summary) || topic.perspectives.left,
+    center_left: perspectiveText(perspectives.center_left ?? perspectives["center-left"] ?? source.center_left_analysis ?? source.center_left_summary) || topic.perspectives.center_left,
     center: perspectiveText(perspectives.center ?? perspectives.centro ?? source.center_analysis ?? source.center_summary) || topic.perspectives.center,
+    center_right: perspectiveText(perspectives.center_right ?? perspectives["center-right"] ?? source.center_right_analysis ?? source.center_right_summary) || topic.perspectives.center_right,
     right: perspectiveText(perspectives.right ?? perspectives.direita ?? source.right_analysis ?? source.right_summary) || topic.perspectives.right,
   };
-  topic.articles = {
-    left: articleList(groups.left ?? groups.esquerda ?? source.left_articles, 100),
-    center: articleList(groups.center ?? groups.centro ?? source.center_articles, 100),
-    right: articleList(groups.right ?? groups.direita ?? source.right_articles, 100),
-  };
+  topic.articles = sanitizeArticleGroups(source, 100);
+  topic.lockedArticleCount = lockedArticleCount;
+  topic.previewLimit = previewLimit;
+  const officialSources = strings(official?.sources);
+  if (topic.officialSource && !topic.officialSource.url && officialSources[0]) {
+    topic.officialSource.url = safeUrl(officialSources[0]) ?? "";
+  }
   return topic;
 }
 
