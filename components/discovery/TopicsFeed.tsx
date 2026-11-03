@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
-import { ArrowDownRight, ArrowLeft, ArrowRight, RefreshCw, Sparkles } from "lucide-react";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
+import { ArrowDownRight, ArrowLeft, ArrowRight, RefreshCw, Search, Sparkles, X } from "lucide-react";
 import { sanitizePremiumFeed, sanitizePublicFeed, type Topic } from "@/lib/topics";
 import { AppPremiumCTA } from "@/components/discovery/AppPremiumCTA";
 import { TopicsLoading } from "@/components/discovery/TopicsLoading";
 
 type FeedState = "loading" | "ready" | "empty" | "error";
+type SearchMessage = "" | "validation" | "access" | "error";
 type CategoryFilter = "tudo" | "economia" | "política" | "tecnologia" | "mundo" | "esportes";
 
 const CATEGORY_FILTERS: CategoryFilter[] = ["tudo", "economia", "política", "tecnologia", "mundo", "esportes"];
@@ -29,9 +30,9 @@ function matchesCategory(categories: string[], filter: CategoryFilter) {
 
 function SpectrumRuler({ counts, showLabels = true }: { counts: Topic["perspectiveCounts"]; showLabels?: boolean }) {
   const segments = [
-    { key: "left", label: "Esquerda", count: counts.left, color: "#bd527d" },
-    { key: "center", label: "Centro", count: counts.center, color: "#89749a" },
-    { key: "right", label: "Direita", count: counts.right, color: "#527cc3" },
+    { key: "left", label: "Esquerda", count: counts.left, color: "#e53935" },
+    { key: "center", label: "Centro", count: counts.center, color: "#858585" },
+    { key: "right", label: "Direita", count: counts.right, color: "#2563eb" },
   ];
   const total = segments.reduce((sum, segment) => sum + segment.count, 0);
   if (total === 0) return null;
@@ -82,33 +83,82 @@ export function TopicsFeed() {
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [featuredIndex, setFeaturedIndex] = useState(0);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchDraft, setSearchDraft] = useState("");
+  const [activeQuery, setActiveQuery] = useState("");
+  const [searchMessage, setSearchMessage] = useState<SearchMessage>("");
+  const activeQueryRef = useRef("");
+  const requestId = useRef(0);
+  const activeRequest = useRef<AbortController | null>(null);
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const visibleTopics = topics.filter((topic) => matchesCategory(topic.categories, category));
   const carouselTopics = visibleTopics.slice(0, 5);
   const featuredTopic = carouselTopics[featuredIndex % Math.max(carouselTopics.length, 1)];
 
-  const load = useCallback(async (nextOffset = 0) => {
+  const load = useCallback(async (nextOffset = 0, searchTerm = "") => {
+    const search = searchTerm.trim();
+    if (search && (search.length < 2 || search.length > 120)) {
+      setSearchMessage("validation");
+      return;
+    }
+    activeRequest.current?.abort();
+    const controller = new AbortController();
+    activeRequest.current = controller;
+    const currentRequestId = ++requestId.current;
     setState("loading");
+    setSearchMessage("");
+    if (nextOffset === 0) {
+      setTopics([]);
+      setFeaturedIndex(0);
+    }
     try {
-      const params = new URLSearchParams({ limit: "50", offset: String(nextOffset) });
-      const response = await fetch(`/api/topics?${params.toString()}`, { cache: "no-store" });
+      const limit = search ? 20 : 50;
+      const params = new URLSearchParams({ limit: String(limit), offset: String(nextOffset) });
+      if (search) params.set("q", search);
+      const response = await fetch(`/api/topics?${params.toString()}`, { cache: "no-store", signal: controller.signal });
       const payload: unknown = await response.json();
-      if (!response.ok) throw new Error("feed request failed");
-      const envelope = payload as { topics?: unknown; access?: string };
+      if (currentRequestId !== requestId.current) return;
+      const envelope = payload as { topics?: unknown; access?: string; error?: string };
+      if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
+          setPremium(false);
+          setSearchMessage("access");
+          setState("ready");
+          setTopics([]);
+          return;
+        }
+        if (response.status === 400 || response.status === 422) {
+          setSearchMessage("validation");
+          setState("ready");
+          setTopics([]);
+          return;
+        }
+        throw new Error(envelope.error || "feed request failed");
+      }
       const isPremium = envelope.access === "premium";
       const incoming = isPremium ? sanitizePremiumFeed(envelope.topics ?? payload) : sanitizePublicFeed(envelope.topics ?? payload);
+      const topicsEnvelope = envelope.topics as { meta?: { has_more?: unknown } } | undefined;
       setPremium(isPremium);
       setTopics((current) => nextOffset === 0 ? incoming : [...current, ...incoming]);
       setOffset(nextOffset + incoming.length);
-      setHasMore(isPremium && incoming.length >= 50);
+      setHasMore(isPremium && (typeof topicsEnvelope?.meta?.has_more === "boolean" ? topicsEnvelope.meta.has_more : incoming.length >= limit));
       setState(incoming.length || nextOffset > 0 ? "ready" : "empty");
-    } catch {
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      if (currentRequestId !== requestId.current) return;
+      if (search) {
+        setSearchMessage("error");
+        setState("ready");
+        setTopics([]);
+        return;
+      }
       setState("error");
     }
   }, []);
 
   useEffect(() => {
     if (carouselTopics.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const timer = window.setInterval(() => setFeaturedIndex((current) => (current + 1) % carouselTopics.length), 6000);
+    const timer = window.setInterval(() => setFeaturedIndex((current) => (current + 1) % carouselTopics.length), 15000);
     return () => window.clearInterval(timer);
   }, [carouselTopics.length]);
 
@@ -117,26 +167,94 @@ export function TopicsFeed() {
     return () => window.clearTimeout(timer);
   }, [load]);
 
+  useEffect(() => {
+    if (!searchOpen || !premium) return;
+    const term = searchDraft.trim();
+    if (!term && !activeQueryRef.current) return;
+    activeRequest.current?.abort();
+    requestId.current += 1;
+    if (term && (term.length < 2 || term.length > 120)) {
+      debounceTimer.current = setTimeout(() => {
+        setSearchMessage("validation");
+        setState("ready");
+        setTopics([]);
+      }, 0);
+      return () => {
+        if (debounceTimer.current) clearTimeout(debounceTimer.current);
+      };
+    }
+    debounceTimer.current = setTimeout(() => {
+      activeQueryRef.current = term;
+      setActiveQuery(term);
+      void load(0, term);
+    }, 450);
+    return () => {
+      if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    };
+  }, [load, premium, searchDraft, searchOpen]);
+
+  function submitSearch(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const term = searchDraft.trim();
+    if (term.length < 2 || term.length > 120) {
+      setSearchMessage("validation");
+      return;
+    }
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    activeQueryRef.current = term;
+    setActiveQuery(term);
+    void load(0, term);
+  }
+
+  function closeSearch() {
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    setSearchOpen(false);
+    setSearchDraft("");
+    activeQueryRef.current = "";
+    setActiveQuery("");
+    setSearchMessage("");
+    if (activeQuery) void load(0, "");
+  }
+
   return (
     <section className="discovery-section topics-page" id="topicos" aria-labelledby="topics-title">
       <div className="discovery-shell">
         <div className="topics-list-heading">
           <div>
-            <p className="topics-list-heading__eyebrow">PRISMA</p>
-            <h1 id="topics-title">Prisma - Feed</h1>
+            <h1 id="topics-title"><Image src="/logo.svg" alt="" width={42} height={42} priority /> Prisma - Feed</h1>
           </div>
-          <div className="topics-category-filters" role="group" aria-label="Filtrar tópicos por categoria">
-            {CATEGORY_FILTERS.map((item) => (
-              <button type="button" key={item} aria-pressed={category === item} onClick={() => { setCategory(item); setFeaturedIndex(0); }}>
-                {item === "tudo" ? "Tudo" : item.charAt(0).toUpperCase() + item.slice(1)}
-              </button>
-            ))}
+          <div className="topics-toolbar">
+            <div className="topics-category-filters" role="group" aria-label="Filtrar tópicos por categoria">
+              {CATEGORY_FILTERS.map((item) => (
+                <button type="button" key={item} aria-pressed={category === item} onClick={() => { setCategory(item); setFeaturedIndex(0); }}>
+                  {item === "tudo" ? "Tudo" : item.charAt(0).toUpperCase() + item.slice(1)}
+                </button>
+              ))}
+            </div>
+            {premium && <div className={`topic-search${searchOpen ? " topic-search--open" : ""}`}>
+              <button type="button" className="topic-search__trigger" aria-label="Pesquisar tópicos" aria-expanded={searchOpen} onClick={() => {
+                setSearchOpen(true);
+                window.setTimeout(() => document.getElementById("premium-topic-search")?.focus(), 0);
+              }}><Search size={17} aria-hidden="true" /></button>
+              <form className="topic-search__form" role="search" onSubmit={submitSearch}>
+                <label htmlFor="premium-topic-search" className="sr-only">Pesquisar tópicos no Prisma Premium</label>
+                <input id="premium-topic-search" value={searchDraft} onChange={(event) => setSearchDraft(event.target.value)} placeholder="Pesquisar assuntos" maxLength={121} tabIndex={searchOpen ? 0 : -1} aria-hidden={!searchOpen} />
+                <button type="submit" className="topic-search__submit" aria-label="Pesquisar" tabIndex={searchOpen ? 0 : -1}><Search size={17} aria-hidden="true" /></button>
+                <button type="button" className="topic-search__close" aria-label="Fechar pesquisa" onClick={closeSearch} tabIndex={searchOpen ? 0 : -1}><X size={16} aria-hidden="true" /></button>
+              </form>
+            </div>}
           </div>
         </div>
 
+        {searchMessage && <p className={`topic-search-message topic-search-message--${searchMessage}`} role="status" aria-live="polite">
+          {searchMessage === "validation" && "Digite entre 2 e 120 caracteres para pesquisar."}
+          {searchMessage === "access" && "A busca é exclusiva do Prisma Premium. Assine pelo aplicativo para pesquisar tópicos."}
+          {searchMessage === "error" && "Não foi possível pesquisar agora. Confira sua conexão e tente novamente."}
+        </p>}
+
         {state === "loading" && topics.length === 0 && <TopicsLoading />}
         {state === "error" && <div className="discovery-state discovery-state--error" role="alert"><p>Não foi possível carregar os tópicos agora.</p><button className="discovery-button discovery-button--outline" onClick={() => void load()}><RefreshCw size={16} aria-hidden="true" /> Tentar novamente</button></div>}
-        {state === "empty" && <div className="discovery-state">Ainda não há tópicos publicados. Volte em breve.</div>}
+        {state === "empty" && <div className="discovery-state">{activeQuery ? `Nenhum tópico encontrado para “${activeQuery}”.` : "Ainda não há tópicos publicados. Volte em breve."}</div>}
         {state === "ready" && topics.length > 0 && visibleTopics.length === 0 && <div className="discovery-state">Nenhum tópico nesta categoria por enquanto. Escolha outro tema para continuar explorando.</div>}
 
         {featuredTopic && <section className="featured-carousel" aria-label="Tópicos em destaque" aria-roledescription="carrossel">
@@ -184,7 +302,7 @@ export function TopicsFeed() {
 
         {state === "loading" && topics.length > 0 && <p className="discovery-loading-more" role="status">Atualizando assuntos…</p>}
         {!premium && topics.length > 0 && <div className="discovery-limit-note"><span>Você está vendo a prévia pública: até 3 tópicos.</span><Link href="/conta?returnTo=%2Ftopicos">Entrar na sua conta</Link></div>}
-        {premium && hasMore && <button className="discovery-button discovery-button--outline discovery-more" onClick={() => void load(offset)} disabled={state === "loading"}>Carregar mais</button>}
+        {premium && hasMore && <button className="discovery-button discovery-button--outline discovery-more" onClick={() => void load(offset, activeQuery)} disabled={state === "loading"}>Carregar mais</button>}
         {!premium && <AppPremiumCTA />}
       </div>
     </section>

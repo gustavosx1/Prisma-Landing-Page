@@ -24,6 +24,16 @@ async function publicPreview() {
 }
 
 export async function GET(request: NextRequest) {
+  const query = request.nextUrl.searchParams;
+  const search = query.get("q")?.trim();
+  const requestedLimit = Number(query.get("limit") ?? (search ? 20 : 50));
+  const requestedOffset = Number(query.get("offset") ?? 0);
+  if ((search !== undefined && search !== null && (search.length < 2 || search.length > 120)) ||
+      !Number.isInteger(requestedLimit) || requestedLimit < 1 || requestedLimit > (search ? 30 : 50) ||
+      !Number.isInteger(requestedOffset) || requestedOffset < 0 || requestedOffset > 10000) {
+    return response({ error: "Parâmetros de busca ou paginação inválidos." }, 400, false);
+  }
+
   let session = null;
   try {
     session = await authorizedSession();
@@ -31,17 +41,12 @@ export async function GET(request: NextRequest) {
     return response({ error: "Autenticação indisponível." }, 503, false);
   }
 
-  if (session && await checkPremium(session.accessToken)) {
-    const query = request.nextUrl.searchParams;
-    const search = query.get("q")?.trim();
-    const requestedLimit = Number(query.get("limit") ?? (search ? 30 : 50));
-    const requestedOffset = Number(query.get("offset") ?? 0);
-    const maxLimit = search ? 30 : 50;
-    if ((search && (search.length < 2 || search.length > 120)) ||
-        !Number.isInteger(requestedLimit) || requestedLimit < 1 || requestedLimit > maxLimit ||
-        !Number.isInteger(requestedOffset) || requestedOffset < 0 || requestedOffset > 10000) {
-      return response({ error: "Parâmetros de busca ou paginação inválidos." }, 400, true);
-    }
+  const isPremium = session ? await checkPremium(session.accessToken) : false;
+  if (search && !isPremium) {
+    return response({ error: "A busca de tópicos exige uma assinatura Prisma Premium ativa." }, 403, Boolean(session));
+  }
+
+  if (session && isPremium) {
 
     const path = search
       ? `feed/topics/search?q=${encodeURIComponent(search)}&limit=${requestedLimit}&offset=${requestedOffset}`
@@ -53,6 +58,9 @@ export async function GET(request: NextRequest) {
         cache: "no-store",
       });
       if (result.ok) return response({ topics: await result.json(), access: "premium" }, 200, true);
+      if (search && (result.status === 401 || result.status === 403)) {
+        return response({ error: "A busca de tópicos exige uma assinatura Prisma Premium ativa." }, result.status, true);
+      }
       if (result.status !== 401 && result.status !== 403) {
         return response({ error: "Não foi possível carregar os tópicos." }, 502, true);
       }

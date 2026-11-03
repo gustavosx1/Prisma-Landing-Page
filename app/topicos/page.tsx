@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { DiscoveryHeader } from "@/components/discovery/DiscoveryHeader";
 import { TopicsFeed } from "@/components/discovery/TopicsFeed";
 import { Footer } from "@/components/sections/Footer";
 import { authorizedSession } from "@/lib/server/topics-api";
@@ -16,5 +15,5 @@ export default async function TopicsPage() {
   const session = await authorizedSession().catch(() => null);
   if (!session) redirect("/conta?returnTo=%2Ftopicos");
 
-  return <><DiscoveryHeader /><TopicsFeed /><Footer /></>;
+  return <><TopicsFeed /><Footer /></>;
 }

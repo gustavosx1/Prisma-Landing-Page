@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { ArrowLeft, ArrowUpRight, BadgeCheck, CircleHelp, LockKeyhole, RefreshCw } from "lucide-react";
 import { AppPremiumCTA } from "@/components/discovery/AppPremiumCTA";
-import { sanitizePremiumDetail, sanitizePublicDetail, type ArticlePerspective, type Topic, type TopicArticle } from "@/lib/topics";
+import { sanitizePremiumDetail, sanitizePublicDetail, type Topic, type TopicArticle } from "@/lib/topics";
 import { TopicsLoading } from "@/components/discovery/TopicsLoading";
 
 type ApiDetail = { topic?: unknown; access?: "preview" | "premium"; error?: string };
@@ -16,13 +16,20 @@ function dateLabel(value: string | null) {
   return Number.isNaN(parsed.getTime()) ? "Data de publicação indisponível" : new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(parsed);
 }
 
-const PERSPECTIVES: { key: ArticlePerspective; label: string; color: string }[] = [
+type DetailPerspective = "left" | "center" | "right";
+
+const PERSPECTIVES: { key: DetailPerspective; label: string; color: string }[] = [
   { key: "left", label: "Esquerda", color: "left" },
-  { key: "center_left", label: "Centro-esquerda", color: "center-left" },
   { key: "center", label: "Centro", color: "center" },
-  { key: "center_right", label: "Centro-direita", color: "center-right" },
   { key: "right", label: "Direita", color: "right" },
 ];
+
+function articlesForPerspective(topic: Topic, perspective: DetailPerspective) {
+  if (perspective === "center") {
+    return [...(topic.articles.center_left ?? []), ...(topic.articles.center ?? []), ...(topic.articles.center_right ?? [])];
+  }
+  return topic.articles[perspective] ?? [];
+}
 
 function articleLead(value: string) {
   const characters = Array.from(value.trim());
@@ -57,7 +64,7 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
   const [topic, setTopic] = useState<Topic | null>(initialTopic);
   const [state, setState] = useState<"loading" | "ready" | "error">(initialTopic ? "ready" : "loading");
   const [premium, setPremium] = useState(initialPremium);
-  const [activePerspective, setActivePerspective] = useState<ArticlePerspective>("center");
+  const [activePerspective, setActivePerspective] = useState<DetailPerspective>("center");
 
   const load = useCallback(async () => {
     setState("loading");
@@ -83,7 +90,7 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
   if (state === "loading" && !topic) return <main className="discovery-detail-shell"><TopicsLoading variant="detail" /></main>;
   if ((state === "error" && !topic) || !topic) return <main className="discovery-detail-shell"><div className="discovery-state discovery-state--error" role="alert"><p>Não foi possível abrir este tópico.</p><button className="discovery-button discovery-button--outline" onClick={() => void load()}><RefreshCw size={16} aria-hidden="true" /> Tentar novamente</button></div><Link className="discovery-text-link" href="/topicos"><ArrowLeft size={16} aria-hidden="true" /> Voltar aos tópicos</Link></main>;
 
-  const selectedArticles = topic.articles[activePerspective] ?? [];
+  const selectedArticles = articlesForPerspective(topic, activePerspective);
   const perspectiveLabel = PERSPECTIVES.find(({ key }) => key === activePerspective)?.label ?? "";
 
   return (
@@ -100,8 +107,8 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
           <div className="topic-detail__meta">{topic.publishedAt && <time>{dateLabel(topic.publishedAt)}</time>}{topic.articleCount !== null && <span>{topic.articleCount} matérias analisadas</span>}</div>
         </header>
 
-        <section className="topic-perspectives" aria-labelledby="perspectives-heading">
-          <div className="topic-section-heading"><div><p className="discovery-eyebrow">O mesmo fato, outros enquadramentos</p><h2 id="perspectives-heading">Coberturas por perspectiva</h2></div></div>
+        <section className="topic-perspectives" aria-label="Coberturas por perspectiva">
+          <div className="topic-section-heading"><div><p className="discovery-eyebrow">O mesmo fato, outros enquadramentos</p></div></div>
           <div className="topic-perspective-tabs" role="tablist" aria-label="Filtrar veículos por perspectiva">
             {PERSPECTIVES.map(({ key, label }, index) => <button type="button" role="tab" key={key} id={`perspective-tab-${key}`} aria-controls="perspective-panel" aria-selected={activePerspective === key} tabIndex={activePerspective === key ? 0 : -1} onClick={() => setActivePerspective(key)} onKeyDown={(event) => {
               if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
@@ -111,7 +118,7 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
               setActivePerspective(nextKey);
               document.getElementById(`perspective-tab-${nextKey}`)?.focus();
             }}>
-              <span className={`topic-perspective-tabs__dot topic-perspective-tabs__dot--${key.replace("_", "-")}`} aria-hidden="true" />{label}<span className="topic-perspective-tabs__count">{topic.articles[key]?.length ?? 0}</span>
+              <span className={`topic-perspective-tabs__dot topic-perspective-tabs__dot--${key}`} aria-hidden="true" />{label}<span className="topic-perspective-tabs__count">{articlesForPerspective(topic, key).length}</span>
             </button>)}
           </div>
           <div className={`topic-perspective-panel topic-perspective-panel--${activePerspective.replace("_", "-")}`} role="tabpanel" id="perspective-panel" aria-labelledby={`perspective-tab-${activePerspective}`}>
