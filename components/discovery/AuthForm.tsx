@@ -76,11 +76,13 @@ export function AuthForm() {
     <div className="auth-layout">
       <aside className="auth-story">
         <Image className="auth-story__logo" src="/logo.svg" alt="Prisma News" width={300} height={300} priority />
-        <p className="auth-story__eyebrow">PRISMA NEWS · LEITURA EM CONTEXTO</p>
-        <h2>O mundo não cabe em uma manchete.</h2>
-        <p>Entre para explorar os acontecimentos por diferentes perspectivas e descobrir o que cada cobertura deixa em evidência.</p>
-        <div className="auth-story__spectrum" aria-label="Perspectivas: esquerda, centro e direita"><i /><i /><i /></div>
-        <small>Esquerda <span>·</span> Centro <span>·</span> Direita</small>
+        <div className="auth-story__copy">
+          <p className="auth-story__eyebrow">PRISMA NEWS · LEITURA EM CONTEXTO</p>
+          <h2>O mundo não cabe em uma manchete.</h2>
+          <p>Entre para explorar os acontecimentos por diferentes perspectivas e descobrir o que cada cobertura deixa em evidência.</p>
+          <div className="auth-story__spectrum" aria-label="Perspectivas: esquerda, centro e direita"><i /><i /><i /></div>
+          <small>Esquerda <span>·</span> Centro <span>·</span> Direita</small>
+        </div>
       </aside>
       <section className="auth-card" aria-labelledby="auth-title">
         <p className="discovery-eyebrow">Sua leitura, do seu jeito</p>
