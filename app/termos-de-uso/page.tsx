@@ -32,6 +32,7 @@ export default function TermsOfUsePage() {
     "A assinatura Premium mensal custa R$ 9,90, com renovação automática conforme as condições da loja de aplicativos.",
     "Os preços e condições de assinatura são definidos pela Apple App Store e Google Play, conforme o dispositivo.",
     "Você pode cancelar a renovação automática diretamente na loja em que adquiriu a assinatura.",
+    "Os direitos legais do consumidor, inclusive o direito de arrependimento quando aplicável, são preservados.",
     "O conteúdo do app é editorial, informativo e não substitui orientação profissional ou aconselhamento específico.",
     "Você deve usar o app de forma responsável e não pode copiar, reproduzir, explorar ou distribuir conteúdo sem autorização.",
     "Podemos suspender ou encerrar contas em casos de violação desses termos, uso indevido ou risco ao serviço."
@@ -54,17 +55,17 @@ export default function TermsOfUsePage() {
             </h1>
 
             <div className="mt-4 rounded-xl border border-purple-800/40 bg-[#120920] p-4 text-sm text-slate-200">
-              <p><strong>Última atualização:</strong> 14/09/2026</p>
-              <p className="mt-1"><strong>Versão:</strong> 1.0.0</p>
+              <p><strong>Última atualização:</strong> 03/11/2026</p>
+              <p className="mt-1"><strong>Versão:</strong> 1.1.0</p>
               <p className="mt-1"><strong>Titular do serviço:</strong> GUSTAVO DOS SANTOS BANDEIRA ROCHA</p>
               <p className="mt-1"><strong>CNPJ:</strong> 67.897.516/0001-51</p>
               
             </div>
 
             <p className="mt-4 leading-relaxed text-slate-200">
-              Estes Termos de Uso regem o uso do aplicativo <strong>Prisma News</strong> e dos serviços
-              disponibilizados por meio dele. Ao acessar ou usar o aplicativo, o usuário confirma que leu,
-              compreendeu e aceita estas regras, bem como a <a href="/privacidade" className="text-purple-300 underline decoration-purple-500/70 underline-offset-2 hover:text-purple-200">Política de Privacidade</a>.
+              Estes Termos regem o aplicativo Prisma News e os serviços digitais nele oferecidos pelo titular
+              identificado acima. A contratação de assinatura é concluída pela loja de aplicativos, que também
+              apresenta as condições comerciais finais. Leia estes Termos e a <a href="/privacidade" className="text-purple-300 underline decoration-purple-500/70 underline-offset-2 hover:text-purple-200">Política de Privacidade</a> antes de usar os recursos.
             </p>
           </header>
 
@@ -85,9 +86,9 @@ export default function TermsOfUsePage() {
             <div>
               <h2 className="text-2xl font-bold text-white">2. Elegibilidade e criação de conta</h2>
               <p className="mt-3 leading-relaxed text-slate-200">
-                Para utilizar o Prisma News, o usuário deve ter capacidade civil para contratar, conforme a legislação
-                aplicável. O acesso pode ser realizado por e-mail e senha, login com Google ou Sign in with Apple,
-                conforme os métodos disponibilizados no aplicativo.
+                A conta e a contratação de recursos pagos destinam-se a pessoas com capacidade civil para contratar.
+                O serviço não é direcionado a menores de 18 anos. Os métodos de acesso disponíveis podem variar entre
+                o aplicativo e o site.
               </p>
               <ul className="mt-3 list-disc space-y-2 pl-6 text-slate-200 marker:text-purple-300">
                 <li>O usuário deve fornecer informações verdadeiras, completas e atualizadas durante o cadastro.</li>
@@ -101,30 +102,32 @@ export default function TermsOfUsePage() {
               <h2 className="text-2xl font-bold text-white">3. Descrição do serviço</h2>
               <p className="mt-3 leading-relaxed text-slate-200">
                 O Prisma News é uma plataforma de conteúdo editorial e informativo, disponível para dispositivos móveis
-                iOS e Android. O serviço pode incluir conteúdos gratuitos, conteúdos exclusivos para assinantes e
-                funcionalidades de acesso, personalização, alertas, notificações e experiência de leitura.
+                iOS e Android e, em parte, pela web. O serviço pode incluir conteúdos gratuitos, recursos Premium,
+                funcionalidades de conta, alertas, notificações e ferramentas de leitura e comparação de perspectivas.
               </p>
               <p className="mt-3 leading-relaxed text-slate-200">
-                O acesso ao conteúdo pode variar conforme a disponibilidade do plano adquirido, a conta do usuário e as
-                regras da loja de aplicativos. O serviço pode disponibilizar conteúdo em formatos diferentes e pode
-                incorporar melhorias, atualizações e novas funcionalidades ao longo do tempo.
+                O acesso depende do plano contratado, do estado da assinatura confirmado pela loja e da disponibilidade
+                técnica do serviço. As funcionalidades podem ser corrigidas ou atualizadas. Não prometemos disponibilidade
+                ininterrupta; indisponibilidades não afastam direitos e soluções previstos em lei.
               </p>
             </div>
 
             <div>
               <h2 className="text-2xl font-bold text-white">4. Assinaturas e cobrança</h2>
               <p className="mt-3 leading-relaxed text-slate-200">
-                O Prisma News pode oferecer acesso a conteúdos e recursos Premium por meio de assinatura recorrente.
-                A assinatura Premium é mensal e custa R$ 9,90, exceto por ofertas promocionais válidas. O preço e as
-                condições aplicáveis são apresentados pela loja antes da confirmação da compra.
+                O Prisma News pode oferecer acesso a conteúdos e recursos Premium por assinatura recorrente. O plano
+                mensal de referência é R$ 9,90; preço, período, tributos, eventual oferta, renovação e demais condições
+                efetivamente aplicáveis devem ser conferidos na tela de compra da Apple App Store ou Google Play antes
+                da confirmação. Em caso de divergência, prevalecem as condições mostradas pela loja para aquela compra,
+                sem prejuízo dos direitos legais do consumidor.
               </p>
               <ul className="mt-3 list-disc space-y-2 pl-6 text-slate-200 marker:text-purple-300">
-                <li>Os preços, condições de oferta e disponibilidade dos planos são apresentados pela Apple App Store ou Google Play antes da compra.</li>
-                <li>A cobrança é processada exclusivamente pela loja de aplicativos e não diretamente pelo aplicativo, salvo quando expressamente informado.</li>
-                <li>A assinatura é renovada automaticamente ao fim de cada ciclo, a menos que o usuário a cancele antes do vencimento do período vigente.</li>
-                <li>O valor da assinatura pode ser alterado por decisão da loja ou do titular do serviço, conforme as regras da plataforma e as notificações aplicáveis.</li>
-                <li>Durante outubro de 2026, novos usuários podem obter o primeiro mês do Premium por R$ 2,90; a partir do segundo mês, a assinatura mensal renova por R$ 9,90, conforme as condições e a disponibilidade apresentadas na loja no momento da compra.</li>
-                <li>Outros testes gratuitos, descontos, promoções ou ofertas especiais, quando disponíveis, estarão sujeitos às condições específicas informadas na compra.</li>
+                <li>A loja informa o preço final, o período, a renovação e as condições da oferta antes da confirmação; verifique esses dados na tela de compra.</li>
+                <li>O pagamento e a gestão da assinatura são processados pela loja da compra; este site não recebe dados de cartão nem realiza checkout.</li>
+                <li>Quando o plano indicar renovação automática, novas cobranças seguem os ciclos e condições informados pela loja até o cancelamento.</li>
+                <li>Cancelamentos, cobranças e pedidos de reembolso podem ser iniciados nas ferramentas oficiais da loja. Isso não restringe direitos assegurados pela legislação brasileira.</li>
+                <li>Qualquer mudança de preço ou condição para renovações deve ser comunicada e aplicada conforme a legislação e as regras da loja, podendo o usuário cancelar antes da próxima cobrança.</li>
+                <li>Testes, descontos ou promoções só se aplicam se estiverem expressamente disponíveis e descritos na tela de compra no momento da contratação.</li>
               </ul>
               <p className="mt-3 leading-relaxed text-slate-200">
                 Recursos de busca assistida por inteligência artificial podem localizar fontes primárias oficiais que
@@ -135,17 +138,24 @@ export default function TermsOfUsePage() {
                 O usuário reconhece que ao iniciar uma assinatura, entende que a cobrança será feita de acordo com o
                 método de pagamento habilitado na loja de aplicativos e de acordo com as políticas daquela plataforma.
               </p>
+              <p className="mt-3 leading-relaxed text-slate-200">
+                Se a contratação ocorrer fora do estabelecimento comercial, o consumidor poderá exercer o direito de
+                arrependimento no prazo legal de 7 dias, quando aplicável, pelos canais da loja e/ou pelo suporte do
+                Prisma News. O pedido será encaminhado para processamento e eventual estorno conforme a lei e o fluxo
+                da loja. Nada nestes Termos elimina o direito de arrependimento ou outros direitos inderrogáveis.
+              </p>
             </div>
 
             <div>
               <h2 className="text-2xl font-bold text-white">5. Cancelamento e gerenciamento da assinatura</h2>
               <p className="mt-3 leading-relaxed text-slate-200">
-                O cancelamento da renovação automática deve ser realizado pelo usuário diretamente na App Store ou no
-                Google Play, conforme a plataforma de aquisição da assinatura.
+                O cancelamento da renovação automática deve ser solicitado nas configurações de assinatura da App Store
+                ou Google Play, conforme a plataforma de aquisição. O suporte pode orientar, mas não consegue cancelar
+                uma cobrança administrada pela loja em nome do usuário.
               </p>
               <ul className="mt-3 list-disc space-y-2 pl-6 text-slate-200 marker:text-purple-300">
-                <li>O cancelamento impede a renovação automática para o próximo ciclo, mas não reembolsa automaticamente o período já pago.</li>
-                <li>Se a assinatura for cancelada, o usuário continuará com acesso Premium até o fim do período de cobrança já pago e vigente.</li>
+                <li>O cancelamento normalmente impede ciclos futuros e não significa, por si só, reembolso do período já iniciado; permanecem válidos os direitos legais e as regras da loja.</li>
+                <li>O acesso Premium permanece até o fim do período pago, salvo regra legal ou condição da loja aplicável ao caso.</li>
                 <li>O aplicativo pode disponibilizar funcionalidade de restauração de compras para permitir a recuperação de compras válidas, conforme as regras da loja e o status do usuário.</li>
                 <li>O usuário também pode gerenciar a assinatura por meio das configurações da conta na loja de aplicativos, conforme a plataforma utilizada.</li>
               </ul>
@@ -154,14 +164,15 @@ export default function TermsOfUsePage() {
             <div>
               <h2 className="text-2xl font-bold text-white">6. Reembolsos</h2>
               <p className="mt-3 leading-relaxed text-slate-200">
-                Eventuais solicitações de reembolso serão tratadas conforme a política de reembolso da Apple App Store
-                ou do Google Play, na medida em que a compra tenha sido realizada por meio dessas plataformas.
+                Para compras feitas nas lojas, pedidos de reembolso podem ser apresentados pelos canais oficiais da Apple
+                App Store ou Google Play. A análise e execução do estorno seguem os procedimentos da loja e a legislação
+                aplicável. O titular do serviço prestará cooperação razoável quando necessária, sem prejuízo de
+                responsabilidades que a lei lhe atribua.
               </p>
               <p className="mt-3 leading-relaxed text-slate-200">
-                O titular do serviço não decide unilateralmente sobre reembolsos de compras realizadas em lojas de
-                aplicativos, salvo quando a própria política da loja e a legislação aplicável exigirem alguma ação
-                específica. O usuário deve entrar em contato com a loja de aplicativos para solicitar análise e,
-                quando aplicável, devolução do valor.
+                A indicação da loja como canal operacional não afasta direitos do consumidor nem transfere obrigações
+                legais do fornecedor. Para dúvidas sobre acesso à conta ou funcionamento do serviço, contate o suporte
+                Prisma News; para uma transação da loja, use também o canal oficial da plataforma.
               </p>
             </div>
 
@@ -215,30 +226,32 @@ export default function TermsOfUsePage() {
             <div>
               <h2 className="text-2xl font-bold text-white">10. Suspensão e encerramento de conta</h2>
               <p className="mt-3 leading-relaxed text-slate-200">
-                O titular do serviço pode, a seu critério, suspender temporariamente ou encerrar definitivamente a
-                conta do usuário quando houver violação destes Termos, uso fraudulento, atividade que ameace a
-                segurança do serviço, descumprimento de políticas aplicáveis, ou qualquer conduta que comprometa a
-                operação, integridade, reputação ou estabilidade do aplicativo.
+                O acesso poderá ser limitado ou suspenso quando necessário para cumprir a lei, proteger pessoas,
+                investigar fraude ou abuso, responder a risco concreto de segurança ou fazer cessar violação material
+                destes Termos. Quando razoavelmente possível, o usuário será informado dos motivos e poderá contatar o
+                suporte para esclarecimentos ou revisão. Medidas urgentes podem ser adotadas sem aviso prévio quando
+                necessário para conter risco ou cumprir determinação legal.
               </p>
               <p className="mt-3 leading-relaxed text-slate-200">
-                Em caso de encerramento, o acesso à conta e aos conteúdos vinculados poderá ser limitado ou cessado,
-                sem prejuízo de medidas legais cabíveis ou da necessidade de manutenção de dados conforme a legislação
-                aplicável e a Política de Privacidade.
+                O encerramento será proporcional ao motivo e não elimina direitos relativos a valores pagos, reembolso,
+                dados pessoais ou reparação previstos em lei. Dados poderão ser mantidos apenas nos prazos e hipóteses
+                legais descritos na Política de Privacidade.
               </p>
             </div>
 
             <div>
               <h2 className="text-2xl font-bold text-white">11. Limitação de responsabilidade</h2>
               <p className="mt-3 leading-relaxed text-slate-200">
-                O Prisma News busca manter o serviço funcional, acessível e seguro, mas não garante que o app esteja
-                sempre livre de falhas, interrupções, indisponibilidades, erros de conteúdo, defeitos de software ou
-                indisponibilidade temporária de rede, servidores ou fornecedores terceiros.
+                Empregamos esforços razoáveis para manter o serviço funcional e seguro. Ainda assim, podem ocorrer
+                interrupções, manutenção, falhas de rede ou indisponibilidade de fornecedores e lojas. Quando possível,
+                buscaremos restabelecer o funcionamento e comunicar interrupções relevantes.
               </p>
               <p className="mt-3 leading-relaxed text-slate-200">
-                Na medida do permitido pela legislação aplicável, o titular do serviço não será responsável por danos
-                indiretos, consequentes, especiais, incidentais ou lucros cessantes decorrentes do uso ou da impossibilidade
-                de uso do aplicativo, incluindo prejuízos relacionados a disponibilidade, dados, perda de conteúdo ou
-                interrupções do serviço.
+                Nenhuma disposição destes Termos exclui ou limita responsabilidade que não possa ser afastada por lei,
+                inclusive direitos do consumidor e reparação por danos quando devida. Na extensão permitida pela lei,
+                não respondemos por prejuízos causados exclusivamente por terceiros, pela loja ou por uso do serviço em
+                desacordo com estes Termos, sem prejuízo da análise das circunstâncias concretas e das responsabilidades
+                legalmente atribuídas a cada agente.
               </p>
             </div>
 
@@ -257,14 +270,14 @@ export default function TermsOfUsePage() {
             <div>
               <h2 className="text-2xl font-bold text-white">13. Alterações dos Termos</h2>
               <p className="mt-3 leading-relaxed text-slate-200">
-                O titular do serviço pode atualizar estes Termos periodicamente para refletir melhorias no serviço,
-                ajustes operacionais, requisitos legais, mudanças de políticas de plataformas de distribuição ou novas
-                funcionalidades. Alterações relevantes poderão ser comunicadas dentro do aplicativo, por e-mail ou por
-                outros canais disponíveis.
+                Podemos atualizar estes Termos para refletir mudanças no serviço, requisitos legais ou operacionais.
+                Publicaremos a versão e a data atualizadas e, quando a mudança for relevante, comunicaremos com
+                antecedência razoável por canal apropriado e solicitaremos nova aceitação quando exigido por lei.
               </p>
               <p className="mt-3 leading-relaxed text-slate-200">
-                O uso contínuo do aplicativo após a publicação de uma atualização constitui aceitação das novas condições,
-                salvo quando a lei ou as plataformas exigirem um procedimento específico para consentimento ou notificação.
+                Alterações não afastam direitos já constituídos nem produzem efeito retroativo. Se o usuário não concordar
+                com uma alteração relevante, poderá deixar de usar o serviço e cancelar a assinatura futura pela loja,
+                sem prejuízo de obrigações e direitos já existentes.
               </p>
             </div>
 
@@ -291,8 +304,11 @@ export default function TermsOfUsePage() {
                 as partes poderão buscar solução amigável antes de recorrer à via judicial.
               </p>
               <p className="mt-3 leading-relaxed text-slate-200">
-                Para fins de determinação da competência, fica definido o foro de [CIDADE/ESTADO], [PAÍS], salvo regra
-                específica de proteção ao consumidor, legislação aplicável ou exigência de foro obrigatório.
+                Estes Termos são regidos pelas leis da República Federativa do Brasil. Quando juridicamente cabível,
+                fica eleito o foro da Comarca de São Luís, Estado do Maranhão, por ser a cidade indicada como sede do
+                titular do serviço, sem impedir o consumidor de ajuizar demanda no foro de seu domicílio ou de exercer
+                qualquer outra opção de foro assegurada por norma cogente. Esta cláusula não restringe o acesso ao Poder
+                Judiciário nem altera competências absolutas.
               </p>
             </div>
 
@@ -312,7 +328,7 @@ export default function TermsOfUsePage() {
               </ul>
             </div>
 
-            <div className="rounded-xl border border-purple-800/35 bg-[#10071d] p-4">
+            <div className="legal-tldr rounded-xl border border-purple-800/35 bg-[#10071d] p-4">
               <h2 className="text-2xl font-bold text-white">TL;DR</h2>
               <ul className="mt-3 list-disc space-y-2 pl-6 text-slate-200 marker:text-purple-300">
                 <li>Você aceita estes termos ao usar o Prisma News e ao criar sua conta.</li>

@@ -2,8 +2,6 @@ import { APP_STORE_URL, GOOGLE_PLAY_URL } from "@/lib/appDownload";
 import Link from "next/link";
 
 export function AppPremiumCTA({ compact = false }: { compact?: boolean }) {
-  const appLink = process.env.NEXT_PUBLIC_PRISMA_PREMIUM_LINK;
-
   return (
     <aside className={`discovery-app-cta${compact ? " discovery-app-cta--compact" : ""}`} aria-labelledby="app-premium-title">
       <div>
@@ -13,16 +11,13 @@ export function AppPremiumCTA({ compact = false }: { compact?: boolean }) {
       </div>
       <div className="discovery-app-actions">
         <Link className="discovery-button discovery-button--outline" href="/conta?returnTo=%2Ftopicos">Ver na web</Link>
-        {appLink ? (
-          <a className="discovery-button discovery-button--primary" href={appLink}>
-            Abrir Prisma no Premium
-          </a>
-        ) : (
-          <p className="discovery-app-note">Abra a área Premium no Prisma News ou instale o aplicativo pelas lojas.</p>
-        )}
-        <a href={APP_STORE_URL} target="_blank" rel="noreferrer">Baixar na App Store<span className="sr-only"> (abre em nova aba)</span></a>
-        <a href={GOOGLE_PLAY_URL} target="_blank" rel="noreferrer">Baixar no Google Play<span className="sr-only"> (abre em nova aba)</span></a>
-        {appLink && <p className="discovery-app-note">Se o app não abrir, escolha sua loja para instalar. Nenhuma compra é realizada neste site.</p>}
+        <a className="discovery-button discovery-button--primary" href={APP_STORE_URL} target="_blank" rel="noreferrer">
+          Baixar e assinar na App Store<span className="sr-only"> (abre em nova aba)</span>
+        </a>
+        <a className="discovery-button discovery-button--primary" href={GOOGLE_PLAY_URL} target="_blank" rel="noreferrer">
+          Baixar e assinar no Google Play<span className="sr-only"> (abre em nova aba)</span>
+        </a>
+        <p className="discovery-app-note">Após instalar, assine na área Premium do aplicativo. Este site não processa compras.</p>
       </div>
     </aside>
   );

@@ -75,7 +75,7 @@ export function AuthForm() {
   return (
     <div className="auth-layout">
       <aside className="auth-story">
-        <Image className="auth-story__logo" src="/logo.png" alt="Prisma News" width={300} height={300} priority />
+        <Image className="auth-story__logo" src="/logo.svg" alt="Prisma News" width={300} height={300} priority />
         <div className="auth-story__copy">
           <p className="auth-story__eyebrow">PRISMA NEWS · LEITURA EM CONTEXTO</p>
           <h2>O mundo não cabe em uma manchete.</h2>

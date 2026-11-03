@@ -20,10 +20,6 @@ sold on the website; purchases remain in the mobile apps.
 - `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`: public Supabase
 	Auth client values. Do not use a service-role key here.
 - `SPECTRUM_API_URL`: server-only origin for the Prisma Spectrum API.
-- `NEXT_PUBLIC_PRISMA_PREMIUM_LINK`: the app's verified Universal Link / Android
-	App Link or scheme that opens the Premium screen. Set this only after the app
-	team confirms the actual link. Store installation links remain visible as a
-	fallback.
 - Existing `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are used only by the
 	website's existing analytics route; they are never sent to the browser.
 

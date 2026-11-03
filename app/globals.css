@@ -550,6 +550,15 @@ body {
 .legal-page article th { color: #514e59 !important; }
 .legal-page article a,
 .legal-page > div > a { color: #695c98 !important; }
+.legal-page article .legal-table-wrap { border-color: #d8d1e5 !important; background: #f8f7fc !important; }
+.legal-page article .legal-table-wrap thead { background: #e9e3f3 !important; }
+.legal-page article .legal-table-wrap th { color: #30243f !important; }
+.legal-page article .legal-table-wrap tbody tr { border-color: #ded9e7 !important; }
+.legal-page article .legal-table-wrap td { color: #383441 !important; }
+.legal-page article .legal-table-wrap td:first-child { color: #25212c !important; }
+.legal-page article .legal-tldr { border-color: #c9b9e8 !important; background: #f1ebfa !important; }
+.legal-page article .legal-tldr h2 { color: #30243f !important; }
+.legal-page article .legal-tldr li { color: #383441 !important; }
 
 @media (max-width: 640px) {
   .store-buttons { flex-direction: column; align-items: stretch; }

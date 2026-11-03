@@ -6,7 +6,7 @@ export function DiscoveryHeader() {
     <header className="discovery-header">
       <div className="discovery-header__inner">
         <Link href="/" className="discovery-brand" aria-label="Prisma News — início">
-          <Image src="/logo.png" alt="" width={34} height={34} priority />
+          <Image src="/logo.svg" alt="" width={34} height={34} priority />
           <span>Prisma <b>News</b></span>
         </Link>
         <nav aria-label="Navegação de tópicos">
