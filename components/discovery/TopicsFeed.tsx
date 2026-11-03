@@ -8,6 +8,50 @@ import { sanitizePremiumFeed, sanitizePublicFeed, type Topic } from "@/lib/topic
 import { AppPremiumCTA } from "@/components/discovery/AppPremiumCTA";
 
 type FeedState = "loading" | "ready" | "empty" | "error";
+type CategoryFilter = "tudo" | "economia" | "política" | "tecnologia" | "mundo" | "esportes";
+
+const CATEGORY_FILTERS: CategoryFilter[] = ["tudo", "economia", "política", "tecnologia", "mundo", "esportes"];
+
+function normalizedCategory(value: string) {
+  return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+
+function matchesCategory(categories: string[], filter: CategoryFilter) {
+  if (filter === "tudo") return true;
+  const values = categories.map(normalizedCategory);
+  if (filter === "economia") return values.some((value) => value.includes("economia"));
+  if (filter === "política") return values.some((value) => value.includes("politica"));
+  if (filter === "tecnologia") return values.some((value) => value.includes("tecnologia") || value.includes("tech"));
+  if (filter === "mundo") return values.some((value) => value.includes("mundo") || value.includes("internacional") || value.includes("global"));
+  return values.some((value) => value.includes("esporte"));
+}
+
+function SpectrumRuler({ counts, showLabels = true }: { counts: Topic["perspectiveCounts"]; showLabels?: boolean }) {
+  const segments = [
+    { key: "left", label: "Esquerda", count: counts.left, color: "#bd527d" },
+    { key: "center", label: "Centro", count: counts.center, color: "#89749a" },
+    { key: "right", label: "Direita", count: counts.right, color: "#527cc3" },
+  ];
+  const total = segments.reduce((sum, segment) => sum + segment.count, 0);
+  if (total === 0) return null;
+
+  return (
+    <div className="spectrum-ruler" role="img" aria-label={`Distribuição de matérias: ${segments.map(({ label, count }) => `${label}, ${count}`).join("; ")}`}>
+      <div className="spectrum-ruler__track" aria-hidden="true">
+        {segments.map((segment) => segment.count > 0 && (
+          <span key={segment.key} style={{ flexGrow: segment.count, backgroundColor: segment.color }} />
+        ))}
+      </div>
+      {showLabels && <div className="spectrum-ruler__labels" aria-hidden="true">
+        {segments.map((segment) => segment.count > 0 && (
+          <span className={`spectrum-ruler__label spectrum-ruler__label--${segment.key}`} key={segment.key}>
+            <i />{segment.label} · {segment.count}
+          </span>
+        ))}
+      </div>}
+    </div>
+  );
+}
 
 function dateLabel(value: string | null) {
   if (!value) return "Atualizado recentemente";
@@ -21,8 +65,10 @@ export function TopicsFeed() {
   const [premium, setPremium] = useState(false);
   const [query, setQuery] = useState("");
   const [activeQuery, setActiveQuery] = useState("");
+  const [category, setCategory] = useState<CategoryFilter>("tudo");
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(false);
+  const visibleTopics = topics.filter((topic) => matchesCategory(topic.categories, category));
 
   const load = useCallback(async (nextOffset = 0, search = "") => {
     setState("loading");
@@ -105,26 +151,35 @@ export function TopicsFeed() {
           <span>Atualizado com frequência</span>
         </div>
 
+        <div className="topics-category-filters" role="group" aria-label="Filtrar tópicos por categoria">
+          {CATEGORY_FILTERS.map((item) => (
+            <button type="button" key={item} aria-pressed={category === item} onClick={() => setCategory(item)}>
+              {item === "tudo" ? "Tudo" : item.charAt(0).toUpperCase() + item.slice(1)}
+            </button>
+          ))}
+        </div>
+
         {state === "loading" && topics.length === 0 && <div className="discovery-state" role="status" aria-live="polite">Carregando os tópicos mais recentes…</div>}
         {state === "error" && <div className="discovery-state discovery-state--error" role="alert"><p>Não foi possível carregar os tópicos agora.</p><button className="discovery-button discovery-button--outline" onClick={() => void load(0, activeQuery)}><RefreshCw size={16} aria-hidden="true" /> Tentar novamente</button></div>}
         {state === "empty" && <div className="discovery-state">Ainda não há tópicos publicados. Volte em breve.</div>}
+        {state === "ready" && topics.length > 0 && visibleTopics.length === 0 && <div className="discovery-state">Nenhum tópico nesta categoria por enquanto. Escolha outro tema para continuar explorando.</div>}
 
-        {topics.length > 0 && <Link className="featured-topic" href={`/topicos/${encodeURIComponent(topics[0].id)}`} aria-label={`Ver tópico em destaque: ${topics[0].title}`}>
-          {topics[0].imageUrl && <Image className="featured-topic__image" src={topics[0].imageUrl} alt="" fill sizes="(max-width: 760px) 100vw, 1180px" unoptimized />}
+        {visibleTopics.length > 0 && <Link className="featured-topic" href={`/topicos/${encodeURIComponent(visibleTopics[0].id)}`} aria-label={`Ver tópico em destaque: ${visibleTopics[0].title}`}>
+          {visibleTopics[0].imageUrl && <Image className="featured-topic__image" src={visibleTopics[0].imageUrl} alt="" fill sizes="(max-width: 760px) 100vw, 1180px" unoptimized />}
           <span className="featured-topic__veil" aria-hidden="true" />
           <span className="featured-topic__content">
             <span className="featured-topic__tag"><Sparkles size={14} aria-hidden="true" /> Novo tópico em destaque</span>
-            <span className="featured-topic__date">{dateLabel(topics[0].publishedAt)}{topics[0].categories[0] ? ` · ${topics[0].categories[0]}` : ""}</span>
-            <strong>{topics[0].title}</strong>
-            <span className="featured-topic__summary">{topics[0].summary || "Leia e compare as principais perspectivas sobre este assunto."}</span>
+            <span className="featured-topic__date">{dateLabel(visibleTopics[0].publishedAt)}{visibleTopics[0].categories[0] ? ` · ${visibleTopics[0].categories[0]}` : ""}</span>
+            <strong>{visibleTopics[0].title}</strong>
+            <span className="featured-topic__summary">{visibleTopics[0].summary || "Leia e compare as principais perspectivas sobre este assunto."}</span>
+            <SpectrumRuler counts={visibleTopics[0].perspectiveCounts} />
             <span className="featured-topic__action">Explorar cobertura <ArrowRight size={17} aria-hidden="true" /></span>
           </span>
-          <span className="featured-topic__spectrum" aria-label="Perspectivas: esquerda, centro e direita"><i className="left" /><i className="center" /><i className="right" /></span>
         </Link>}
 
-        {topics.length > 1 && (
+        {visibleTopics.length > 1 && (
           <div className="discovery-grid" aria-live="polite">
-            {topics.slice(1).map((topic, index) => (
+            {visibleTopics.slice(1).map((topic, index) => (
               <article className={`topic-card topic-card--${index % 3}`} key={topic.id}>
                 <Link className="topic-card__link" href={`/topicos/${encodeURIComponent(topic.id)}`} aria-label={`Abrir tópico: ${topic.title}`}>
                   <div className="topic-card__visual" style={topic.imageUrl ? { backgroundImage: `linear-gradient(180deg, transparent 38%, rgba(17,24,39,.7)), url("${topic.imageUrl.replaceAll('"', '')}")` } : undefined}>
@@ -136,11 +191,7 @@ export function TopicsFeed() {
                     <div className="topic-card__meta"><time>{dateLabel(topic.publishedAt)}</time>{topic.categories[0] && <span>{topic.categories[0]}</span>}</div>
                     <h3>{topic.title}</h3>
                     <p>{topic.summary || "Leia como diferentes veículos estão cobrindo este acontecimento."}</p>
-                    <div className="topic-spectrum" aria-label="Perspectivas: esquerda, centro e direita">
-                      <span className="topic-spectrum__left"><i />Esquerda</span>
-                      <span className="topic-spectrum__center"><i />Centro</span>
-                      <span className="topic-spectrum__right"><i />Direita</span>
-                    </div>
+                    <SpectrumRuler counts={topic.perspectiveCounts} />
                     <div className="topic-card__foot"><span>{topic.articleCount ? `${topic.articleCount} matérias` : "Coberturas comparadas"}</span><span className="topic-card__open">Abrir análise <ArrowDownRight size={16} aria-hidden="true" /></span></div>
                   </div>
                 </Link>

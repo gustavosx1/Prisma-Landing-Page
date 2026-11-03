@@ -6,6 +6,7 @@ export type Topic = {
   publishedAt: string | null;
   categories: string[];
   articleCount: number | null;
+  perspectiveCounts: { left: number; center: number; right: number };
   perspectives: Partial<Record<"left" | "center" | "right", string>>;
   articles: Partial<Record<"left" | "center" | "right", TopicArticle[]>>;
   fullSummary?: string;
@@ -87,13 +88,15 @@ export function sanitizePublicTopic(value: unknown): Topic | null {
   const source = record(value);
   if (!source) return null;
   const id = topicId(source);
-  const title = firstString(source, ["title", "name"]);
+  const title = firstString(source, ["title", "canonical_title", "name"]);
   if (!id || !title) return null;
 
   const perspectivesSource = record(source.perspectives) ?? record(source.spectrum) ?? {};
   const articlesSource = record(source.articles_by_perspective) ?? record(source.articles) ?? {};
   const image = safeUrl(firstString(source, ["image_url", "imageUrl", "cover_image", "image"]));
   const count = source.article_count ?? source.articles_count;
+  const blindspot = record(source.blindspot) ?? record(source.blind_spot) ?? {};
+  const safeCount = (value: unknown) => typeof value === "number" && Number.isFinite(value) && value > 0 ? value : 0;
 
   return {
     id,
@@ -103,6 +106,11 @@ export function sanitizePublicTopic(value: unknown): Topic | null {
     publishedAt: firstString(source, ["published_at", "publishedAt", "created_at", "date"]) || null,
     categories: strings(source.categories ?? source.tags),
     articleCount: typeof count === "number" && Number.isFinite(count) ? count : null,
+    perspectiveCounts: {
+      left: safeCount(blindspot.left_count ?? blindspot.left),
+      center: safeCount(blindspot.center_count ?? blindspot.center),
+      right: safeCount(blindspot.right_count ?? blindspot.right),
+    },
     perspectives: {
       left: perspectiveText(perspectivesSource.left ?? perspectivesSource.esquerda ?? source.left_summary),
       center: perspectiveText(perspectivesSource.center ?? perspectivesSource.centro ?? source.center_summary),
@@ -125,8 +133,10 @@ function payloadItems(payload: unknown): unknown[] {
     if (Array.isArray(value)) return value;
     const nested = record(value);
     if (nested) {
-      for (const nestedKey of ["topics", "items", "results"]) {
+      for (const nestedKey of ["topics", "items", "results", "data"] as const) {
         if (Array.isArray(nested[nestedKey])) return nested[nestedKey] as unknown[];
+        const deeper = record(nested[nestedKey]);
+        if (deeper && Array.isArray(deeper.data)) return deeper.data;
       }
     }
   }
