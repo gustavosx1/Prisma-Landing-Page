@@ -1,12 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { StoreButtons } from "@/components/sections/StoreButtons";
+
+const NAV_LINKS = [
+  { label: "Tópicos", href: "/conta?returnTo=%2Ftopicos" },
+  { label: "Como funciona", href: "#como-funciona" },
+  { label: "Recursos", href: "#recursos" },
+  { label: "Preços", href: "#precos" },
+  { label: "FAQ", href: "#faq" },
+];
 
 export function NavBar() {
   const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -46,10 +57,26 @@ export function NavBar() {
           </span>
         </Link>
 
-        <nav aria-label="Navegação principal">
-          <Link href="/conta?returnTo=%2Ftopicos" className="discovery-button discovery-button--primary navbar-login">Entrar</Link>
+        <nav className="navbar-desktop-links" aria-label="Navegação principal">
+          {NAV_LINKS.map((item) => <Link key={item.label} href={item.href}>{item.label}</Link>)}
         </nav>
+        <div className="navbar-desktop-actions">
+          <Link href="/conta?returnTo=%2Ftopicos" className="discovery-button discovery-button--primary navbar-login">Entrar</Link>
+          <StoreButtons location="navbar" compact className="navbar-stores" />
+        </div>
+        <button className="navbar-menu-toggle" type="button" onClick={() => setOpen((value) => !value)} aria-label={open ? "Fechar menu" : "Abrir menu"} aria-expanded={open} aria-controls="navbar-mobile-menu">
+          {open ? <X size={21} aria-hidden="true" /> : <Menu size={21} aria-hidden="true" />}
+        </button>
       </div>
+      <AnimatePresence>
+        {open && <motion.div id="navbar-mobile-menu" className="navbar-mobile-menu" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
+          <nav aria-label="Navegação móvel">
+            {NAV_LINKS.map((item) => <Link key={item.label} href={item.href} onClick={() => setOpen(false)}>{item.label}</Link>)}
+            <Link href="/conta?returnTo=%2Ftopicos" className="discovery-button discovery-button--primary" onClick={() => setOpen(false)}>Entrar</Link>
+          </nav>
+          <StoreButtons location="navbar_mobile" compact />
+        </motion.div>}
+      </AnimatePresence>
     </motion.header>
   );
 }

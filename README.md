@@ -4,15 +4,14 @@ Os links oficiais para download do aplicativo estão centralizados em `lib/appDo
 
 # Topic discovery integration
 
-The home page keeps topic data behind an account gate: its topic section is a
-teaser with a **Ver mais tópicos** action, and the navbar offers **Entrar**.
-Both route visitors through `/conta`; after sign-in or account creation, they
-continue to the requested page. The `/topicos` feed and `/topicos/[topicId]`
-pages require an authenticated account. Free accounts see the capped public
-preview there; Premium access is verified separately by the backend. Account
-creation and sign-in use Supabase Auth with SSR cookie handling. Premium
-subscriptions are **not** sold on the website; app-only CTAs link to the App
-Store and Google Play.
+The home page retains its institutional/product content, with account entry and
+the full navigation restored in the navbar. The `/topicos` feed and
+`/topicos/[topicId]` pages require an authenticated account. Free accounts see
+the capped public preview there; Premium access is verified separately by the
+backend. Sign-in and sign-up use Supabase Auth with SSR cookie handling. Every
+App Store/Google Play download group also offers **Ver na web**, which routes
+visitors through `/conta` to the topic feed. Premium subscriptions are **not**
+sold on the website; purchases remain in the mobile apps.
 
 ## Environment
 

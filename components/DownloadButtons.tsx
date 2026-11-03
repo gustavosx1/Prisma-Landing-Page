@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Apple, Play } from "lucide-react";
+import Link from "next/link";
 import { APP_STORE_URL, GOOGLE_PLAY_URL } from "@/lib/appDownload";
 import { captureAttribution, sendEvent } from "@/lib/track";
 
@@ -75,6 +76,9 @@ export function DownloadButtons({
         <Play aria-hidden="true" className="store-button-icon" />
         <span>{compact ? "Google Play" : "Disponível no Google Play"}</span>
       </a>
+      <Link href="/conta?returnTo=%2Ftopicos" className="store-button store-button--web" aria-label="Ver Prisma News na web">
+        <span>Ver na web</span>
+      </Link>
     </div>
   );
 }

@@ -15,7 +15,7 @@ function dateLabel(value: string | null) {
   return Number.isNaN(parsed.getTime()) ? "Atualizado recentemente" : new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium" }).format(parsed);
 }
 
-export function TopicsFeed({ compact = false }: { compact?: boolean }) {
+export function TopicsFeed() {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [state, setState] = useState<FeedState>("loading");
   const [premium, setPremium] = useState(false);
@@ -46,10 +46,9 @@ export function TopicsFeed({ compact = false }: { compact?: boolean }) {
   }, []);
 
   useEffect(() => {
-    if (compact) return;
     const timer = window.setTimeout(() => { void load(); }, 0);
     return () => window.clearTimeout(timer);
-  }, [compact, load]);
+  }, [load]);
 
   function submitSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -59,50 +58,43 @@ export function TopicsFeed({ compact = false }: { compact?: boolean }) {
     void load(0, value);
   }
 
-  if (compact) {
-    return (
-      <section className="discovery-section discovery-section--compact" id="topicos" aria-labelledby="recent-topics-title">
-        <div className="discovery-shell discovery-teaser">
-          <div>
-            <p className="discovery-eyebrow"><Sparkles size={15} aria-hidden="true" /> Leitura em perspectiva</p>
-            <h2 id="recent-topics-title">O que está em pauta</h2>
-            <p className="discovery-lede">Compare como diferentes perspectivas cobrem os principais acontecimentos. Entre ou crie sua conta para explorar os tópicos.</p>
-          </div>
-          <Link className="discovery-button discovery-button--primary" href="/conta?returnTo=%2Ftopicos">
-            Ver mais tópicos <ArrowRight size={17} aria-hidden="true" />
-          </Link>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className="discovery-section" id="topicos" aria-labelledby="topics-title">
       <div className="discovery-shell">
         <div className="discovery-heading-row">
           <div>
-            <p className="discovery-eyebrow"><Sparkles size={15} aria-hidden="true" /> Leitura em perspectiva</p>
             <h2 id="topics-title">Descubra os assuntos</h2>
             <p className="discovery-lede">Um acontecimento, diferentes coberturas. Compare o que cada perspectiva destaca — e o que pode ficar de fora.</p>
           </div>
         </div>
 
-        {!compact && (
-          <form className="discovery-search" onSubmit={submitSearch} role="search">
-            <label htmlFor="topic-search" className="sr-only">Buscar tópicos Premium</label>
-            <Search size={18} aria-hidden="true" />
-            <input id="topic-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={premium ? "Buscar por assunto, país ou tema" : "Busca disponível com Prisma Premium"} disabled={!premium} minLength={2} maxLength={120} />
-            <button type="submit" disabled={!premium || query.trim().length < 2}>Buscar</button>
-          </form>
-        )}
+        <form className="discovery-search" onSubmit={submitSearch} role="search">
+          <label htmlFor="topic-search" className="sr-only">Buscar tópicos Premium</label>
+          <Search size={18} aria-hidden="true" />
+          <input id="topic-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={premium ? "Buscar por assunto, país ou tema" : "Busca disponível com Prisma Premium"} disabled={!premium} minLength={2} maxLength={120} />
+          <button type="submit" disabled={!premium || query.trim().length < 2}>Buscar</button>
+        </form>
 
         {state === "loading" && topics.length === 0 && <div className="discovery-state" role="status" aria-live="polite">Carregando os tópicos mais recentes…</div>}
         {state === "error" && <div className="discovery-state discovery-state--error" role="alert"><p>Não foi possível carregar os tópicos agora.</p><button className="discovery-button discovery-button--outline" onClick={() => void load(0, activeQuery)}><RefreshCw size={16} aria-hidden="true" /> Tentar novamente</button></div>}
         {state === "empty" && <div className="discovery-state">Ainda não há tópicos publicados. Volte em breve.</div>}
 
-        {topics.length > 0 && (
+        {topics.length > 0 && <Link className="featured-topic" href={`/topicos/${encodeURIComponent(topics[0].id)}`} aria-label={`Ver tópico em destaque: ${topics[0].title}`}>
+          {topics[0].imageUrl && <Image className="featured-topic__image" src={topics[0].imageUrl} alt="" fill sizes="(max-width: 760px) 100vw, 1180px" unoptimized />}
+          <span className="featured-topic__veil" aria-hidden="true" />
+          <span className="featured-topic__content">
+            <span className="featured-topic__tag"><Sparkles size={14} aria-hidden="true" /> Novo tópico em destaque</span>
+            <span className="featured-topic__date">{dateLabel(topics[0].publishedAt)}{topics[0].categories[0] ? ` · ${topics[0].categories[0]}` : ""}</span>
+            <strong>{topics[0].title}</strong>
+            <span className="featured-topic__summary">{topics[0].summary || "Leia e compare as principais perspectivas sobre este assunto."}</span>
+            <span className="featured-topic__action">Explorar cobertura <ArrowRight size={17} aria-hidden="true" /></span>
+          </span>
+          <span className="featured-topic__spectrum" aria-label="Perspectivas: esquerda, centro e direita"><i className="left" /><i className="center" /><i className="right" /></span>
+        </Link>}
+
+        {topics.length > 1 && (
           <div className="discovery-grid" aria-live="polite">
-            {topics.map((topic, index) => (
+            {topics.slice(1).map((topic, index) => (
               <article className={`topic-card topic-card--${index % 3}`} key={topic.id}>
                 <Link className="topic-card__link" href={`/topicos/${encodeURIComponent(topic.id)}`} aria-label={`Abrir tópico: ${topic.title}`}>
                   <div className="topic-card__visual" style={topic.imageUrl ? { backgroundImage: `linear-gradient(180deg, transparent 38%, rgba(17,24,39,.7)), url("${topic.imageUrl.replaceAll('"', '')}")` } : undefined}>

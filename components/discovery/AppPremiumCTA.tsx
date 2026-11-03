@@ -1,4 +1,5 @@
 import { APP_STORE_URL, GOOGLE_PLAY_URL } from "@/lib/appDownload";
+import Link from "next/link";
 
 export function AppPremiumCTA({ compact = false }: { compact?: boolean }) {
   const appLink = process.env.NEXT_PUBLIC_PRISMA_PREMIUM_LINK;
@@ -11,6 +12,7 @@ export function AppPremiumCTA({ compact = false }: { compact?: boolean }) {
         <p>As assinaturas são feitas exclusivamente no aplicativo, pela App Store ou Google Play. Este site não processa compras.</p>
       </div>
       <div className="discovery-app-actions">
+        <Link className="discovery-button discovery-button--outline" href="/conta?returnTo=%2Ftopicos">Ver na web</Link>
         {appLink ? (
           <a className="discovery-button discovery-button--primary" href={appLink}>
             Abrir Prisma no Premium
