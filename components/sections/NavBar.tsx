@@ -45,7 +45,7 @@ export function NavBar() {
           className="flex items-center gap-2.5 group"
         >
           <Image
-            src="/logo.svg"
+            src="/logo.png"
             alt="Logo Prisma News"
             width={34}
             height={34}

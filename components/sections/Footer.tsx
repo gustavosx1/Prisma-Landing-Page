@@ -20,7 +20,7 @@ export function Footer() {
               className="mb-3 inline-flex items-center gap-3"
             >
               <Image
-                src="/logo.svg"
+                src="/logo.png"
                 alt="Logo Prisma News"
                 width={34}
                 height={34}
