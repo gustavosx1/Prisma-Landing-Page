@@ -12,10 +12,10 @@ export function AppPremiumCTA({ compact = false }: { compact?: boolean }) {
       <div className="discovery-app-actions">
         <Link className="discovery-button discovery-button--outline" href="/conta?returnTo=%2Ftopicos">Ver na web</Link>
         <a className="discovery-button discovery-button--primary" href={APP_STORE_URL} target="_blank" rel="noreferrer">
-          Baixar e assinar na App Store<span className="sr-only"> (abre em nova aba)</span>
+          Baixar na App Store<span className="sr-only"> (abre em nova aba)</span>
         </a>
         <a className="discovery-button discovery-button--primary" href={GOOGLE_PLAY_URL} target="_blank" rel="noreferrer">
-          Baixar e assinar no Google Play<span className="sr-only"> (abre em nova aba)</span>
+          Baixar no Google Play<span className="sr-only"> (abre em nova aba)</span>
         </a>
         <p className="discovery-app-note">Após instalar, assine na área Premium do aplicativo. Este site não processa compras.</p>
       </div>
