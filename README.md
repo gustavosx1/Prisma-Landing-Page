@@ -4,8 +4,10 @@ Os links oficiais para download do aplicativo estão centralizados em `lib/appDo
 
 # Topic discovery integration
 
-The home page retains its institutional/product content, with account entry and
-the full navigation restored in the navbar. The `/topicos` feed and
+The home page retains its institutional/product content, with the full
+navigation and store links restored in the navbar. Topic browsing is linked from
+the hero's illustrative event card and from the **Ver na web** store CTA; there
+is no separate **Entrar** navbar button. The `/topicos` feed and
 `/topicos/[topicId]` pages require an authenticated account. Free accounts see
 the capped public preview there; Premium access is verified separately by the
 backend. Sign-in and sign-up use Supabase Auth with SSR cookie handling. Every

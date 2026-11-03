@@ -61,7 +61,6 @@ export function NavBar() {
           {NAV_LINKS.map((item) => <Link key={item.label} href={item.href}>{item.label}</Link>)}
         </nav>
         <div className="navbar-desktop-actions">
-          <Link href="/conta?returnTo=%2Ftopicos" className="discovery-button discovery-button--primary navbar-login">Entrar</Link>
           <StoreButtons location="navbar" compact className="navbar-stores" />
         </div>
         <button className="navbar-menu-toggle" type="button" onClick={() => setOpen((value) => !value)} aria-label={open ? "Fechar menu" : "Abrir menu"} aria-expanded={open} aria-controls="navbar-mobile-menu">
@@ -72,7 +71,6 @@ export function NavBar() {
         {open && <motion.div id="navbar-mobile-menu" className="navbar-mobile-menu" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
           <nav aria-label="Navegação móvel">
             {NAV_LINKS.map((item) => <Link key={item.label} href={item.href} onClick={() => setOpen(false)}>{item.label}</Link>)}
-            <Link href="/conta?returnTo=%2Ftopicos" className="discovery-button discovery-button--primary" onClick={() => setOpen(false)}>Entrar</Link>
           </nav>
           <StoreButtons location="navbar_mobile" compact />
         </motion.div>}

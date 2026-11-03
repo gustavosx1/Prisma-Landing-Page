@@ -6,8 +6,10 @@ import {
   CheckCircle2,
   AlertTriangle,
   Eye,
+  Globe2,
   TrendingUp,
 } from "lucide-react";
+import Link from "next/link";
 import { initScrollDepth } from "@/lib/analytics";
 import { StoreButtons } from "@/components/sections/StoreButtons";
 
@@ -123,7 +125,7 @@ export function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <StoreButtons location="hero" />
+              <StoreButtons location="hero" showWeb={false} />
             </motion.div>
 
             {/* Microproof */}
@@ -232,6 +234,10 @@ export function Hero() {
                   Alto impacto
                 </span>
               </div>
+              <Link href="/conta?returnTo=%2Ftopicos" className="hero-topics-cta">
+                <Globe2 size={17} aria-hidden="true" />
+                Ver tópicos de hoje
+              </Link>
             </div>
 
             {/* Badge */}

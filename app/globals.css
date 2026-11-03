@@ -610,7 +610,6 @@ body { color: #111827; }
 .site-theme header[class*="bg-[#060111]"] { border-color: #e5e7eb !important; box-shadow: 0 8px 26px rgb(17 24 39 / 7%) !important; }
 .site-theme header nav a { color: #374151 !important; }
 .site-theme header nav a:hover { color: #5b21b6 !important; }
-.site-theme .navbar-login, .site-theme .navbar-login:hover,
 .site-theme .discovery-button--primary, .site-theme .discovery-button--primary:hover,
 .site-theme .discovery-search button, .site-theme .discovery-search button:hover,
 .site-theme .store-button--web, .site-theme .store-button--web:hover { background-color: #5b21b6 !important; color: #fff !important; }
@@ -641,12 +640,16 @@ body { color: #111827; }
 .navbar-desktop-links { display: flex; align-items: center; gap: clamp(12px, 1.7vw, 25px); }
 .navbar-desktop-links a { color: #374151; font-size: .82rem; font-weight: 650; text-decoration: none; white-space: nowrap; }
 .navbar-desktop-actions { display: flex; align-items: center; gap: 12px; }
-.navbar-stores .store-button { min-height: 40px; padding: 8px 10px; font-size: .74rem; }
+.navbar-stores .store-button { width: 112px; height: 40px; min-height: 40px; justify-content: center; padding: 0 9px; font-size: .72rem; }
 .navbar-stores .store-button-icon { width: 16px; height: 16px; }
+.navbar-stores .store-button--web, .navbar-stores .store-button--web:hover { border-color: #5b21b6 !important; background: #5b21b6 !important; color: #fff !important; }
+.navbar-stores .store-button--web .store-button-icon { color: #fff !important; }
 .navbar-menu-toggle { display: none; width: 42px; height: 42px; align-items: center; justify-content: center; border: 1px solid #d1d5db; border-radius: 12px; background: #fff; color: #111827; }
 .navbar-mobile-menu { display: none; }
 .store-buttons .store-button--web { border-color: #5b21b6; background: #5b21b6; color: #fff; }
 .store-buttons .store-button--web:hover { border-color: #4c1d95; background: #4c1d95; color: #fff; }
+.hero-topics-cta { display: flex; min-height: 48px; align-items: center; justify-content: center; gap: 9px; margin-top: 20px; padding: 11px 16px; border: 1px solid #5b21b6; border-radius: 12px; background: #5b21b6; color: #fff !important; font-size: .9rem; font-weight: 750; text-decoration: none; transition: background-color .18s ease, transform .18s ease; }
+.hero-topics-cta:hover { transform: translateY(-1px); background: #4c1d95; }
 
 .discovery-section { background: #fafafa; color: #111827; }
 .discovery-section .discovery-shell { width: min(1180px, calc(100% - 48px)); }
@@ -748,8 +751,7 @@ body { color: #111827; }
 @media (max-width: 1120px) {
   .navbar-desktop-links { gap: 12px; }
   .navbar-desktop-links a { font-size: .76rem; }
-  .navbar-stores .store-button { padding: 7px; }
-  .navbar-stores .store-button span { font-size: .68rem; }
+  .navbar-stores .store-button { width: 100px; padding-inline: 5px; }
 }
 @media (max-width: 960px) {
   .navbar-desktop-links, .navbar-desktop-actions { display: none; }
@@ -801,4 +803,19 @@ body { color: #111827; }
   .topic-card__meta, .topic-card__foot, .topic-detail__meta, .perspective-panel li span { color: #d1d5db; }
   .topic-card__meta span { background: #374151; color: #f3f4f6; }
   .topic-spectrum > span { color: #e5e7eb; }
+}
+
+/* More compact rhythm: retain breathing room while reducing empty vertical bands. */
+.site-theme main > section:not(.hero-section) { padding-block: clamp(3rem, 5.2vw, 4.5rem) !important; }
+.site-theme main > section .mb-16 { margin-bottom: 3rem !important; }
+.site-theme main > section .mb-20 { margin-bottom: 3.5rem !important; }
+.site-theme main > section .mt-16 { margin-top: 2.75rem !important; }
+.site-theme main > section .mt-20 { margin-top: 3.5rem !important; }
+.site-theme .hero-section { min-height: 90svh; }
+.site-theme .hero-section > div.relative.z-10 { padding-top: 7rem; padding-bottom: 3rem; }
+@media (max-width: 700px) {
+  .site-theme main > section:not(.hero-section) { padding-block: 2.75rem !important; }
+  .site-theme .hero-section { min-height: auto; }
+  .site-theme .hero-section > div.relative.z-10 { padding-top: 6rem; padding-bottom: 2.75rem; }
+  .navbar-stores .store-button { width: auto; }
 }

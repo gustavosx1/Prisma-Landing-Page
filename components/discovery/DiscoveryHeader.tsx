@@ -11,7 +11,6 @@ export function DiscoveryHeader() {
         </Link>
         <nav aria-label="Navegação de tópicos">
           <Link href="/topicos">Descobrir</Link>
-          <Link href="/conta?returnTo=%2Ftopicos">Entrar</Link>
           <Link className="discovery-header__download" href="/topicos#app-premium-title">Conheça o Premium</Link>
         </nav>
       </div>
