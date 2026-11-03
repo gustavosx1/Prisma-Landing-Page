@@ -303,7 +303,7 @@ export function TopicsFeed() {
         {state === "loading" && topics.length > 0 && <p className="discovery-loading-more" role="status">Atualizando assuntos…</p>}
         {!premium && topics.length > 0 && <div className="discovery-limit-note"><span>Você está vendo a prévia pública: até 3 tópicos.</span><Link href="/conta?returnTo=%2Ftopicos">Entrar na sua conta</Link></div>}
         {premium && hasMore && <button className="discovery-button discovery-button--outline discovery-more" onClick={() => void load(offset, activeQuery)} disabled={state === "loading"}>Carregar mais</button>}
-        {!premium && <AppPremiumCTA />}
+        {!premium && <AppPremiumCTA variant="feed" />}
       </div>
     </section>
   );

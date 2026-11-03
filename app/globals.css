@@ -1181,3 +1181,67 @@ body { color: #111827; }
   .topic-detail__header h1 { font-size: clamp(1.7rem, 8vw, 2.35rem); }
   .topic-detail__summary { margin: 10px 0; font-size: .94rem; }
 }
+
+/* App-only Premium CTA: one design system for feed and topic detail */
+.premium-app-cta {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, .8fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 52px);
+  overflow: hidden;
+  margin: 38px 0 0;
+  padding: clamp(25px, 4.2vw, 46px);
+  border: 1px solid #d9c5e8;
+  border-radius: 26px;
+  background: radial-gradient(ellipse at 2% 5%, rgb(226 200 245 / 62%), transparent 34%), linear-gradient(120deg, #f8f2fc, #eee4f6 56%, #f8f5fb);
+  box-shadow: 0 22px 55px rgb(61 30 81 / 10%);
+}
+.premium-app-cta::after {
+  position: absolute;
+  z-index: -1;
+  top: -110px;
+  right: 31%;
+  width: 270px;
+  height: 270px;
+  border: 1px solid rgb(100 38 168 / 11%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 24px rgb(100 38 168 / 3%), 0 0 0 52px rgb(100 38 168 / 2%);
+  content: "";
+}
+.premium-app-cta__copy { max-width: 650px; }
+.premium-app-cta__eyebrow { display: inline-flex; align-items: center; gap: 7px; margin: 0 0 13px; color: #682b91; font-size: .72rem; font-weight: 850; letter-spacing: .13em; text-transform: uppercase; }
+.premium-app-cta__eyebrow svg { color: #9c4dcc; }
+.premium-app-cta__copy h2 { max-width: 590px; margin: 0; color: #2f1842; font-size: clamp(1.7rem, 3.2vw, 2.6rem); font-weight: 800; letter-spacing: -.055em; line-height: 1.1; text-wrap: balance; }
+.premium-app-cta__description { max-width: 570px; margin: 15px 0 18px; color: #594b62; font-size: .96rem; line-height: 1.7; }
+.premium-app-cta__assurance { display: flex; align-items: flex-start; gap: 8px; color: #594269; font-size: .78rem; font-weight: 700; line-height: 1.5; }
+.premium-app-cta__assurance svg { flex: 0 0 auto; margin-top: 1px; color: #6a3b8c; }
+.premium-app-cta__download { padding: 21px; border: 1px solid rgb(255 255 255 / 90%); border-radius: 19px; background: rgb(255 255 255 / 88%); box-shadow: 0 12px 30px rgb(54 31 69 / 8%); backdrop-filter: blur(12px); }
+.premium-app-cta__download-heading { display: flex; align-items: center; gap: 11px; margin-bottom: 16px; }
+.premium-app-cta__icon { display: grid; width: 42px; height: 42px; flex: 0 0 42px; place-items: center; border-radius: 13px; background: #f0e5f7; color: #6426a8; }
+.premium-app-cta__download-heading strong, .premium-app-cta__download-heading span { display: block; }
+.premium-app-cta__download-heading strong { color: #30213b; font-size: .94rem; font-weight: 800; }
+.premium-app-cta__download-heading div > span { margin-top: 2px; color: #706477; font-size: .74rem; }
+.premium-app-cta__store-buttons .store-buttons { display: grid; grid-template-columns: 1fr; gap: 9px; }
+.premium-app-cta__store-buttons .store-button { width: 100%; min-height: 48px; justify-content: flex-start; padding-inline: 14px; border-color: #e3d8eb; border-radius: 12px; font-size: .85rem; }
+.premium-app-cta__store-buttons .store-button:first-child { border-color: #54217d; background: linear-gradient(115deg, #57217c, #7836a3); color: #fff; }
+.premium-app-cta__store-buttons .store-button:first-child .store-button-icon { color: #fff; }
+.premium-app-cta__store-buttons .store-button:first-child:hover { border-color: #40145f; background: linear-gradient(115deg, #461966, #672a91); }
+.premium-app-cta__store-buttons .store-button:last-child { background: #fff; color: #362844; }
+.premium-app-cta__store-buttons .store-button:last-child .store-button-icon { color: #5b2b84; }
+.premium-app-cta__hint { display: flex; align-items: flex-start; gap: 6px; margin: 12px 0 0; color: #706477; font-size: .72rem; line-height: 1.5; }
+.premium-app-cta__hint svg { flex: 0 0 auto; margin-top: 1px; color: #72428f; }
+.premium-app-cta--detail { margin-top: 30px; }
+.premium-app-cta--detail .premium-app-cta__copy h2 { font-size: clamp(1.55rem, 2.8vw, 2.2rem); }
+@media (max-width: 760px) {
+  .premium-app-cta { grid-template-columns: 1fr; gap: 22px; border-radius: 21px; }
+  .premium-app-cta__copy h2 { max-width: 620px; }
+  .premium-app-cta__download { padding: 18px; }
+}
+@media (max-width: 520px) {
+  .premium-app-cta { gap: 19px; margin-top: 28px; padding: 22px 18px; border-radius: 18px; }
+  .premium-app-cta__copy h2 { font-size: clamp(1.55rem, 8vw, 2.1rem); }
+  .premium-app-cta__description { margin: 12px 0 15px; font-size: .89rem; }
+  .premium-app-cta__download { padding: 15px; }
+}

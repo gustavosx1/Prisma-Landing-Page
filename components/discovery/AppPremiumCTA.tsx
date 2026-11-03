@@ -1,24 +1,32 @@
-import { APP_STORE_URL, GOOGLE_PLAY_URL } from "@/lib/appDownload";
-import Link from "next/link";
+import { ArrowDownToLine, ShieldCheck, Smartphone, Sparkles } from "lucide-react";
+import { StoreButtons } from "@/components/sections/StoreButtons";
 
-export function AppPremiumCTA({ compact = false }: { compact?: boolean }) {
+type AppPremiumCTAProps = { variant: "feed" | "detail" };
+
+export function AppPremiumCTA({ variant }: AppPremiumCTAProps) {
+  const isDetail = variant === "detail";
+  const titleId = `app-premium-title-${variant}`;
+
   return (
-    <aside className={`discovery-app-cta${compact ? " discovery-app-cta--compact" : ""}`} aria-labelledby="app-premium-title">
-      <div>
-        <p className="discovery-eyebrow">Acesso no aplicativo</p>
-        <h3 id="app-premium-title">Baixe o Prisma para fazer sua assinatura.</h3>
-        <p>Instale o aplicativo e assine o Prisma Premium por lá. Escolha sua loja abaixo; este site não processa compras.</p>
+    <section className={`premium-app-cta premium-app-cta--${variant}`} aria-labelledby={titleId}>
+      <div className="premium-app-cta__copy">
+        <p className="premium-app-cta__eyebrow"><Sparkles size={14} aria-hidden="true" /> Prisma Premium</p>
+        <h2 id={titleId}>{isDetail ? "Veja o quadro completo no Prisma Premium." : "Mais contexto para cada assunto."}</h2>
+        <p className="premium-app-cta__description">
+          {isDetail
+            ? "A prévia deste tópico é só o começo. A cobertura completa e os recursos Premium ficam disponíveis no aplicativo."
+            : "Explore tópicos e coberturas completas com o Prisma Premium. O acesso é liberado após assinar pelo aplicativo."}
+        </p>
+        <div className="premium-app-cta__assurance"><ShieldCheck size={17} aria-hidden="true" /> Assinatura feita exclusivamente no aplicativo — este site não processa pagamentos.</div>
       </div>
-      <div className="discovery-app-actions">
-        <Link className="discovery-button discovery-button--outline" href="/conta?returnTo=%2Ftopicos">Ver na web</Link>
-        <a className="discovery-button discovery-button--primary" href={APP_STORE_URL} target="_blank" rel="noreferrer">
-          Apple · App Store<span className="sr-only"> (baixar o Prisma, abre em nova aba)</span>
-        </a>
-        <a className="discovery-button discovery-button--primary" href={GOOGLE_PLAY_URL} target="_blank" rel="noreferrer">
-          Android · Google Play<span className="sr-only"> (baixar o Prisma, abre em nova aba)</span>
-        </a>
-        <p className="discovery-app-note">Após instalar, conclua a assinatura na área Premium do aplicativo.</p>
+      <div className="premium-app-cta__download">
+        <div className="premium-app-cta__download-heading">
+          <span className="premium-app-cta__icon"><Smartphone size={19} aria-hidden="true" /></span>
+          <div><strong>Comece pelo app</strong><span>Disponível para iOS e Android</span></div>
+        </div>
+        <StoreButtons location={isDetail ? "premium_topic_detail" : "premium_feed"} showWeb={false} className="premium-app-cta__store-buttons" />
+        <p className="premium-app-cta__hint"><ArrowDownToLine size={14} aria-hidden="true" /> Baixe o Prisma e assine na área Premium do aplicativo.</p>
       </div>
-    </aside>
+    </section>
   );
 }

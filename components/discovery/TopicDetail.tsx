@@ -131,7 +131,7 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
 
         {!premium && (topic.lockedArticleCount ?? 0) > 0 && <aside className="topic-paywall-note"><LockKeyhole size={17} aria-hidden="true" /><p><strong>{topic.lockedArticleCount} matérias adicionais</strong> estão disponíveis no Prisma Premium. Esta prévia mostra até {topic.previewLimit ?? 2} matérias por perspectiva.</p></aside>}
 
-        {!premium && <section className="topic-locked" aria-labelledby="locked-title"><LockKeyhole size={21} aria-hidden="true" /><div><h2 id="locked-title">Esta é uma prévia pública</h2><p>As análises completas e o histórico ampliado ficam no Prisma Premium. A assinatura é feita somente pelo aplicativo.</p><Link href={`/conta?returnTo=${encodeURIComponent(`/topicos/${topic.id}`)}`}>Entrar ou criar uma conta</Link></div><AppPremiumCTA compact /></section>}
+        {!premium && <AppPremiumCTA variant="detail" />}
       </article>
     </main>
   );
