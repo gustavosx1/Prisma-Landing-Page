@@ -320,11 +320,16 @@ body {
 .discovery-header nav a { color: #4b5563; font-size: .9rem; font-weight: 600; text-decoration: none; }
 .discovery-header nav a:hover { color: var(--discovery-purple); }
 .discovery-header nav .discovery-header__download { color: var(--discovery-purple); }
+.site-theme .navbar-login { color: #fff !important; }
+.site-theme .navbar-login:hover { color: #fff !important; }
 .discovery-brand { display: inline-flex; align-items: center; gap: 10px; color: var(--discovery-ink); font-size: 1.05rem; font-weight: 800; text-decoration: none; }
 .discovery-brand b { color: var(--discovery-purple); }
 .discovery-section { padding: clamp(64px, 8vw, 104px) 0; background: var(--discovery-surface); color: var(--discovery-ink); }
 .site-theme main > .discovery-section { background: var(--discovery-surface) !important; color: var(--discovery-ink) !important; }
 .discovery-section--compact { padding-top: clamp(56px, 7vw, 88px); }
+.discovery-teaser { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: clamp(25px, 4vw, 42px); border: 1px solid var(--discovery-border); border-radius: 22px; background: #fff; }
+.discovery-teaser .discovery-lede { max-width: 720px; }
+.discovery-teaser > .discovery-button { flex: 0 0 auto; }
 .discovery-shell, .discovery-detail-shell { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
 .discovery-heading-row { display: flex; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: 32px; }
 .discovery-eyebrow { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; color: var(--discovery-purple); font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
@@ -445,6 +450,7 @@ body {
   .discovery-header nav a { font-size: .78rem; }
   .discovery-header nav a:last-child { display: none; }
   .discovery-heading-row { align-items: flex-start; flex-direction: column; }
+  .discovery-teaser { align-items: flex-start; flex-direction: column; }
   .discovery-grid, .topic-perspectives__grid { grid-template-columns: 1fr; }
   .topic-card:last-child:nth-child(odd) { grid-column: auto; }
   .topic-card__visual { height: 190px; }
@@ -459,6 +465,7 @@ body {
 @media (prefers-color-scheme: dark) {
   :root { --discovery-surface: #111827; --discovery-border: #374151; --discovery-ink: #f9fafb; --discovery-muted: #cbd5e1; }
   .discovery-header, .topic-card, .perspective-panel, .auth-card, .discovery-search { background: #1f2937; }
+  .discovery-teaser { border-color: #374151; background: #1f2937; }
   .site-theme .discovery-header { border-color: #374151 !important; background: #1f2937 !important; }
   .site-theme .discovery-header nav a { color: #e5e7eb !important; }
   .site-theme .discovery-brand { color: #f9fafb !important; }

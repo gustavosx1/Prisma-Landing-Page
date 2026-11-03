@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { DiscoveryHeader } from "@/components/discovery/DiscoveryHeader";
 import { TopicsFeed } from "@/components/discovery/TopicsFeed";
 import { Footer } from "@/components/sections/Footer";
+import { authorizedSession } from "@/lib/server/topics-api";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Descubra tópicos e compare perspectivas",
@@ -10,6 +12,9 @@ export const metadata: Metadata = {
   openGraph: { title: "Tópicos em perspectiva | Prisma News", description: "Um acontecimento, diferentes coberturas. Descubra e compare perspectivas." },
 };
 
-export default function TopicsPage() {
+export default async function TopicsPage() {
+  const session = await authorizedSession().catch(() => null);
+  if (!session) redirect("/conta?returnTo=%2Ftopicos");
+
   return <><DiscoveryHeader /><TopicsFeed /><Footer /></>;
 }

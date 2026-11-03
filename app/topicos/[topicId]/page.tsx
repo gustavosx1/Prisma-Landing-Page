@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { DiscoveryHeader } from "@/components/discovery/DiscoveryHeader";
 import { TopicDetail } from "@/components/discovery/TopicDetail";
 import { Footer } from "@/components/sections/Footer";
-import { publicPreviewContains, topicsApiUrl } from "@/lib/server/topics-api";
+import { authorizedSession, publicPreviewContains, topicsApiUrl } from "@/lib/server/topics-api";
 import { sanitizePublicDetail } from "@/lib/topics";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +37,8 @@ async function loadPublicTopic(topicId: string) {
 
 export default async function TopicPage({ params }: Props) {
   const { topicId } = await params;
+  const session = await authorizedSession().catch(() => null);
+  if (!session) redirect(`/conta?returnTo=${encodeURIComponent(`/topicos/${topicId}`)}`);
   const initialTopic = await loadPublicTopic(topicId);
   return <><DiscoveryHeader /><TopicDetail topicId={topicId} initialTopic={initialTopic} /><Footer /></>;
 }

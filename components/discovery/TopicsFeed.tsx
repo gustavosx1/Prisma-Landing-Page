@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { ArrowDownRight, ArrowUpRight, RefreshCw, Search, Sparkles } from "lucide-react";
+import { ArrowDownRight, ArrowRight, RefreshCw, Search, Sparkles } from "lucide-react";
 import { sanitizePremiumFeed, sanitizePublicFeed, type Topic } from "@/lib/topics";
 import { AppPremiumCTA } from "@/components/discovery/AppPremiumCTA";
 
@@ -46,9 +46,10 @@ export function TopicsFeed({ compact = false }: { compact?: boolean }) {
   }, []);
 
   useEffect(() => {
+    if (compact) return;
     const timer = window.setTimeout(() => { void load(); }, 0);
     return () => window.clearTimeout(timer);
-  }, [load]);
+  }, [compact, load]);
 
   function submitSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -58,16 +59,32 @@ export function TopicsFeed({ compact = false }: { compact?: boolean }) {
     void load(0, value);
   }
 
+  if (compact) {
+    return (
+      <section className="discovery-section discovery-section--compact" id="topicos" aria-labelledby="recent-topics-title">
+        <div className="discovery-shell discovery-teaser">
+          <div>
+            <p className="discovery-eyebrow"><Sparkles size={15} aria-hidden="true" /> Leitura em perspectiva</p>
+            <h2 id="recent-topics-title">O que está em pauta</h2>
+            <p className="discovery-lede">Compare como diferentes perspectivas cobrem os principais acontecimentos. Entre ou crie sua conta para explorar os tópicos.</p>
+          </div>
+          <Link className="discovery-button discovery-button--primary" href="/conta?returnTo=%2Ftopicos">
+            Ver mais tópicos <ArrowRight size={17} aria-hidden="true" />
+          </Link>
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section className={`discovery-section${compact ? " discovery-section--compact" : ""}`} id="topicos" aria-labelledby={compact ? "recent-topics-title" : "topics-title"}>
+    <section className="discovery-section" id="topicos" aria-labelledby="topics-title">
       <div className="discovery-shell">
         <div className="discovery-heading-row">
           <div>
             <p className="discovery-eyebrow"><Sparkles size={15} aria-hidden="true" /> Leitura em perspectiva</p>
-            <h2 id={compact ? "recent-topics-title" : "topics-title"}>{compact ? "O que está em pauta" : "Descubra os assuntos"}</h2>
+            <h2 id="topics-title">Descubra os assuntos</h2>
             <p className="discovery-lede">Um acontecimento, diferentes coberturas. Compare o que cada perspectiva destaca — e o que pode ficar de fora.</p>
           </div>
-          {compact && <Link className="discovery-text-link" href="/topicos">Explorar tópicos <ArrowUpRight size={16} aria-hidden="true" /></Link>}
         </div>
 
         {!compact && (
@@ -111,9 +128,9 @@ export function TopicsFeed({ compact = false }: { compact?: boolean }) {
         )}
 
         {state === "loading" && topics.length > 0 && <p className="discovery-loading-more" role="status">Atualizando tópicos…</p>}
-        {!premium && topics.length > 0 && <div className="discovery-limit-note"><span>Você está vendo a prévia pública: até 3 tópicos.</span><Link href={`/conta?returnTo=${encodeURIComponent(compact ? "/topicos" : "/topicos")}`}>Entrar na sua conta</Link></div>}
+        {!premium && topics.length > 0 && <div className="discovery-limit-note"><span>Você está vendo a prévia pública: até 3 tópicos.</span><Link href="/conta?returnTo=%2Ftopicos">Entrar na sua conta</Link></div>}
         {premium && hasMore && <button className="discovery-button discovery-button--outline discovery-more" onClick={() => void load(offset, activeQuery)}>Carregar mais</button>}
-        {!premium && <AppPremiumCTA compact={compact} />}
+        {!premium && <AppPremiumCTA />}
       </div>
     </section>
   );

@@ -4,11 +4,15 @@ Os links oficiais para download do aplicativo estão centralizados em `lib/appDo
 
 # Topic discovery integration
 
-The home page now includes a recent-topics preview, with shareable topic pages at
-`/topicos/[topicId]`, and the complete discovery view at `/topicos`. Account
-creation and sign-in use Supabase Auth with SSR cookie handling at `/conta`.
-Premium subscriptions are **not** sold on the website; app-only CTAs link to the
-App Store and Google Play.
+The home page keeps topic data behind an account gate: its topic section is a
+teaser with a **Ver mais tópicos** action, and the navbar offers **Entrar**.
+Both route visitors through `/conta`; after sign-in or account creation, they
+continue to the requested page. The `/topicos` feed and `/topicos/[topicId]`
+pages require an authenticated account. Free accounts see the capped public
+preview there; Premium access is verified separately by the backend. Account
+creation and sign-in use Supabase Auth with SSR cookie handling. Premium
+subscriptions are **not** sold on the website; app-only CTAs link to the App
+Store and Google Play.
 
 ## Environment
 
