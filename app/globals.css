@@ -1007,7 +1007,7 @@ body { color: #111827; }
 .site-theme .topics-page .discovery-shell { width: min(1240px, calc(100% - 56px)); }
 .topics-list-heading { align-items: center; margin-bottom: 24px; }
 .topics-list-heading__eyebrow { margin-bottom: 4px; }
-.site-theme .topics-list-heading h1 { margin: 0; color: #241831; font-family: var(--font-poppins), var(--font-manrope), sans-serif; font-size: clamp(2rem, 3.8vw, 3.1rem); font-weight: 800; letter-spacing: -.065em; line-height: 1.1; }
+.site-theme .topics-list-heading h1 { margin: 0; color: #4b1f68; font-family: var(--font-manrope), sans-serif; font-size: clamp(2rem, 3.8vw, 3.1rem); font-weight: 500; letter-spacing: -.04em; line-height: 1.1; }
 .topics-list-heading > span { display: none; }
 .site-theme .topics-page .topics-category-filters { justify-content: flex-end; gap: 7px; margin: 0; }
 .site-theme .topics-page .topics-category-filters button { min-height: 36px; padding: 7px 13px; font-size: .76rem; }
@@ -1111,7 +1111,7 @@ body { color: #111827; }
 }
 @media (prefers-color-scheme: dark) {
   .site-theme .topics-page { background: #fbf9fd !important; }
-  .site-theme .topics-page .topics-list-heading h1 { color: #241831 !important; }
+  .site-theme .topics-page .topics-list-heading h1 { color: #4b1f68 !important; }
   .site-theme .topics-page .topics-category-filters button:not([aria-pressed="true"]) { background: #fff !important; color: #51445d !important; }
   .topic-perspective-tabs button { color: #50465b !important; }
   .topic-perspective-panel, .topic-article { background: #fff !important; }
@@ -1125,7 +1125,7 @@ body { color: #111827; }
 
 /* Premium search control and requested Prisma Feed refinements */
 .site-theme .topics-list-heading h1 { display: flex; align-items: center; gap: 12px; }
-.site-theme .topics-list-heading h1 img { width: clamp(34px, 4vw, 46px); height: clamp(34px, 4vw, 46px); object-fit: contain; }
+.site-theme .topics-list-heading h1 img { width: clamp(44px, 4.6vw, 54px); height: clamp(44px, 4.6vw, 54px); object-fit: contain; }
 .topics-toolbar { display: flex; min-width: 0; align-items: center; justify-content: flex-end; gap: 8px; }
 .site-theme .topics-page .topics-category-filters { flex-wrap: wrap; }
 .topic-search { position: relative; width: 40px; height: 38px; flex: 0 0 auto; border: 1px solid #ddd4e5; border-radius: 999px; background: #fff; transition: width 280ms cubic-bezier(.2,.8,.2,1), border-color 180ms ease, box-shadow 180ms ease; }
@@ -1170,7 +1170,7 @@ body { color: #111827; }
   .topic-search__form input { font-size: .77rem; }
   .topic-search-message { margin: 0 0 14px; text-align: left; }
   .site-theme .topics-list-heading h1 { gap: 9px; font-size: clamp(1.9rem, 9vw, 2.5rem); }
-  .site-theme .topics-list-heading h1 img { width: 34px; height: 34px; }
+  .site-theme .topics-list-heading h1 img { width: 42px; height: 42px; }
   .topic-perspective-tabs { margin-inline: 5px; padding-inline: 4px; gap: 3px; }
   .topic-perspective-tabs button { gap: 5px; padding-inline: 5px; font-size: .75rem; }
   .topic-perspective-tabs__count { min-width: 18px; padding-inline: 4px; }

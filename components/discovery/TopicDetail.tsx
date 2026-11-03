@@ -131,10 +131,7 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
 
         {!premium && (topic.lockedArticleCount ?? 0) > 0 && <aside className="topic-paywall-note"><LockKeyhole size={17} aria-hidden="true" /><p><strong>{topic.lockedArticleCount} matérias adicionais</strong> estão disponíveis no Prisma Premium. Esta prévia mostra até {topic.previewLimit ?? 2} matérias por perspectiva.</p></aside>}
 
-        {premium && <section className="topic-premium-content" aria-labelledby="premium-content-heading"><p className="discovery-eyebrow">Prisma Premium</p><h2 id="premium-content-heading">Análise completa</h2>{topic.fullSummary && <p>{topic.fullSummary}</p>}{topic.analysis && <p>{topic.analysis}</p>}{topic.blindspots && topic.blindspots.length > 0 && <><h3>Pontos que merecem atenção</h3><ul>{topic.blindspots.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)}</ul></>}{topic.officialSource?.url && <p><a href={topic.officialSource.url} target="_blank" rel="noopener noreferrer">{topic.officialSource.label || "Consultar fonte oficial"}<span className="sr-only"> (abre em nova aba)</span></a></p>}{topic.poll?.question && <div className="topic-poll"><h3>{topic.poll.question}</h3><ul>{topic.poll.options.map((option, index) => <li key={`${option}-${index}`}>{option}</li>)}</ul></div>}</section>}
-
         {!premium && <section className="topic-locked" aria-labelledby="locked-title"><LockKeyhole size={21} aria-hidden="true" /><div><h2 id="locked-title">Esta é uma prévia pública</h2><p>As análises completas e o histórico ampliado ficam no Prisma Premium. A assinatura é feita somente pelo aplicativo.</p><Link href={`/conta?returnTo=${encodeURIComponent(`/topicos/${topic.id}`)}`}>Entrar ou criar uma conta</Link></div><AppPremiumCTA compact /></section>}
-        {premium && <p className="topic-detail__premium-note">Você está vendo o conteúdo Premium disponível para sua conta.</p>}
       </article>
     </main>
   );

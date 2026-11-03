@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { DiscoveryHeader } from "@/components/discovery/DiscoveryHeader";
 import { TopicDetail } from "@/components/discovery/TopicDetail";
 import { Footer } from "@/components/sections/Footer";
 import { authorizedSession, checkPremium, privateHeaders, publicPreviewContains, topicsApiUrl } from "@/lib/server/topics-api";
@@ -52,5 +51,5 @@ export default async function TopicPage({ params }: Props) {
   const session = await authorizedSession().catch(() => null);
   if (!session) redirect(`/conta?returnTo=${encodeURIComponent(`/topicos/${topicId}`)}`);
   const { topic: initialTopic, premium: initialPremium } = await loadTopicForSession(topicId, session.accessToken);
-  return <><DiscoveryHeader /><TopicDetail topicId={topicId} initialTopic={initialTopic} initialPremium={initialPremium} /><Footer /></>;
+  return <><TopicDetail topicId={topicId} initialTopic={initialTopic} initialPremium={initialPremium} /><Footer /></>;
 }
