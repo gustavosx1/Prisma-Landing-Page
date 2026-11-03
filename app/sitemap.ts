@@ -9,6 +9,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: "https://prismanews.com.br/topicos",
+      lastModified: new Date(),
+      changeFrequency: "hourly",
+      priority: 0.9,
+    },
+    {
       url: "https://prismanews.com.br/privacidade",
       lastModified: new Date(),
       changeFrequency: "yearly",

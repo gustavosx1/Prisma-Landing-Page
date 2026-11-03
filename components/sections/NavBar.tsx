@@ -8,6 +8,7 @@ import Link from "next/link";
 import { StoreButtons } from "@/components/sections/StoreButtons";
 
 const NAV_LINKS = [
+  { label: "Tópicos",       href: "#topicos" },
   { label: "Como funciona", href: "#como-funciona" },
   { label: "Recursos",      href: "#recursos" },
   { label: "Preços",        href: "#precos" },
@@ -67,6 +68,7 @@ export function NavBar() {
               {l.label}
             </a>
           ))}
+          <a href="/conta?returnTo=%2Ftopicos" className="text-sm text-slate-300 hover:text-white transition-colors font-medium">Entrar</a>
         </nav>
 
         {/* Desktop CTAs */}
@@ -106,6 +108,7 @@ export function NavBar() {
                   {l.label}
                 </a>
               ))}
+              <a href="/conta?returnTo=%2Ftopicos" onClick={() => setOpen(false)} className="block px-4 py-3 text-slate-300 hover:text-white hover:bg-purple-900/30 rounded-xl transition-colors font-medium">Entrar</a>
               <div className="pt-3 mt-3 border-t border-purple-900/30">
                 <StoreButtons location="navbar_mobile" />
               </div>

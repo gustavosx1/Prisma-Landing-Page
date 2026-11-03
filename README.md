@@ -2,6 +2,58 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 Os links oficiais para download do aplicativo estão centralizados em `lib/appDownload.ts` e são usados nos botões de toda a página.
 
+# Topic discovery integration
+
+The home page now includes a recent-topics preview, with shareable topic pages at
+`/topicos/[topicId]`, and the complete discovery view at `/topicos`. Account
+creation and sign-in use Supabase Auth with SSR cookie handling at `/conta`.
+Premium subscriptions are **not** sold on the website; app-only CTAs link to the
+App Store and Google Play.
+
+## Environment
+
+- `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`: public Supabase
+	Auth client values. Do not use a service-role key here.
+- `SPECTRUM_API_URL`: server-only origin for the Prisma Spectrum API.
+- `NEXT_PUBLIC_PRISMA_PREMIUM_LINK`: the app's verified Universal Link / Android
+	App Link or scheme that opens the Premium screen. Set this only after the app
+	team confirms the actual link. Store installation links remain visible as a
+	fallback.
+- Existing `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are used only by the
+	website's existing analytics route; they are never sent to the browser.
+
+The site proxy requests the public feed using exactly `limit=3&offset=0`, ignores
+public pagination/search parameters, and allowlists public topic and preview
+article fields before returning them. Premium feed/search/detail requests are
+made server-side with the validated Supabase access token and `Cache-Control:
+private, no-store`; the Spectrum API must revalidate JWT and Premium entitlement
+on every protected request. A lost entitlement or rejected token falls back to
+the public preview. Feed limits are validated server-side (50 for feed, 30 for
+search; search length 2–120).
+
+## Required deployment/backend follow-up
+
+The configured repository contains the landing site and analytics endpoint, but
+not the Prisma Spectrum API implementation, its endpoint schemas/tests, or the
+mobile app's Universal/App Links configuration. Consequently, this change cannot
+enforce the three-topic ceiling against callers who bypass this website and call
+the public API directly. The API deployment must clamp public feed access to the
+first three published topics irrespective of `limit`, `offset`, or query
+variants, keep Premium fields out of public detail responses, retain its
+Premium route authorization, and add bypass/free/Premium/expired-token tests.
+The API CORS allowlist should contain only the production site and approved
+preview origins. Confirm its actual response schemas (especially
+`GET /auth/subscription` and topic field names) against its OpenAPI/tests before
+production rollout; the website fails closed to public preview when Premium
+status cannot be verified.
+
+The mobile app team must provide the Premium-screen app link and configure
+Apple Associated Domains plus `apple-app-site-association`, and Android
+`assetlinks.json`/intent filters, if Universal/App Links are used. Allow the
+Supabase `/auth/callback` URL for production and preview domains in the Supabase
+Auth redirect allowlist. Do not add a website checkout, RevenueCat webhook call,
+or payment-sync call to this site.
+
 ## Getting Started
 
 First, run the development server:
