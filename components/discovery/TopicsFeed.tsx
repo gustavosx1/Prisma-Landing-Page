@@ -29,6 +29,10 @@ function matchesCategory(categories: string[], filter: CategoryFilter) {
   return values.some((value) => value.includes("esporte"));
 }
 
+function hasMultiplePerspectives(counts: Topic["perspectiveCounts"]) {
+  return Object.values(counts).filter((count) => count > 0).length > 1;
+}
+
 function SpectrumRuler({ counts, showLabels = true }: { counts: Topic["perspectiveCounts"]; showLabels?: boolean }) {
   const segments = [
     { key: "left", label: "Esquerda", count: counts.left, color: "#e53935" },
@@ -360,7 +364,7 @@ export function TopicsFeed() {
                 <Link className="topic-card__link" href={`/topicos/${encodeURIComponent(topic.id)}`} aria-label={`Abrir tópico: ${topic.title}`} onClick={(event) => saveBeforeOpeningTopic(event, topic.id)}>
                   <div className="topic-card__visual">
                     <Image className="topic-card__photo" src={topic.imageUrl || "/fallback.png"} alt="" fill sizes="(max-width: 700px) 100vw, 33vw" unoptimized />
-                    <span className="topic-card__visual-label">Em perspectiva</span>
+                    {hasMultiplePerspectives(topic.perspectiveCounts) && <span className="topic-card__visual-label">Em perspectiva</span>}
                   </div>
                   <div className="topic-card__body">
                     <div className="topic-card__meta"><time dateTime={topic.publishedAt ?? undefined}>{relativeTime(topic.publishedAt)}</time>{topic.categories[0] && <span>{topic.categories[0]}</span>}</div>
