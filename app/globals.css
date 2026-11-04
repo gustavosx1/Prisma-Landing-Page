@@ -1132,7 +1132,8 @@ body { color: #111827; }
 /* Premium search control and requested Prisma Feed refinements */
 .site-theme .topics-list-heading h1 { display: flex; align-items: center; gap: 12px; }
 .site-theme .topics-list-heading h1 img { width: clamp(44px, 4.6vw, 54px); height: clamp(44px, 4.6vw, 54px); object-fit: contain; }
-.topics-toolbar { display: flex; min-width: 0; align-items: center; justify-content: flex-end; gap: 8px; }
+.topics-toolbar { display: flex; min-width: 0; flex-wrap: nowrap; align-items: center; justify-content: flex-end; gap: 8px; }
+.topics-toolbar__actions { display: flex; flex: 0 0 auto; align-items: center; gap: 6px; }
 .site-theme .topics-page .topics-category-filters { flex-wrap: wrap; }
 .topic-search { position: relative; width: 40px; height: 38px; flex: 0 0 auto; overflow: hidden; border: 1px solid #ddd4e5; border-radius: 999px; background: #fff; transition: width 280ms cubic-bezier(.2,.8,.2,1), border-color 180ms ease, box-shadow 180ms ease; }
 .topic-search--open { width: min(280px, 35vw); border-color: #9c72bd; box-shadow: 0 0 0 3px rgb(126 54 178 / 10%); }
@@ -1172,7 +1173,7 @@ body { color: #111827; }
 .topic-detail__summary { max-width: 740px; margin: 13px 0; font-size: clamp(.94rem, 1.35vw, 1.1rem); line-height: 1.58; }
 @media (max-width: 900px) {
   .topics-toolbar { width: 100%; justify-content: space-between; }
-  .site-theme .topics-page .topics-category-filters { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; }
+  .site-theme .topics-page .topics-category-filters { min-width: 0; flex: 1 1 auto; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; }
   .topic-search--open { width: min(280px, 48vw); }
 }
 @media (max-width: 600px) {

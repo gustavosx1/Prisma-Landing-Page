@@ -308,19 +308,21 @@ export function TopicsFeed() {
                 </button>
               ))}
             </div>
-            {premium && <div className={`topic-search${searchOpen ? " topic-search--open" : ""}`}>
-              <button type="button" className="topic-search__trigger" aria-label="Pesquisar tópicos" aria-expanded={searchOpen} onClick={() => {
-                setSearchOpen(true);
-                window.setTimeout(() => document.getElementById("premium-topic-search")?.focus(), 0);
-              }}><Search size={17} aria-hidden="true" /></button>
-              <form className="topic-search__form" role="search" onSubmit={submitSearch}>
-                <label htmlFor="premium-topic-search" className="sr-only">Pesquisar tópicos no Prisma Premium</label>
-                <input id="premium-topic-search" value={searchDraft} onChange={(event) => setSearchDraft(event.target.value)} placeholder="Pesquisar assuntos" maxLength={121} tabIndex={searchOpen ? 0 : -1} aria-hidden={!searchOpen} />
-                <button type="submit" className="topic-search__submit" aria-label="Pesquisar" tabIndex={searchOpen ? 0 : -1}><Search size={17} aria-hidden="true" /></button>
-                <button type="button" className="topic-search__close" aria-label="Fechar pesquisa" onClick={closeSearch} tabIndex={searchOpen ? 0 : -1}><X size={16} aria-hidden="true" /></button>
-              </form>
-            </div>}
-            <FooterSignOut compact />
+            <div className="topics-toolbar__actions">
+              {premium && <div className={`topic-search${searchOpen ? " topic-search--open" : ""}`}>
+                <button type="button" className="topic-search__trigger" aria-label="Pesquisar tópicos" aria-expanded={searchOpen} onClick={() => {
+                  setSearchOpen(true);
+                  window.setTimeout(() => document.getElementById("premium-topic-search")?.focus(), 0);
+                }}><Search size={17} aria-hidden="true" /></button>
+                <form className="topic-search__form" role="search" onSubmit={submitSearch}>
+                  <label htmlFor="premium-topic-search" className="sr-only">Pesquisar tópicos no Prisma Premium</label>
+                  <input id="premium-topic-search" value={searchDraft} onChange={(event) => setSearchDraft(event.target.value)} placeholder="Pesquisar assuntos" maxLength={121} tabIndex={searchOpen ? 0 : -1} aria-hidden={!searchOpen} />
+                  <button type="submit" className="topic-search__submit" aria-label="Pesquisar" tabIndex={searchOpen ? 0 : -1}><Search size={17} aria-hidden="true" /></button>
+                  <button type="button" className="topic-search__close" aria-label="Fechar pesquisa" onClick={closeSearch} tabIndex={searchOpen ? 0 : -1}><X size={16} aria-hidden="true" /></button>
+                </form>
+              </div>}
+              <FooterSignOut compact />
+            </div>
           </div>
         </div>
 
