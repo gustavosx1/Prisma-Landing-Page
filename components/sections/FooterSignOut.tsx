@@ -6,7 +6,7 @@ import { LogOut } from "lucide-react";
 import { createSupabaseBrowserClient, isSupabaseBrowserConfigured } from "@/lib/supabase/browser";
 import { clearTopicFeedSnapshot } from "@/lib/topicFeedState";
 
-export function FooterSignOut() {
+export function FooterSignOut({ compact = false }: { compact?: boolean }) {
   const router = useRouter();
   const [authenticated, setAuthenticated] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -48,9 +48,16 @@ export function FooterSignOut() {
   if (!authenticated) return null;
 
   return (
-    <button className="footer-sign-out" type="button" onClick={() => void signOut()} disabled={busy}>
+    <button
+      className={compact ? "topic-toolbar-sign-out" : "footer-sign-out"}
+      type="button"
+      onClick={() => void signOut()}
+      disabled={busy}
+      aria-label={compact ? (busy ? "Saindo da conta" : "Sair da conta") : undefined}
+      title={compact ? (busy ? "Saindo da conta" : "Sair da conta") : undefined}
+    >
       <LogOut size={15} aria-hidden="true" />
-      {busy ? "Saindo…" : "Sair da conta"}
+      {!compact && (busy ? "Saindo…" : "Sair da conta")}
     </button>
   );
 }

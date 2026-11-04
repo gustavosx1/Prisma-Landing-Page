@@ -8,6 +8,7 @@ import { sanitizePremiumFeed, sanitizePublicFeed, type Topic } from "@/lib/topic
 import { clearTopicFeedSnapshot, readTopicFeedSnapshot, saveTopicFeedSnapshot, type TopicFeedCategory } from "@/lib/topicFeedState";
 import { AppPremiumCTA } from "@/components/discovery/AppPremiumCTA";
 import { TopicsLoading } from "@/components/discovery/TopicsLoading";
+import { FooterSignOut } from "@/components/sections/FooterSignOut";
 
 type FeedState = "loading" | "ready" | "empty" | "error";
 type SearchMessage = "" | "validation" | "access" | "error";
@@ -299,7 +300,7 @@ export function TopicsFeed() {
           <div>
             <h1 id="topics-title"><Image src="/logo.svg" alt="" width={42} height={42} priority /> <span>Prisma <span className="topics-list-heading__bullet" aria-hidden="true">•</span> Feed</span></h1>
           </div>
-          <div className="topics-toolbar">
+          <div className={`topics-toolbar${searchOpen ? " topics-toolbar--search-open" : ""}`}>
             <div className="topics-category-filters" role="group" aria-label="Filtrar tópicos por categoria">
               {CATEGORY_FILTERS.map((item) => (
                 <button type="button" key={item} aria-pressed={category === item} onClick={() => { setCategory(item); setFeaturedIndex(0); }}>
@@ -319,6 +320,7 @@ export function TopicsFeed() {
                 <button type="button" className="topic-search__close" aria-label="Fechar pesquisa" onClick={closeSearch} tabIndex={searchOpen ? 0 : -1}><X size={16} aria-hidden="true" /></button>
               </form>
             </div>}
+            <FooterSignOut compact />
           </div>
         </div>
 

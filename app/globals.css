@@ -1150,6 +1150,10 @@ body { color: #111827; }
 .footer-sign-out { display: inline-flex; align-items: center; gap: 7px; padding: 7px 10px; border: 1px solid #e3dfeb; border-radius: 9px; background: #fff; color: #5b2b84; font-size: .76rem; font-weight: 650; transition: border-color 160ms ease, background 160ms ease, color 160ms ease; }
 .footer-sign-out:hover:not(:disabled) { border-color: #b9a2cc; background: #f7f2fa; color: #42185e; }
 .footer-sign-out:disabled { cursor: wait; opacity: .65; }
+.topic-toolbar-sign-out { display: inline-grid; width: 40px; height: 38px; flex: 0 0 auto; place-items: center; padding: 0; border: 1px solid #ddd4e5; border-radius: 999px; background: #fff; color: #51445d; cursor: pointer; transition: border-color 180ms ease, background 180ms ease, color 180ms ease, transform 180ms ease; }
+.topic-toolbar-sign-out:hover:not(:disabled) { border-color: #b9a2cc; background: #f7f2fa; color: #6426a8; transform: scale(1.05); }
+.topic-toolbar-sign-out:focus-visible { outline: 3px solid rgb(126 54 178 / 28%); outline-offset: 2px; }
+.topic-toolbar-sign-out:disabled { cursor: wait; opacity: .65; }
 .topic-search-message { margin: -8px 0 18px auto; color: #51445d; font-size: .82rem; text-align: right; }
 .topic-search-message--validation { color: #8a5700; }
 .topic-search-message--access { color: #6426a8; }
@@ -1173,9 +1177,11 @@ body { color: #111827; }
 }
 @media (max-width: 600px) {
   .topics-toolbar { gap: 6px; }
+  .topics-toolbar--search-open .topic-toolbar-sign-out { display: none; }
   .site-theme .topics-page .topics-category-filters { width: auto; flex: 1 1 auto; }
   .topic-search { width: 38px; height: 36px; }
   .topic-search--open { width: min(230px, calc(100vw - 64px)); }
+  .topic-toolbar-sign-out { width: 38px; height: 36px; }
   .topic-search__form input { font-size: .77rem; }
   .topic-search-message { margin: 0 0 14px; text-align: left; }
   .site-theme .topics-list-heading h1 { gap: 9px; font-size: clamp(1.9rem, 9vw, 2.5rem); }
