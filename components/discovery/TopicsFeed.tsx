@@ -219,7 +219,7 @@ export function TopicsFeed() {
   return (
     <section className="discovery-section topics-page" id="topicos" aria-labelledby="topics-title">
       <div className="discovery-shell">
-        <div className="topics-list-heading">
+        <div className={`topics-list-heading${searchOpen ? " topics-list-heading--search-open" : ""}`}>
           <div>
             <h1 id="topics-title"><Image src="/logo.svg" alt="" width={42} height={42} priority /> <span>Prisma <span className="topics-list-heading__bullet" aria-hidden="true">•</span> Feed</span></h1>
           </div>
