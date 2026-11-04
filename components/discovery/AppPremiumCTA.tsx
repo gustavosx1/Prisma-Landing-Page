@@ -1,4 +1,5 @@
-import { ArrowDownToLine, ShieldCheck, Smartphone, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { ArrowDownToLine, ShieldCheck, Sparkles } from "lucide-react";
 import { StoreButtons } from "@/components/sections/StoreButtons";
 
 type AppPremiumCTAProps = { variant: "feed" | "detail" };
@@ -21,7 +22,7 @@ export function AppPremiumCTA({ variant }: AppPremiumCTAProps) {
       </div>
       <div className="premium-app-cta__download">
         <div className="premium-app-cta__download-heading">
-          <span className="premium-app-cta__icon"><Smartphone size={19} aria-hidden="true" /></span>
+          <span className="premium-app-cta__icon"><Image src="/logo.svg" alt="" width={30} height={30} /></span>
           <div><strong>Comece pelo app</strong><span>Disponível para iOS e Android</span></div>
         </div>
         <StoreButtons location={isDetail ? "premium_topic_detail" : "premium_feed"} showWeb={false} className="premium-app-cta__store-buttons" />

@@ -221,7 +221,7 @@ export function TopicsFeed() {
       <div className="discovery-shell">
         <div className="topics-list-heading">
           <div>
-            <h1 id="topics-title"><Image src="/logo.svg" alt="" width={54} height={54} priority /> Prisma • Feed</h1>
+            <h1 id="topics-title"><Image src="/logo.svg" alt="" width={42} height={42} priority /> Prisma - Feed</h1>
           </div>
           <div className="topics-toolbar">
             <div className="topics-category-filters" role="group" aria-label="Filtrar tópicos por categoria">
@@ -258,17 +258,19 @@ export function TopicsFeed() {
         {state === "ready" && topics.length > 0 && visibleTopics.length === 0 && <div className="discovery-state">Nenhum tópico nesta categoria por enquanto. Escolha outro tema para continuar explorando.</div>}
 
         {featuredTopic && <section className="featured-carousel" aria-label="Tópicos em destaque" aria-roledescription="carrossel">
-          <Link className="featured-topic" href={`/topicos/${encodeURIComponent(featuredTopic.id)}`} aria-label={`Ver tópico em destaque: ${featuredTopic.title}`}>
-            <Image className="featured-topic__image" src={featuredTopic.imageUrl || "/fallback-banner.png"} alt="" fill sizes="(max-width: 760px) 100vw, 1180px" unoptimized priority />
-            <span className="featured-topic__veil" aria-hidden="true" />
-            <span className="featured-topic__content">
-              <span className="featured-topic__tag"><Sparkles size={14} aria-hidden="true" /> Em destaque · {featuredTopic.categories[0] || "Prisma News"}</span>
-              <time className="featured-topic__date" dateTime={featuredTopic.publishedAt ?? undefined}>{relativeTime(featuredTopic.publishedAt)}</time>
-              <strong>{featuredTopic.title}</strong>
-              <span className="featured-topic__summary">{summaryPreview(featuredTopic.summary || "Leia e compare as principais perspectivas sobre este assunto.")}</span>
-              <span className="featured-topic__action">Ler cobertura completa <ArrowRight size={17} aria-hidden="true" /></span>
-            </span>
-          </Link>
+          <div className="featured-carousel__track">
+            {carouselTopics.map((topic, index) => <Link className={`featured-topic${index === featuredIndex ? " featured-topic--active" : ""}`} key={topic.id} href={`/topicos/${encodeURIComponent(topic.id)}`} aria-label={`Ver tópico em destaque: ${topic.title}`}>
+              <Image className="featured-topic__image" src={topic.imageUrl || "/fallback-banner.png"} alt="" fill sizes="(max-width: 760px) 88vw, 1180px" unoptimized priority={index === 0} />
+              <span className="featured-topic__veil" aria-hidden="true" />
+              <span className="featured-topic__content">
+                <span className="featured-topic__tag"><Sparkles size={14} aria-hidden="true" /> Em destaque · {topic.categories[0] || "Prisma News"}</span>
+                <time className="featured-topic__date" dateTime={topic.publishedAt ?? undefined}>{relativeTime(topic.publishedAt)}</time>
+                <strong>{topic.title}</strong>
+                <span className="featured-topic__summary">{summaryPreview(topic.summary || "Leia e compare as principais perspectivas sobre este assunto.")}</span>
+                <span className="featured-topic__action">Ler cobertura completa <ArrowRight size={17} aria-hidden="true" /></span>
+              </span>
+            </Link>)}
+          </div>
           {carouselTopics.length > 1 && <div className="featured-carousel__controls">
             <button type="button" aria-label="Tópico anterior" onClick={() => setFeaturedIndex((index) => (index - 1 + carouselTopics.length) % carouselTopics.length)}><ArrowLeft size={17} aria-hidden="true" /></button>
             <div className="featured-carousel__dots" aria-label={`Tópico ${featuredIndex + 1} de ${carouselTopics.length}`}>
@@ -301,7 +303,7 @@ export function TopicsFeed() {
         )}
 
         {state === "loading" && topics.length > 0 && <p className="discovery-loading-more" role="status">Atualizando assuntos…</p>}
-        {!premium && topics.length > 0 && <div className="discovery-limit-note"><span>Você está vendo a prévia pública: até 3 tópicos.</span><Link href="/conta?returnTo=%2Ftopicos">Entrar na sua conta</Link></div>}
+        {!premium && topics.length > 0 && <div className="discovery-limit-note discovery-limit-note--premium"><p>Assine o Prisma Premium para acessar mais</p></div>}
         {premium && hasMore && <button className="discovery-button discovery-button--outline discovery-more" onClick={() => void load(offset, activeQuery)} disabled={state === "loading"}>Carregar mais</button>}
         {!premium && <AppPremiumCTA variant="feed" />}
       </div>
