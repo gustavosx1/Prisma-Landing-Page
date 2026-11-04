@@ -267,6 +267,7 @@ export function TopicsFeed() {
                 <time className="featured-topic__date" dateTime={topic.publishedAt ?? undefined}>{relativeTime(topic.publishedAt)}</time>
                 <strong>{topic.title}</strong>
                 <span className="featured-topic__summary">{summaryPreview(topic.summary || "Leia e compare as principais perspectivas sobre este assunto.")}</span>
+                <SpectrumRuler counts={topic.perspectiveCounts} showLabels={false} />
                 <span className="featured-topic__action">Ler cobertura completa <ArrowRight size={17} aria-hidden="true" /></span>
               </span>
             </Link>)}
