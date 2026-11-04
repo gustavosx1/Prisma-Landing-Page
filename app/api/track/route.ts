@@ -62,6 +62,10 @@ export async function POST(request: Request): Promise<Response> {
   const supabaseUrl = process.env.SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!supabaseUrl || !serviceRoleKey) {
+    if (process.env.NODE_ENV !== "production") {
+      return Response.json({ ok: true, skipped: true });
+    }
+
     console.error("Tracking is missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
     return Response.json({ error: "Tracking is not configured" }, { status: 500 });
   }

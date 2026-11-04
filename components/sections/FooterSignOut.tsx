@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
-import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { createSupabaseBrowserClient, isSupabaseBrowserConfigured } from "@/lib/supabase/browser";
 
 export function FooterSignOut() {
   const router = useRouter();
@@ -11,6 +11,8 @@ export function FooterSignOut() {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
+    if (!isSupabaseBrowserConfigured()) return;
+
     const supabase = createSupabaseBrowserClient();
     let mounted = true;
 
@@ -28,6 +30,8 @@ export function FooterSignOut() {
   }, []);
 
   async function signOut() {
+    if (!isSupabaseBrowserConfigured()) return;
+
     setBusy(true);
     const supabase = createSupabaseBrowserClient();
     const { error } = await supabase.auth.signOut();
