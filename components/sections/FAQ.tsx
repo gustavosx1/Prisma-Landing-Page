@@ -28,11 +28,11 @@ const FAQS = [
   },
   {
     q: "Qual a diferença entre o plano Grátis e o Premium?",
-    a: "No plano Grátis, você tem acesso a até 3 eventos por dia com perspectivas básicas. O Premium custa R$ 9,90 por mês e inclui acesso ilimitado, análise aprofundada, detector de blindspots, contexto histórico, histórico completo de eventos, alertas temáticos personalizados, export de análises e busca assistida por LLM em fontes primárias oficiais. Essa busca não é um fact-check automatizado nem garante a veracidade de informações.",
+    a: "Sem uma assinatura, qualquer visitante pode consultar a prévia pública de até 3 tópicos, com perspectivas básicas. O Premium inclui acesso ampliado, análise aprofundada, detector de blindspots, contexto histórico, alertas e busca assistida em fontes primárias oficiais. A disponibilidade e o preço são informados pela App Store ou Google Play no aplicativo; este site não processa compras. A busca não é um fact-check automatizado nem garante a veracidade de informações.",
   },
   {
     q: "Posso cancelar o Premium quando quiser?",
-    a: "Sim, sem burocracia. O cancelamento pode ser feito a qualquer momento direto pelo painel da sua conta. Você continua com acesso até o fim do período já pago. Sem multas, sem tentativas de retenção agressiva.",
+    a: "Sim. Assinaturas são gerenciadas pela App Store ou Google Play, onde você pode consultar as opções de cancelamento e o período de acesso restante. O site não gerencia cobranças ou cancelamentos.",
   },
   {
     q: "O Prisma News funciona bem no celular?",

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Apple, Play } from "lucide-react";
+import { Apple, Globe2, Play } from "lucide-react";
+import Link from "next/link";
 import { APP_STORE_URL, GOOGLE_PLAY_URL } from "@/lib/appDownload";
 import { captureAttribution, sendEvent } from "@/lib/track";
 
@@ -11,12 +12,14 @@ const APPSTORE_URL = APP_STORE_URL;
 type DownloadButtonsProps = {
   compact?: boolean;
   className?: string;
+  showWeb?: boolean;
   onStoreClick?: (store: "play" | "appstore") => void;
 };
 
 export function DownloadButtons({
   compact = false,
   className = "",
+  showWeb = true,
   onStoreClick,
 }: DownloadButtonsProps) {
   const appStoreLink = useRef<HTMLAnchorElement>(null);
@@ -75,6 +78,10 @@ export function DownloadButtons({
         <Play aria-hidden="true" className="store-button-icon" />
         <span>{compact ? "Google Play" : "Disponível no Google Play"}</span>
       </a>
+      {showWeb && <Link href="/conta?returnTo=%2Ftopicos" className="store-button store-button--web" aria-label="Ver Prisma News na web">
+        <Globe2 aria-hidden="true" className="store-button-icon" />
+        <span>Ver na web</span>
+      </Link>}
     </div>
   );
 }

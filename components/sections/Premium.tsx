@@ -22,7 +22,7 @@ const PLANS: {
     description: "Para começar a ver os dois lados.",
     highlight: false,
     features: [
-      { text: "3 eventos por dia",                         included: true  },
+      { text: "Prévia pública de até 3 tópicos",          included: true  },
       { text: "Perspectivas esquerda/centro/direita",      included: true  },
       { text: "Resumo básico por evento",                  included: true  },
       { text: "Histórico de 7 dias",                       included: true  },
@@ -35,8 +35,8 @@ const PLANS: {
   },
   {
     name: "Premium",
-    price: "9,90",
-    period: "por mês",
+    price: null,
+    period: "consulte na loja",
     description: "Para quem quer o quadro completo, sempre.",
     highlight: true,
     badge: "Mais popular",
@@ -106,17 +106,16 @@ export function Premium() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          aria-label="Promoção de lançamento válida durante outubro de 2026"
+          aria-label="Assinatura disponível nos aplicativos Prisma News"
         >
           <p className="promo-eyebrow mb-2 text-sm font-bold uppercase tracking-[0.16em]">
-            Oferta de lançamento · outubro de 2026
+            Disponível somente no aplicativo
           </p>
           <h3 className="mb-2 text-2xl font-extrabold sm:text-3xl">
-            Primeiro mês por <span>R$ 2,90</span>
+            Escolha o Premium na sua loja de aplicativos
           </h3>
           <p className="mx-auto max-w-2xl text-sm leading-relaxed sm:text-base">
-            Para novos usuários que assinarem durante outubro de 2026. A partir do segundo mês,
-            o Premium renova por R$ 9,90/mês. Confira as condições exibidas na loja antes de assinar.
+            Assinaturas são processadas pela App Store ou Google Play no aplicativo Prisma News. Confira o preço, a renovação e as condições diretamente na loja. Este site não processa compras.
           </p>
         </motion.aside>
 
@@ -150,7 +149,7 @@ export function Premium() {
                 <p className="text-sm text-slate-400 mb-5">{plan.description}</p>
                 <div className="flex items-baseline gap-2">
                   <span className="text-4xl font-extrabold text-white">
-                    {plan.price ? `R$ ${plan.price}` : "Grátis"}
+                    {plan.price ? `R$ ${plan.price}` : plan.name === "Premium" ? "Na loja" : "Grátis"}
                   </span>
                   <span className="text-slate-400 text-sm">/{plan.period}</span>
                 </div>

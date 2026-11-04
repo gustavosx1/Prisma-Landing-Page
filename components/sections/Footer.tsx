@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { StoreButtons } from "@/components/sections/StoreButtons";
+import { FooterSignOut } from "@/components/sections/FooterSignOut";
 
 const LEGAL_LINKS = [
   { label: "Termos de Uso", href: "/termos-de-uso" },
@@ -79,10 +80,13 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col items-start justify-between gap-3 pt-6 text-xs text-slate-500 sm:flex-row sm:items-center">
           <p>© {new Date().getFullYear()} Prisma News. Todos os direitos reservados.</p>
-          <p className="flex items-center gap-1.5">
-            Feito com cuidado no Brasil{" "}
-            <span role="img" aria-label="Brasil">🇧🇷</span>
-          </p>
+          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+            <p className="flex items-center gap-1.5">
+              Feito com cuidado no Brasil{" "}
+              <span role="img" aria-label="Brasil">🇧🇷</span>
+            </p>
+            <FooterSignOut />
+          </div>
         </div>
       </div>
     </footer>
