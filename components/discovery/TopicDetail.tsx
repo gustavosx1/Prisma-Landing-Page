@@ -4,8 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { ArrowLeft, ArrowUpRight, BadgeCheck, CircleHelp, LockKeyhole, RefreshCw } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { AppPremiumCTA } from "@/components/discovery/AppPremiumCTA";
 import { sanitizePremiumDetail, sanitizePublicDetail, type Topic, type TopicArticle } from "@/lib/topics";
+import { readTopicFeedSnapshot } from "@/lib/topicFeedState";
 import { TopicsLoading } from "@/components/discovery/TopicsLoading";
 
 type ApiDetail = { topic?: unknown; access?: "preview" | "premium"; error?: string };
@@ -61,6 +63,7 @@ function ArticleRow({ article, premium }: { article: TopicArticle; premium: bool
 }
 
 export function TopicDetail({ topicId, initialTopic = null, initialPremium = false }: { topicId: string; initialTopic?: Topic | null; initialPremium?: boolean }) {
+  const router = useRouter();
   const [topic, setTopic] = useState<Topic | null>(initialTopic);
   const [state, setState] = useState<"loading" | "ready" | "error">(initialTopic ? "ready" : "loading");
   const [premium, setPremium] = useState(initialPremium);
@@ -95,7 +98,12 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
 
   return (
     <main className="discovery-detail-shell">
-      <Link className="discovery-text-link" href="/topicos"><ArrowLeft size={16} aria-hidden="true" /> Todos os tópicos</Link>
+      <Link className="discovery-text-link" href="/topicos" onClick={(event) => {
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        if (!readTopicFeedSnapshot(topicId)) return;
+        event.preventDefault();
+        router.back();
+      }}><ArrowLeft size={16} aria-hidden="true" /> Todos os tópicos</Link>
       <article className="topic-detail">
         <header className="topic-detail__header">
           <div className="topic-detail__image">

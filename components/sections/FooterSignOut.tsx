@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { createSupabaseBrowserClient, isSupabaseBrowserConfigured } from "@/lib/supabase/browser";
+import { clearTopicFeedSnapshot } from "@/lib/topicFeedState";
 
 export function FooterSignOut() {
   const router = useRouter();
@@ -39,6 +40,7 @@ export function FooterSignOut() {
       setBusy(false);
       return;
     }
+    clearTopicFeedSnapshot();
     router.replace("/");
     router.refresh();
   }

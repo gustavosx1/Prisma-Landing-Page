@@ -2,15 +2,16 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FormEvent, type MouseEvent } from "react";
 import { ArrowDownRight, ArrowLeft, ArrowRight, RefreshCw, Search, Sparkles, X } from "lucide-react";
 import { sanitizePremiumFeed, sanitizePublicFeed, type Topic } from "@/lib/topics";
+import { clearTopicFeedSnapshot, readTopicFeedSnapshot, saveTopicFeedSnapshot, type TopicFeedCategory } from "@/lib/topicFeedState";
 import { AppPremiumCTA } from "@/components/discovery/AppPremiumCTA";
 import { TopicsLoading } from "@/components/discovery/TopicsLoading";
 
 type FeedState = "loading" | "ready" | "empty" | "error";
 type SearchMessage = "" | "validation" | "access" | "error";
-type CategoryFilter = "tudo" | "economia" | "política" | "tecnologia" | "mundo" | "esportes";
+type CategoryFilter = TopicFeedCategory;
 
 const CATEGORY_FILTERS: CategoryFilter[] = ["tudo", "economia", "política", "tecnologia", "mundo", "esportes"];
 
@@ -90,7 +91,7 @@ export function TopicsFeed() {
   const activeQueryRef = useRef("");
   const requestId = useRef(0);
   const activeRequest = useRef<AbortController | null>(null);
-  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const restoreScrollY = useRef<number | null>(null);
   const visibleTopics = topics.filter((topic) => matchesCategory(topic.categories, category));
   const carouselTopics = visibleTopics.slice(0, 5);
   const featuredTopic = carouselTopics[featuredIndex % Math.max(carouselTopics.length, 1)];
@@ -163,57 +164,128 @@ export function TopicsFeed() {
   }, [carouselTopics.length]);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => { void load(); }, 0);
-    return () => window.clearTimeout(timer);
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      const snapshot = readTopicFeedSnapshot();
+      if (!snapshot) {
+        clearTopicFeedSnapshot();
+        void load();
+        return;
+      }
+
+      clearTopicFeedSnapshot();
+      setCategory(snapshot.category);
+      setFeaturedIndex(snapshot.featuredIndex);
+      setSearchOpen(snapshot.searchOpen);
+      setSearchDraft(snapshot.searchDraft);
+      setActiveQuery(snapshot.activeQuery);
+      activeQueryRef.current = snapshot.activeQuery;
+
+      void (async () => {
+        try {
+          const params = new URLSearchParams({ limit: snapshot.activeQuery ? "20" : "50", offset: "0" });
+          if (snapshot.activeQuery) params.set("q", snapshot.activeQuery);
+          const response = await fetch(`/api/topics?${params.toString()}`, { cache: "no-store" });
+          const payload = await response.json() as { topics?: unknown; access?: string; error?: string };
+          if (cancelled) return;
+
+          if (!response.ok || (snapshot.activeQuery && payload.access !== "premium")) {
+            if (snapshot.activeQuery && (response.status === 401 || response.status === 403 || payload.access !== "premium")) {
+              setSearchOpen(false);
+              setSearchDraft("");
+              setActiveQuery("");
+              activeQueryRef.current = "";
+              restoreScrollY.current = 0;
+              void load(0, "");
+              return;
+            }
+            throw new Error(payload.error || "feed access could not be restored");
+          }
+
+          const currentPremium = payload.access === "premium";
+          if (currentPremium !== snapshot.premium) {
+            const incoming = currentPremium
+              ? sanitizePremiumFeed(payload.topics ?? payload)
+              : sanitizePublicFeed(payload.topics ?? payload);
+            const topicsEnvelope = payload.topics as { meta?: { has_more?: unknown } } | undefined;
+            setTopics(incoming);
+            setPremium(currentPremium);
+            setOffset(incoming.length);
+            setHasMore(currentPremium && (typeof topicsEnvelope?.meta?.has_more === "boolean" ? topicsEnvelope.meta.has_more : incoming.length >= 50));
+            setSearchOpen(false);
+            setSearchDraft("");
+            setActiveQuery("");
+            activeQueryRef.current = "";
+            setSearchMessage("");
+            setState(incoming.length ? "ready" : "empty");
+            setFeaturedIndex(0);
+            restoreScrollY.current = 0;
+            return;
+          }
+
+          setTopics(snapshot.topics);
+          setPremium(currentPremium);
+          setOffset(snapshot.offset);
+          setHasMore(snapshot.hasMore);
+          setSearchMessage("");
+          setState(snapshot.topics.length ? "ready" : "empty");
+          restoreScrollY.current = snapshot.scrollY;
+        } catch {
+          if (cancelled) return;
+          restoreScrollY.current = 0;
+          void load(0, snapshot.activeQuery);
+        }
+      })();
+    }, 0);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
   }, [load]);
 
-  useEffect(() => {
-    if (!searchOpen || !premium) return;
-    const term = searchDraft.trim();
-    if (!term && !activeQueryRef.current) return;
-    activeRequest.current?.abort();
-    requestId.current += 1;
-    if (term && (term.length < 2 || term.length > 120)) {
-      debounceTimer.current = setTimeout(() => {
-        setSearchMessage("validation");
-        setState("ready");
-        setTopics([]);
-      }, 0);
-      return () => {
-        if (debounceTimer.current) clearTimeout(debounceTimer.current);
-      };
-    }
-    debounceTimer.current = setTimeout(() => {
-      activeQueryRef.current = term;
-      setActiveQuery(term);
-      void load(0, term);
-    }, 450);
-    return () => {
-      if (debounceTimer.current) clearTimeout(debounceTimer.current);
-    };
-  }, [load, premium, searchDraft, searchOpen]);
+  useLayoutEffect(() => {
+    if (restoreScrollY.current === null) return;
+    window.scrollTo(0, restoreScrollY.current ?? 0);
+    restoreScrollY.current = null;
+  }, [topics]);
 
   function submitSearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const term = searchDraft.trim();
+    setSearchMessage("");
     if (term.length < 2 || term.length > 120) {
       setSearchMessage("validation");
       return;
     }
-    if (debounceTimer.current) clearTimeout(debounceTimer.current);
     activeQueryRef.current = term;
     setActiveQuery(term);
     void load(0, term);
   }
 
   function closeSearch() {
-    if (debounceTimer.current) clearTimeout(debounceTimer.current);
     setSearchOpen(false);
     setSearchDraft("");
     activeQueryRef.current = "";
     setActiveQuery("");
     setSearchMessage("");
     if (activeQuery) void load(0, "");
+  }
+
+  function saveBeforeOpeningTopic(event: MouseEvent<HTMLAnchorElement>, topicId: string) {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    saveTopicFeedSnapshot({
+      topicId,
+      scrollY: window.scrollY,
+      topics,
+      premium,
+      category,
+      offset,
+      hasMore,
+      featuredIndex,
+      searchOpen,
+      searchDraft,
+      activeQuery,
+    });
   }
 
   return (
@@ -259,7 +331,7 @@ export function TopicsFeed() {
 
         {featuredTopic && <section className="featured-carousel" aria-label="Tópicos em destaque" aria-roledescription="carrossel">
           <div className="featured-carousel__track">
-            {carouselTopics.map((topic, index) => <Link className={`featured-topic${index === featuredIndex ? " featured-topic--active" : ""}`} key={topic.id} href={`/topicos/${encodeURIComponent(topic.id)}`} aria-label={`Ver tópico em destaque: ${topic.title}`}>
+            {carouselTopics.map((topic, index) => <Link className={`featured-topic${index === featuredIndex ? " featured-topic--active" : ""}`} key={topic.id} href={`/topicos/${encodeURIComponent(topic.id)}`} aria-label={`Ver tópico em destaque: ${topic.title}`} onClick={(event) => saveBeforeOpeningTopic(event, topic.id)}>
               <Image className="featured-topic__image" src={topic.imageUrl || "/fallback-banner.png"} alt="" fill sizes="(max-width: 760px) 88vw, 1180px" unoptimized priority={index === 0} />
               <span className="featured-topic__veil" aria-hidden="true" />
               <span className="featured-topic__content">
@@ -285,7 +357,7 @@ export function TopicsFeed() {
           <div className="discovery-grid" aria-live="polite">
             {visibleTopics.slice(carouselTopics.length).map((topic, index) => (
               <article className={`topic-card topic-card--${index % 3}`} key={topic.id}>
-                <Link className="topic-card__link" href={`/topicos/${encodeURIComponent(topic.id)}`} aria-label={`Abrir tópico: ${topic.title}`}>
+                <Link className="topic-card__link" href={`/topicos/${encodeURIComponent(topic.id)}`} aria-label={`Abrir tópico: ${topic.title}`} onClick={(event) => saveBeforeOpeningTopic(event, topic.id)}>
                   <div className="topic-card__visual">
                     <Image className="topic-card__photo" src={topic.imageUrl || "/fallback.png"} alt="" fill sizes="(max-width: 700px) 100vw, 33vw" unoptimized />
                     <span className="topic-card__visual-label">Em perspectiva</span>
