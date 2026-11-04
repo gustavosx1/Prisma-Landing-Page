@@ -221,7 +221,7 @@ export function TopicsFeed() {
       <div className="discovery-shell">
         <div className="topics-list-heading">
           <div>
-            <h1 id="topics-title"><Image src="/logo.svg" alt="" width={42} height={42} priority /> Prisma - Feed</h1>
+            <h1 id="topics-title"><Image src="/logo.svg" alt="" width={42} height={42} priority /> <span>Prisma <span className="topics-list-heading__bullet" aria-hidden="true">•</span> Feed</span></h1>
           </div>
           <div className="topics-toolbar">
             <div className="topics-category-filters" role="group" aria-label="Filtrar tópicos por categoria">
