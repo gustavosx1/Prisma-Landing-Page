@@ -390,7 +390,8 @@ body {
 .topic-detail__header h1 { max-width: 860px; margin: 0; color: var(--discovery-ink); font-size: clamp(2.2rem, 5.5vw, 4.2rem); font-weight: 800; letter-spacing: -.055em; line-height: 1.05; }
 .topic-detail__summary { max-width: 800px; margin: 18px 0; color: #4b5563; font-size: clamp(1.05rem, 2vw, 1.3rem); line-height: 1.65; }
 .topic-detail__meta { justify-content: flex-start; flex-wrap: wrap; margin-top: 18px; color: #4b4652; }
-.site-theme .topic-detail__meta time { color: #374151; }
+.site-theme .topic-detail__meta time, .site-theme .topic-detail__meta > span:not(.topic-detail__meta-separator) { color: #374151; }
+.site-theme .topic-detail__meta .topic-detail__meta-separator { color: #702bb1; }
 .topic-spectrum--large { max-width: 500px; margin-top: 28px; }
 .topic-spectrum--large > span { padding: 10px 13px; border-radius: 11px; background: #f3f4f6; font-size: .84rem; }
 .topic-section-heading h2 { margin: 0; color: var(--discovery-ink); font-size: clamp(1.7rem, 3vw, 2.4rem); letter-spacing: -.04em; }

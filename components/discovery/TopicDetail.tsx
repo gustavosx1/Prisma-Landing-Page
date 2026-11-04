@@ -104,7 +104,11 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
           <p className="discovery-eyebrow">{topic.categories.join(" · ") || "Cobertura em perspectiva"}</p>
           <h1>{topic.title}</h1>
           {topic.summary && <p className="topic-detail__summary">{topic.summary}</p>}
-          <div className="topic-detail__meta">{topic.publishedAt && <time>{dateLabel(topic.publishedAt)}</time>}{topic.articleCount !== null && <span>{topic.articleCount} matérias analisadas</span>}</div>
+          <div className="topic-detail__meta">
+            {topic.publishedAt && <time>{dateLabel(topic.publishedAt)}</time>}
+            {topic.publishedAt && topic.articleCount !== null && <span className="topic-detail__meta-separator" aria-hidden="true">•</span>}
+            {topic.articleCount !== null && <span>{topic.articleCount} matérias analisadas</span>}
+          </div>
         </header>
 
         <section className="topic-perspectives" aria-label="Coberturas por perspectiva">
