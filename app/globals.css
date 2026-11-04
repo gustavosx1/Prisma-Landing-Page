@@ -1014,8 +1014,8 @@ body { color: #111827; }
 .site-theme .topics-page .topics-category-filters { justify-content: flex-end; gap: 7px; margin: 0; }
 .site-theme .topics-page .topics-category-filters button { min-height: 36px; padding: 7px 13px; font-size: .76rem; }
 .featured-carousel { position: relative; margin-bottom: 33px; }
-.featured-carousel__track { position: relative; min-height: clamp(265px, 29vw, 390px); }
-.site-theme .topics-page .featured-topic { min-height: clamp(265px, 29vw, 390px); margin: 0; border-radius: 20px; }
+.featured-carousel__track { position: relative; min-height: clamp(289px, 31vw, 414px); }
+.site-theme .topics-page .featured-topic { min-height: clamp(289px, 31vw, 414px); margin: 0; border-radius: 20px; }
 .featured-carousel__track > .featured-topic { position: absolute; inset: 0; width: 100%; visibility: hidden; opacity: 0; pointer-events: none; transition: opacity 240ms ease; }
 .featured-carousel__track > .featured-topic--active { visibility: visible; opacity: 1; pointer-events: auto; }
 .site-theme .topics-page .featured-topic__image { object-fit: cover; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
@@ -1096,7 +1096,7 @@ body { color: #111827; }
   .site-theme .topics-page { padding-top: 28px; }
   .site-theme .topics-page .topics-category-filters { width: 100%; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; padding: 2px 1px 5px; scrollbar-width: none; }
   .site-theme .topics-page .topics-category-filters button { flex: 0 0 auto; }
-  .site-theme .topics-page .featured-topic { min-height: 330px; border-radius: 16px; }
+  .site-theme .topics-page .featured-topic { min-height: 354px; border-radius: 16px; }
   .site-theme .topics-page .featured-topic__content { width: 100%; gap: 9px; padding: 20px 17px 63px; }
   .site-theme .topics-page .featured-topic__content strong { font-size: clamp(1.55rem, 7vw, 2.25rem); }
   .site-theme .topics-page .featured-topic__summary { font-size: .82rem; }
@@ -1262,9 +1262,9 @@ body { color: #111827; }
   .site-theme .topics-page .topics-category-filters { width: 100%; flex: 0 0 auto; }
   .topic-search { align-self: flex-end; }
   .topic-search--open { width: min(230px, 100%); }
-  .featured-carousel__track { display: flex; min-height: 330px; gap: 12px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .featured-carousel__track { display: flex; min-height: 354px; gap: 12px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; }
   .featured-carousel__track::-webkit-scrollbar { display: none; }
   .featured-carousel__track > .featured-topic,
-  .featured-carousel__track > .featured-topic--active { position: relative; inset: auto; width: 88%; min-width: 88%; min-height: 330px; flex: 0 0 88%; visibility: visible; opacity: 1; pointer-events: auto; scroll-snap-align: start; }
+  .featured-carousel__track > .featured-topic--active { position: relative; inset: auto; width: 88%; min-width: 88%; min-height: 354px; flex: 0 0 88%; visibility: visible; opacity: 1; pointer-events: auto; scroll-snap-align: start; }
   .featured-carousel__controls { display: none; }
 }
