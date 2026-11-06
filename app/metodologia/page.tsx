@@ -101,6 +101,18 @@ export default function MethodologyPage() {
             <p className="mt-4 leading-relaxed text-slate-200">
               Transparência sobre como calculamos o espectro dos veículos.
             </p>
+            <p className="mt-3 leading-relaxed text-slate-200">
+              Para quem busca uma descrição completa e técnica da metodologia, consulte a{" "}
+              <a
+                href="https://github.com/gustavosx1/prisma_metodologia"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-purple-300 underline decoration-purple-500/70 underline-offset-2 hover:text-purple-200"
+              >
+                documentação técnica completa
+              </a>
+              .
+            </p>
           </header>
 
           <section className="mt-8 space-y-8">
