@@ -6,6 +6,7 @@ import { FooterSignOut } from "@/components/sections/FooterSignOut";
 const LEGAL_LINKS = [
   { label: "Termos de Uso", href: "/termos-de-uso" },
   { label: "Privacidade", href: "/privacidade" },
+  { label: "Metodologia", href: "/metodologia" },
 ];
 
 export function Footer() {

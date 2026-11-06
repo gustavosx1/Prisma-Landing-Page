@@ -21,6 +21,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
     {
+      url: "https://prismanews.com.br/metodologia",
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.5,
+    },
+    {
       url: "https://prismanews.com.br/deletar",
       lastModified: new Date(),
       changeFrequency: "yearly",
