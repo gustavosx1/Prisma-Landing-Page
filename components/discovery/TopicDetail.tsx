@@ -27,10 +27,23 @@ const PERSPECTIVES: { key: DetailPerspective; label: string; color: string }[] =
 ];
 
 function articlesForPerspective(topic: Topic, perspective: DetailPerspective) {
-  if (perspective === "center") {
-    return [...(topic.articles.center_left ?? []), ...(topic.articles.center ?? []), ...(topic.articles.center_right ?? [])];
-  }
-  return topic.articles[perspective] ?? [];
+  const groupedArticles = [
+    ...(topic.articles.left ?? []).map((article) => ({ article, fallback: "left" as const })),
+    ...(topic.articles.center_left ?? []).map((article) => ({ article, fallback: "center" as const })),
+    ...(topic.articles.center ?? []).map((article) => ({ article, fallback: "center" as const })),
+    ...(topic.articles.center_right ?? []).map((article) => ({ article, fallback: "center" as const })),
+    ...(topic.articles.right ?? []).map((article) => ({ article, fallback: "right" as const })),
+  ];
+  const seen = new Set<string>();
+
+  return groupedArticles.flatMap(({ article, fallback }) => {
+    const scorePerspective = typeof article.perspectiveScore === "number"
+      ? article.perspectiveScore < 40 ? "left" : article.perspectiveScore > 60 ? "right" : "center"
+      : fallback;
+    if (scorePerspective !== perspective || seen.has(article.id)) return [];
+    seen.add(article.id);
+    return [article];
+  });
 }
 
 function articleLead(value: string) {

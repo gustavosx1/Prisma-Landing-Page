@@ -30,6 +30,7 @@ export type TopicArticle = {
   publishedAt: string | null;
   url: string | null;
   checked?: boolean;
+  perspectiveScore?: number;
 };
 
 type UnknownRecord = Record<string, unknown>;
@@ -57,6 +58,15 @@ function safeUrl(value: string): string | null {
   }
 }
 
+function perspectiveScore(source: UnknownRecord): number | undefined {
+  for (const key of ["perspective_score", "perspectiveScore", "political_score", "politicalScore", "bias_score", "biasScore", "ideology_score", "ideologyScore", "score"]) {
+    const value = source[key];
+    const score = typeof value === "number" ? value : typeof value === "string" && value.trim() ? Number(value) : NaN;
+    if (Number.isFinite(score) && score >= 0 && score <= 100) return score;
+  }
+  return undefined;
+}
+
 function topicId(source: UnknownRecord): string {
   return firstString(source, ["id", "topic_id", "uuid"]);
 }
@@ -79,6 +89,7 @@ function topicArticle(value: unknown): TopicArticle | null {
     publishedAt: firstString(source, ["published_at", "publishedAt", "date"]) || null,
     url,
     checked: typeof source.checked === "boolean" ? source.checked : undefined,
+    perspectiveScore: perspectiveScore(source) ?? (outlet ? perspectiveScore(outlet) : undefined),
   };
 }
 
