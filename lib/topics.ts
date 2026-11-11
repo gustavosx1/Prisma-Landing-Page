@@ -137,7 +137,9 @@ export function sanitizePublicTopic(value: unknown): Topic | null {
   const image = safeUrl(firstString(source, ["image_url", "imageUrl", "cover_image", "image"]));
   const count = source.article_count ?? source.articles_count;
   const blindspot = record(source.blindspot) ?? record(source.blind_spot) ?? {};
+  const spectrumCounts = record(source.perspective_counts) ?? record(source.perspectiveCounts) ?? record(source.spectrum_counts) ?? record(source.spectrumCounts) ?? {};
   const safeCount = (value: unknown) => typeof value === "number" && Number.isFinite(value) && value > 0 ? value : 0;
+  const firstCount = (...values: unknown[]) => values.map(safeCount).find((value) => value > 0) ?? 0;
 
   return {
     id,
@@ -148,9 +150,9 @@ export function sanitizePublicTopic(value: unknown): Topic | null {
     categories: strings(source.categories ?? source.tags),
     articleCount: typeof count === "number" && Number.isFinite(count) ? count : null,
     perspectiveCounts: {
-      left: safeCount(blindspot.left_count ?? blindspot.left),
-      center: safeCount(blindspot.center_count ?? blindspot.center),
-      right: safeCount(blindspot.right_count ?? blindspot.right),
+      left: firstCount(blindspot.left_count, blindspot.left, spectrumCounts.left_count, spectrumCounts.left, spectrumCounts.esquerda, source.left_count, source.leftCount),
+      center: firstCount(blindspot.center_count, blindspot.center, spectrumCounts.center_count, spectrumCounts.center, spectrumCounts.centro, source.center_count, source.centerCount),
+      right: firstCount(blindspot.right_count, blindspot.right, spectrumCounts.right_count, spectrumCounts.right, spectrumCounts.direita, source.right_count, source.rightCount),
     },
     perspectives: {
       left: perspectiveText(perspectivesSource.left ?? perspectivesSource.esquerda ?? source.left_summary),

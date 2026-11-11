@@ -34,20 +34,20 @@ function hasMultiplePerspectives(counts: Topic["perspectiveCounts"]) {
   return Object.values(counts).filter((count) => count > 0).length > 1;
 }
 
-function SpectrumRuler({ counts, showLabels = true }: { counts: Topic["perspectiveCounts"]; showLabels?: boolean }) {
+function SpectrumRuler({ counts, showLabels = true, showWhenEmpty = false }: { counts: Topic["perspectiveCounts"]; showLabels?: boolean; showWhenEmpty?: boolean }) {
   const segments = [
     { key: "left", label: "Esquerda", count: counts.left, color: "#e53935" },
     { key: "center", label: "Centro", count: counts.center, color: "#858585" },
     { key: "right", label: "Direita", count: counts.right, color: "#2563eb" },
   ];
   const total = segments.reduce((sum, segment) => sum + segment.count, 0);
-  if (total === 0) return null;
+  if (total === 0 && !showWhenEmpty) return null;
 
   return (
-    <div className="spectrum-ruler" role="img" aria-label={`Distribuição de matérias: ${segments.map(({ label, count }) => `${label}, ${count}`).join("; ")}`}>
+    <div className="spectrum-ruler" role="img" aria-label={total > 0 ? `Distribuição de matérias: ${segments.map(({ label, count }) => `${label}, ${count}`).join("; ")}` : "Espectro de perspectivas; distribuição de matérias indisponível"}>
       <div className="spectrum-ruler__track" aria-hidden="true">
-        {segments.map((segment) => segment.count > 0 && (
-          <span key={segment.key} style={{ flexGrow: segment.count, backgroundColor: segment.color }} />
+        {segments.map((segment) => (segment.count > 0 || (showWhenEmpty && total === 0)) && (
+          <span key={segment.key} style={{ flexGrow: total > 0 ? segment.count : 1, backgroundColor: segment.color }} />
         ))}
       </div>
       {showLabels && <div className="spectrum-ruler__labels" aria-hidden="true">
@@ -347,7 +347,7 @@ export function TopicsFeed() {
                 <time className="featured-topic__date" dateTime={topic.publishedAt ?? undefined}>{relativeTime(topic.publishedAt)}</time>
                 <strong>{topic.title}</strong>
                 <span className="featured-topic__summary">{summaryPreview(topic.summary || "Leia e compare as principais perspectivas sobre este assunto.")}</span>
-                <SpectrumRuler counts={topic.perspectiveCounts} showLabels={false} />
+                <SpectrumRuler counts={topic.perspectiveCounts} showLabels={false} showWhenEmpty />
                 <span className="featured-topic__action">Ler cobertura completa <ArrowRight size={17} aria-hidden="true" /></span>
               </span>
             </Link>)}
