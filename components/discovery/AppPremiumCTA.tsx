@@ -1,6 +1,9 @@
-import Image from "next/image";
-import { ArrowDownToLine, ShieldCheck, Sparkles } from "lucide-react";
-import { StoreButtons } from "@/components/sections/StoreButtons";
+"use client";
+
+import Link from "next/link";
+import { ArrowRight, Crown } from "lucide-react";
+import { DownloadButtons } from "../DownloadButtons";
+import { trackEvent } from "@/lib/analytics";
 
 type AppPremiumCTAProps = { variant: "feed" | "detail" };
 
@@ -10,23 +13,18 @@ export function AppPremiumCTA({ variant }: AppPremiumCTAProps) {
 
   return (
     <section className={`premium-app-cta premium-app-cta--${variant}`} aria-labelledby={titleId}>
+      <Crown className="premium-app-cta__crown" size={20} aria-hidden="true" />
       <div className="premium-app-cta__copy">
-        <p className="premium-app-cta__eyebrow"><Sparkles size={14} aria-hidden="true" /> Prisma Premium</p>
+        <p className="premium-app-cta__eyebrow">Prisma Premium</p>
         <h2 id={titleId}>{isDetail ? "Veja o quadro completo no Prisma Premium." : "Mais contexto para cada assunto."}</h2>
         <p className="premium-app-cta__description">
           {isDetail
             ? "A prévia deste tópico é só o começo. A cobertura completa e os recursos Premium ficam disponíveis no aplicativo."
             : "Explore tópicos e coberturas completas com o Prisma Premium. O acesso é liberado após assinar pelo aplicativo."}
         </p>
-        <div className="premium-app-cta__assurance"><ShieldCheck size={17} aria-hidden="true" /> Assinatura feita exclusivamente no aplicativo — este site não processa pagamentos.</div>
-      </div>
-      <div className="premium-app-cta__download">
-        <div className="premium-app-cta__download-heading">
-          <span className="premium-app-cta__icon"><Image src="/logo.svg" alt="" width={30} height={30} /></span>
-          <div><strong>Comece pelo app</strong><span>Disponível para iOS e Android</span></div>
-        </div>
-        <StoreButtons location={isDetail ? "premium_topic_detail" : "premium_feed"} showWeb={false} className="premium-app-cta__store-buttons" />
-        <p className="premium-app-cta__hint"><ArrowDownToLine size={14} aria-hidden="true" /> Baixe o Prisma e assine na área Premium do aplicativo.</p>
+        <Link className="discovery-text-link" href="/#precos">Conhecer o Premium <ArrowRight size={16} aria-hidden="true" /></Link>
+        <DownloadButtons compact showWeb={false} className="premium-app-cta__stores" onStoreClick={(store) => trackEvent("app_store_click", { store, location: isDetail ? "premium_topic_detail" : "premium_feed" })} />
+        <p className="premium-app-cta__hint">Contratação no aplicativo iOS ou Android. Este site não processa pagamentos.</p>
       </div>
     </section>
   );

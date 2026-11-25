@@ -3,14 +3,27 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
-import { ArrowLeft, ArrowUpRight, BadgeCheck, CircleHelp, LockKeyhole, RefreshCw } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, BadgeCheck, CircleHelp, LockKeyhole, RefreshCw, Share2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { AppPremiumCTA } from "@/components/discovery/AppPremiumCTA";
 import { sanitizePremiumDetail, sanitizePublicDetail, type Topic, type TopicArticle } from "@/lib/topics";
 import { readTopicFeedSnapshot } from "@/lib/topicFeedState";
 import { TopicsLoading } from "@/components/discovery/TopicsLoading";
+import { NewsImage } from "./NewsImage";
 
 type ApiDetail = { topic?: unknown; access?: "preview" | "premium"; error?: string };
+
+function completeCoverageCounts(payload: unknown): Topic["perspectiveCounts"] | null {
+  const record = (value: unknown): Record<string, unknown> | null => value !== null && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : null;
+  const outer = record(payload);
+  const source = record(outer?.topic) ?? record(outer?.data) ?? outer;
+  if (!source) return null;
+  const counts = record(source.blindspot) ?? record(source.blind_spot) ?? record(source.perspective_counts) ?? record(source.perspectiveCounts) ?? record(source.spectrum_counts) ?? record(source.spectrumCounts) ?? source;
+  const read = (key: string, localized: string) => counts[`${key}_count`] ?? counts[key] ?? counts[localized] ?? source[`${key}_count`] ?? source[`${key}Count`];
+  const values = [read("left", "esquerda"), read("center", "centro"), read("right", "direita")];
+  if (!values.every((value): value is number => typeof value === "number" && Number.isInteger(value) && value >= 0)) return null;
+  return { left: values[0], center: values[1], right: values[2] };
+}
 
 function dateLabel(value: string | null) {
   if (!value) return "Data de publicação indisponível";
@@ -81,6 +94,9 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
   const [state, setState] = useState<"loading" | "ready" | "error">(initialTopic ? "ready" : "loading");
   const [premium, setPremium] = useState(initialPremium);
   const [activePerspective, setActivePerspective] = useState<DetailPerspective>("center");
+  const [coverageCounts, setCoverageCounts] = useState<Topic["perspectiveCounts"] | null>(null);
+  const [summaryExpanded, setSummaryExpanded] = useState(false);
+  const [shareMessage, setShareMessage] = useState("");
 
   const load = useCallback(async () => {
     setState("loading");
@@ -91,6 +107,7 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
       const next = payload.access === "premium" ? sanitizePremiumDetail(payload.topic) : sanitizePublicDetail(payload.topic);
       if (!next) throw new Error("invalid topic");
       setTopic(next);
+      setCoverageCounts(completeCoverageCounts(payload.topic));
       setPremium(payload.access === "premium");
       setState("ready");
     } catch {
@@ -108,23 +125,37 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
 
   const selectedArticles = articlesForPerspective(topic, activePerspective);
   const perspectiveLabel = PERSPECTIVES.find(({ key }) => key === activePerspective)?.label ?? "";
+  const classifiedTotal = coverageCounts ? Object.values(coverageCounts).reduce((sum, count) => sum + count, 0) : 0;
+  const missingPerspectives = coverageCounts ? PERSPECTIVES.filter(({ key }) => coverageCounts[key] === 0).map(({ label }) => label.toLocaleLowerCase("pt-BR")) : [];
+
+  async function shareTopic() {
+    try {
+      if (navigator.share) await navigator.share({ title: topic?.title, url: window.location.href });
+      else { await navigator.clipboard.writeText(window.location.href); setShareMessage("Link copiado."); }
+    } catch (error) {
+      if (!(error instanceof DOMException && error.name === "AbortError")) setShareMessage("Não foi possível compartilhar. Copie o endereço desta página.");
+    }
+  }
 
   return (
     <main className="discovery-detail-shell">
-      <Link className="discovery-text-link" href="/topicos" onClick={(event) => {
-        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-        if (!readTopicFeedSnapshot(topicId)) return;
-        event.preventDefault();
-        router.back();
-      }}><ArrowLeft size={16} aria-hidden="true" /> Todos os tópicos</Link>
       <article className="topic-detail">
         <header className="topic-detail__header">
           <div className="topic-detail__image">
-            <Image src={topic.imageUrl || "/fallback.png"} alt={topic.imageUrl ? `Imagem relacionada a ${topic.title}` : "Identidade visual Prisma News"} width={1600} height={900} unoptimized />
+            <NewsImage src={topic.imageUrl} fallback="/fallback-banner.png" coverFallback alt={topic.imageUrl ? `Imagem relacionada a ${topic.title}` : ""} priority />
+            <Link className="topic-detail__back" href="/topicos" aria-label="Voltar aos tópicos" onClick={(event) => {
+              if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+              if (!readTopicFeedSnapshot(topicId)) return;
+              event.preventDefault();
+              router.back();
+            }}><ArrowLeft size={20} aria-hidden="true" /></Link>
+            <button className="topic-detail__share" type="button" aria-label="Compartilhar tópico" onClick={() => void shareTopic()}><Share2 size={20} aria-hidden="true" /></button>
           </div>
+          {shareMessage && <p className="topic-detail__share-message" role="status">{shareMessage}</p>}
           <p className="discovery-eyebrow">{topic.categories.join(" · ") || "Cobertura em perspectiva"}</p>
           <h1>{topic.title}</h1>
-          {topic.summary && <p className="topic-detail__summary">{topic.summary}</p>}
+          {topic.summary && <><p className="topic-detail__summary" id="topic-summary">{summaryExpanded || topic.summary.length <= 320 ? topic.summary : `${topic.summary.slice(0, 319).trimEnd()}…`}</p>
+            {topic.summary.length > 320 && <button className="discovery-text-link" type="button" aria-expanded={summaryExpanded} aria-controls="topic-summary" onClick={() => setSummaryExpanded((value) => !value)}>{summaryExpanded ? "Recolher resumo" : "Ler resumo completo"}</button>}</>}
           <div className="topic-detail__meta">
             {topic.publishedAt && <time>{dateLabel(topic.publishedAt)}</time>}
             {topic.publishedAt && topic.articleCount !== null && <span className="topic-detail__meta-separator" aria-hidden="true">•</span>}
@@ -133,7 +164,12 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
         </header>
 
         <section className="topic-perspectives" aria-label="Coberturas por perspectiva">
-          <div className="topic-section-heading"><div><p className="discovery-eyebrow">O mesmo fato, outros enquadramentos</p></div></div>
+          <div className="topic-section-heading"><h2>Compare a cobertura</h2><p>O mesmo fato, outros enquadramentos. Veja como cada perspectiva apresenta o acontecimento.</p></div>
+          {coverageCounts && classifiedTotal > 0 && <div className="topic-coverage" aria-label="Contagens completas de cobertura">
+            <p className="topic-blindspot">Blindspot: {missingPerspectives.length ? missingPerspectives.join(", ") : "Cobertura equilibrada"}</p>
+            <div className="topic-spectrum">{PERSPECTIVES.map(({ key, label }) => <span className={`topic-spectrum__${key}`} key={key}><i aria-hidden="true" />{label} · {coverageCounts[key]}</span>)}</div>
+            {!missingPerspectives.length && <p className="topic-coverage__note">Há matérias nos três grupos; isso não significa volumes iguais.</p>}
+          </div>}
           <div className="topic-perspective-tabs" role="tablist" aria-label="Filtrar veículos por perspectiva">
             {PERSPECTIVES.map(({ key, label }, index) => <button type="button" role="tab" key={key} id={`perspective-tab-${key}`} aria-controls="perspective-panel" aria-selected={activePerspective === key} tabIndex={activePerspective === key ? 0 : -1} onClick={() => setActivePerspective(key)} onKeyDown={(event) => {
               if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
@@ -143,7 +179,7 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
               setActivePerspective(nextKey);
               document.getElementById(`perspective-tab-${nextKey}`)?.focus();
             }}>
-              <span className={`topic-perspective-tabs__dot topic-perspective-tabs__dot--${key}`} aria-hidden="true" />{label}<span className="topic-perspective-tabs__count">{articlesForPerspective(topic, key).length}</span>
+              <span className={`topic-perspective-tabs__dot topic-perspective-tabs__dot--${key}`} aria-hidden="true" />{label}<span className="topic-perspective-tabs__count" aria-label={coverageCounts ? `${coverageCounts[key]} matérias no total` : `${articlesForPerspective(topic, key).length} matérias nesta resposta`}>{coverageCounts?.[key] ?? articlesForPerspective(topic, key).length}</span>
             </button>)}
           </div>
           <div className={`topic-perspective-panel topic-perspective-panel--${activePerspective.replace("_", "-")}`} role="tabpanel" id="perspective-panel" aria-labelledby={`perspective-tab-${activePerspective}`}>

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FormEvent, type MouseEvent } from "react";
 import { ArrowDownRight, ArrowLeft, ArrowRight, RefreshCw, Search, Sparkles, X } from "lucide-react";
 import { sanitizePremiumFeed, sanitizePublicFeed, type Topic } from "@/lib/topics";
@@ -9,6 +8,8 @@ import { clearTopicFeedSnapshot, readTopicFeedSnapshot, saveTopicFeedSnapshot, t
 import { AppPremiumCTA } from "@/components/discovery/AppPremiumCTA";
 import { TopicsLoading } from "@/components/discovery/TopicsLoading";
 import { FooterSignOut } from "@/components/sections/FooterSignOut";
+import { DiscoveryHeader } from "./DiscoveryHeader";
+import { NewsImage } from "./NewsImage";
 
 type FeedState = "loading" | "ready" | "empty" | "error";
 type SearchMessage = "" | "validation" | "access" | "error";
@@ -36,9 +37,9 @@ function hasMultiplePerspectives(counts: Topic["perspectiveCounts"]) {
 
 function SpectrumRuler({ counts, showLabels = true, showWhenEmpty = false }: { counts: Topic["perspectiveCounts"]; showLabels?: boolean; showWhenEmpty?: boolean }) {
   const segments = [
-    { key: "left", label: "Esquerda", count: counts.left, color: "#e53935" },
-    { key: "center", label: "Centro", count: counts.center, color: "#858585" },
-    { key: "right", label: "Direita", count: counts.right, color: "#2563eb" },
+    { key: "left", label: "Esquerda", count: counts.left, color: "var(--spectrum-left)" },
+    { key: "center", label: "Centro", count: counts.center, color: "var(--spectrum-center)" },
+    { key: "right", label: "Direita", count: counts.right, color: "var(--spectrum-right)" },
   ];
   const total = segments.reduce((sum, segment) => sum + segment.count, 0);
   if (total === 0 && !showWhenEmpty) return null;
@@ -93,6 +94,7 @@ export function TopicsFeed() {
   const [searchDraft, setSearchDraft] = useState("");
   const [activeQuery, setActiveQuery] = useState("");
   const [searchMessage, setSearchMessage] = useState<SearchMessage>("");
+  const [sort, setSort] = useState<"latest" | "coverage">("latest");
   const activeQueryRef = useRef("");
   const requestId = useRef(0);
   const activeRequest = useRef<AbortController | null>(null);
@@ -100,6 +102,9 @@ export function TopicsFeed() {
   const visibleTopics = topics.filter((topic) => matchesCategory(topic.categories, category));
   const carouselTopics = visibleTopics.slice(0, 5);
   const featuredTopic = carouselTopics[featuredIndex % Math.max(carouselTopics.length, 1)];
+  const regularTopics = visibleTopics.slice(carouselTopics.length).sort((a, b) => sort === "coverage"
+    ? (b.articleCount ?? 0) - (a.articleCount ?? 0)
+    : (Date.parse(b.publishedAt ?? "") || 0) - (Date.parse(a.publishedAt ?? "") || 0));
 
   const load = useCallback(async (nextOffset = 0, searchTerm = "") => {
     const search = searchTerm.trim();
@@ -163,7 +168,7 @@ export function TopicsFeed() {
   }, []);
 
   useEffect(() => {
-    if (carouselTopics.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (carouselTopics.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce), (max-width: 600px)").matches) return;
     const timer = window.setInterval(() => setFeaturedIndex((current) => (current + 1) % carouselTopics.length), 15000);
     return () => window.clearInterval(timer);
   }, [carouselTopics.length]);
@@ -296,34 +301,30 @@ export function TopicsFeed() {
   return (
     <section className="discovery-section topics-page" id="topicos" aria-labelledby="topics-title">
       <div className="discovery-shell">
-        <div className={`topics-list-heading${searchOpen ? " topics-list-heading--search-open" : ""}`}>
-          <div>
-            <h1 id="topics-title"><Image src="/logo.svg" alt="" width={42} height={42} priority /> <span>Prisma <span className="topics-list-heading__bullet" aria-hidden="true">•</span> Feed</span></h1>
-          </div>
-          <div className={`topics-toolbar${searchOpen ? " topics-toolbar--search-open" : ""}`}>
-            <div className="topics-category-filters" role="group" aria-label="Filtrar tópicos por categoria">
-              {CATEGORY_FILTERS.map((item) => (
-                <button type="button" key={item} aria-pressed={category === item} onClick={() => { setCategory(item); setFeaturedIndex(0); }}>
-                  {item === "tudo" ? "Tudo" : item.charAt(0).toUpperCase() + item.slice(1)}
-                </button>
-              ))}
-            </div>
+        <h1 id="topics-title" className="sr-only">Prisma news — Feed</h1>
+        <DiscoveryHeader actions={
             <div className="topics-toolbar__actions">
               {premium && <div className={`topic-search${searchOpen ? " topic-search--open" : ""}`}>
                 <button type="button" className="topic-search__trigger" aria-label="Pesquisar tópicos" aria-expanded={searchOpen} onClick={() => {
                   setSearchOpen(true);
                   window.setTimeout(() => document.getElementById("premium-topic-search")?.focus(), 0);
-                }}><Search size={17} aria-hidden="true" /></button>
+                }} tabIndex={searchOpen ? -1 : 0}><Search size={17} aria-hidden="true" /></button>
                 <form className="topic-search__form" role="search" onSubmit={submitSearch}>
                   <label htmlFor="premium-topic-search" className="sr-only">Pesquisar tópicos no Prisma Premium</label>
-                  <input id="premium-topic-search" value={searchDraft} onChange={(event) => setSearchDraft(event.target.value)} placeholder="Pesquisar assuntos" maxLength={121} tabIndex={searchOpen ? 0 : -1} aria-hidden={!searchOpen} />
-                  <button type="submit" className="topic-search__submit" aria-label="Pesquisar" tabIndex={searchOpen ? 0 : -1}><Search size={17} aria-hidden="true" /></button>
+                  <input id="premium-topic-search" value={searchDraft} onChange={(event) => setSearchDraft(event.target.value)} placeholder="Pesquisar" maxLength={121} tabIndex={searchOpen ? 0 : -1} aria-hidden={!searchOpen} onKeyDown={(event) => { if (event.key === "Escape") { closeSearch(); document.querySelector<HTMLButtonElement>(".topic-search__trigger")?.focus(); } }} />
+                  <button type="submit" className="topic-search__submit" aria-label="Pesquisar" disabled={state === "loading"} tabIndex={searchOpen ? 0 : -1}><Search size={17} aria-hidden="true" /></button>
                   <button type="button" className="topic-search__close" aria-label="Fechar pesquisa" onClick={closeSearch} tabIndex={searchOpen ? 0 : -1}><X size={16} aria-hidden="true" /></button>
                 </form>
               </div>}
               <FooterSignOut compact />
             </div>
-          </div>
+        } />
+        <div className="topics-category-filters" role="group" aria-label="Filtrar tópicos por categoria">
+          {CATEGORY_FILTERS.map((item) => (
+            <button type="button" key={item} aria-pressed={category === item} onClick={() => { setCategory(item); setFeaturedIndex(0); }}>
+              {item === "tudo" ? "Todos" : item.charAt(0).toUpperCase() + item.slice(1)}
+            </button>
+          ))}
         </div>
 
         {searchMessage && <p className={`topic-search-message topic-search-message--${searchMessage}`} role="status" aria-live="polite">
@@ -338,16 +339,23 @@ export function TopicsFeed() {
         {state === "ready" && topics.length > 0 && visibleTopics.length === 0 && <div className="discovery-state">Nenhum tópico nesta categoria por enquanto. Escolha outro tema para continuar explorando.</div>}
 
         {featuredTopic && <section className="featured-carousel" aria-label="Tópicos em destaque" aria-roledescription="carrossel">
-          <div className="featured-carousel__track">
+          <div className="featured-carousel__track" onScroll={(event) => {
+            const track = event.currentTarget;
+            if (window.matchMedia("(max-width: 600px)").matches && track.firstElementChild) {
+              const width = track.firstElementChild.getBoundingClientRect().width + 12;
+              setFeaturedIndex(Math.min(carouselTopics.length - 1, Math.round(track.scrollLeft / width)));
+            }
+          }}>
             {carouselTopics.map((topic, index) => <Link className={`featured-topic${index === featuredIndex ? " featured-topic--active" : ""}`} key={topic.id} href={`/topicos/${encodeURIComponent(topic.id)}`} aria-label={`Ver tópico em destaque: ${topic.title}`} onClick={(event) => saveBeforeOpeningTopic(event, topic.id)}>
-              <Image className="featured-topic__image" src={topic.imageUrl || "/fallback-banner.png"} alt="" fill sizes="(max-width: 760px) 88vw, 1180px" unoptimized priority={index === 0} />
+              <NewsImage className="featured-topic__image" src={topic.imageUrl} fallback="/fallback-banner.png" coverFallback priority={index === 0} />
               <span className="featured-topic__veil" aria-hidden="true" />
               <span className="featured-topic__content">
-                <span className="featured-topic__tag"><Sparkles size={14} aria-hidden="true" /> Em destaque · {topic.categories[0] || "Prisma News"}</span>
+                <span className="featured-topic__category">{topic.categories[0] || "Notícias"}</span>
+                {hasMultiplePerspectives(topic.perspectiveCounts) && <span className="featured-topic__tag"><Sparkles size={14} aria-hidden="true" /> Em perspectiva</span>}
                 <time className="featured-topic__date" dateTime={topic.publishedAt ?? undefined}>{relativeTime(topic.publishedAt)}</time>
                 <strong>{topic.title}</strong>
                 <span className="featured-topic__summary">{summaryPreview(topic.summary || "Leia e compare as principais perspectivas sobre este assunto.")}</span>
-                <SpectrumRuler counts={topic.perspectiveCounts} showLabels={false} showWhenEmpty />
+                <SpectrumRuler counts={topic.perspectiveCounts} showLabels={false} />
                 <span className="featured-topic__action">Ler cobertura completa <ArrowRight size={17} aria-hidden="true" /></span>
               </span>
             </Link>)}
@@ -361,13 +369,17 @@ export function TopicsFeed() {
           </div>}
         </section>}
 
-        {visibleTopics.length > carouselTopics.length && (
+        {regularTopics.length > 0 && <div className="topics-sort" role="group" aria-label="Ordenar notícias">
+          <button type="button" aria-pressed={sort === "latest"} onClick={() => setSort("latest")}>Mais recentes</button>
+          <button type="button" aria-pressed={sort === "coverage"} onClick={() => setSort("coverage")}>Mais cobertura</button>
+        </div>}
+        {regularTopics.length > 0 && (
           <div className="discovery-grid" aria-live="polite">
-            {visibleTopics.slice(carouselTopics.length).map((topic, index) => (
+            {regularTopics.map((topic, index) => (
               <article className={`topic-card topic-card--${index % 3}`} key={topic.id}>
                 <Link className="topic-card__link" href={`/topicos/${encodeURIComponent(topic.id)}`} aria-label={`Abrir tópico: ${topic.title}`} onClick={(event) => saveBeforeOpeningTopic(event, topic.id)}>
                   <div className="topic-card__visual">
-                    <Image className="topic-card__photo" src={topic.imageUrl || "/fallback.png"} alt="" fill sizes="(max-width: 700px) 100vw, 33vw" unoptimized />
+                    <NewsImage className="topic-card__photo" src={topic.imageUrl} />
                     {hasMultiplePerspectives(topic.perspectiveCounts) && <span className="topic-card__visual-label">Em perspectiva</span>}
                   </div>
                   <div className="topic-card__body">
@@ -384,7 +396,6 @@ export function TopicsFeed() {
         )}
 
         {state === "loading" && topics.length > 0 && <p className="discovery-loading-more" role="status">Atualizando assuntos…</p>}
-        {!premium && topics.length > 0 && <div className="discovery-limit-note discovery-limit-note--premium"><p>Assine o Prisma Premium para acessar mais acontecimentos</p></div>}
         {premium && hasMore && <button className="discovery-button discovery-button--outline discovery-more" onClick={() => void load(offset, activeQuery)} disabled={state === "loading"}>Carregar mais</button>}
         {!premium && <AppPremiumCTA variant="feed" />}
       </div>
