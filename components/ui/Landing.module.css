@@ -143,6 +143,7 @@
   .rows, .searchExamples { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 600px) {
+  .flow { display: none; }
   .desktopComparison { display: none; }
   .container { width: calc(100% - 40px); }
   .navInner { gap: 12px; }

@@ -162,7 +162,7 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
           <p className="discovery-eyebrow">{topic.categories.join(" · ") || "Cobertura em perspectiva"}</p>
           <h1>{topic.title}</h1>
           {topic.summary && <><p className="topic-detail__summary" id="topic-summary">{summaryExpanded || topic.summary.length <= 320 ? topic.summary : `${topic.summary.slice(0, 319).trimEnd()}…`}</p>
-            {topic.summary.length > 320 && <button className="topic-summary-toggle" type="button" aria-expanded={summaryExpanded} aria-controls="topic-summary" onClick={() => setSummaryExpanded((value) => !value)}>{summaryExpanded ? "Recolher resumo" : "Ler resumo completo"}{summaryExpanded ? <ChevronUp size={18} aria-hidden="true" /> : <ChevronDown size={18} aria-hidden="true" />}</button>}</>}
+            {topic.summary.length > 320 && <button className="topic-summary-toggle" type="button" aria-label={summaryExpanded ? "Recolher resumo" : "Ler resumo completo"} aria-expanded={summaryExpanded} aria-controls="topic-summary" onClick={() => setSummaryExpanded((value) => !value)}>{summaryExpanded ? "Ver menos" : "Ler resumo completo"}{summaryExpanded ? <ChevronUp size={14} aria-hidden="true" /> : <ChevronDown size={14} aria-hidden="true" />}</button>}</>}
           <div className="topic-detail__meta">
             {topic.publishedAt && <time>{dateLabel(topic.publishedAt)}</time>}
             {topic.publishedAt && topic.articleCount !== null && <span className="topic-detail__meta-separator" aria-hidden="true">•</span>}
