@@ -1,9 +1,36 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
+import { EditorialHeading } from "@/components/ui/EditorialHeading";
+import styles from "@/components/ui/Landing.module.css";
+
+const OUTLETS = [
+  "Jovem Pan",
+  "Crusoé",
+  "Revista Oeste",
+  "O Antagonista",
+  "Gazeta do Povo",
+  "Poder360",
+  "Veja",
+  "O Globo",
+  "Folha de S.Paulo",
+  "CNN Brasil",
+  "Metrópoles",
+  "UOL Notícias",
+  "G1 / Globo",
+  "Terra",
+  "Congresso em Foco",
+  "Agência Brasil",
+  "Pragmatismo Político",
+  "Nexo Jornal",
+  "Brasil de Fato",
+  "Revista Fórum",
+  "The Intercept Brasil",
+  "Opera Mundi",
+  "Brasil Paralelo",
+];
 
 const FAQS = [
   {
@@ -16,11 +43,12 @@ const FAQS = [
   },
   {
     q: "Quais fontes são utilizadas?",
-    a: "Acompanhamos 20 veículos jornalísticos brasileiros conhecidos. Entre os exemplos estão Brasil de Fato, Intercept, Folha, UOL, Metrópoles, O Antagonista e Jovem Pan. As categorias esquerda, centro e direita descrevem tendências editoriais aproximadas do veículo, não cada matéria individual.",
+    a: "As fontes utilizadas incluem os veículos abaixo. As categorias esquerda, centro e direita descrevem tendências editoriais aproximadas do veículo, não cada matéria individual.",
+    outlets: OUTLETS,
   },
   {
     q: "O que exatamente é um 'blindspot'?",
-    a: "Blindspots são aspectos relevantes de um evento que nenhuma das perspectivas monitoradas está cobrindo — ou que apenas uma menciona enquanto as outras ignoram. Identificar blindspots é fundamental para perceber lacunas sistêmicas de cobertura antes de formar uma opinião.",
+    a: "O indicador de blindspot lista os grupos sem cobertura do evento — esquerda, centro e direita — usando as contagens completas de matérias vinculadas, não apenas uma prévia. Com ao menos uma matéria em cada grupo, mostra cobertura equilibrada: presença dos três grupos, não igualdade de volume. Dados ausentes ou sem cobertura classificada não geram indicador. Ele não permite inferir o motivo da ausência nem a veracidade de uma matéria.",
   },
   {
     q: "O Prisma News faz fact-checking automático?",
@@ -42,17 +70,14 @@ const FAQS = [
     q: "Existe um aplicativo para iOS e Android?",
     a: "Sim. O Prisma News está disponível para iPhone e Android. Use os botões de download no site para abrir a página oficial do aplicativo na App Store ou no Google Play.",
   },
-  {
-    q: "Com que frequência os eventos são atualizados?",
-    a: "A cobertura é monitorada em tempo real durante o horário de funcionamento editorial (6h às 23h). Novos artigos e perspectivas são adicionados continuamente. Eventos de alto impacto recebem atualizações mais frequentes.",
-  },
+
   {
     q: "Meus dados pessoais estão seguros?",
     a: "Sim. Seguimos a LGPD rigorosamente. Não vendemos dados pessoais a terceiros, não compartilhamos preferências de leitura para fins publicitários e armazenamos apenas o mínimo necessário para o funcionamento do serviço. O detalhamento completo está na nossa Política de Privacidade.",
   },
 ];
 
-function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
+function FAQItem({ q, a, outlets, index }: { q: string; a: string; outlets?: string[]; index: number }) {
   const [open, setOpen] = useState(false);
 
   const toggle = () => {
@@ -63,42 +88,37 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
   };
 
   return (
-    <div className="border-b border-purple-900/30 last:border-0">
+    <div className={styles.faqItem}>
       <button
+        type="button"
         onClick={toggle}
-        className="w-full flex items-start justify-between gap-4 py-5 text-left group"
+        className={styles.faqQuestion}
         aria-expanded={open}
         aria-controls={`faq-answer-${index}`}
         id={`faq-question-${index}`}
       >
-        <span className="text-base font-semibold text-white group-hover:text-purple-300 transition-colors leading-snug">
+        <span>
           {q}
         </span>
-        <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-purple-900/40 border border-purple-700/30 flex items-center justify-center mt-0.5">
+        <span aria-hidden="true">
           {open ? (
-            <Minus className="w-4 h-4 text-purple-400" aria-hidden="true" />
+            <Minus aria-hidden="true" />
           ) : (
-            <Plus className="w-4 h-4 text-purple-400" aria-hidden="true" />
+            <Plus aria-hidden="true" />
           )}
         </span>
       </button>
 
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            id={`faq-answer-${index}`}
-            role="region"
-            aria-labelledby={`faq-question-${index}`}
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.28, ease: "easeOut" }}
-            className="overflow-hidden"
-          >
-            <p className="pb-5 text-slate-400 leading-relaxed text-[0.95rem]">{a}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div id={`faq-answer-${index}`} role="region" aria-labelledby={`faq-question-${index}`} hidden={!open}>
+        <div className={styles.faqAnswer}>
+          <p>{a}</p>
+          {outlets && (
+            <ul className={styles.faqOutlets} aria-label="Veículos utilizados como fontes">
+              {outlets.map((outlet) => <li key={outlet}>{outlet}</li>)}
+            </ul>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
@@ -107,59 +127,19 @@ export function FAQ() {
   return (
     <section
       id="faq"
-      className="py-20 lg:py-32 bg-[#060111]"
+      className={styles.section}
       aria-labelledby="faq-heading"
     >
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6 }}
-        >
-          <p className="text-purple-400 font-semibold text-sm uppercase tracking-widest mb-4">
-            FAQ
-          </p>
-          <h2
-            id="faq-heading"
-            className="text-3xl sm:text-4xl font-extrabold text-white mb-4 leading-tight"
-          >
-            Perguntas frequentes
-          </h2>
-          <p className="text-slate-400">Tudo o que você precisa saber antes de começar.</p>
-        </motion.div>
-
-        {/* Accordion */}
-        <motion.div
-          className="bg-[#0c0324]/60 rounded-3xl border border-purple-900/30 px-6 sm:px-8"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.6 }}
-        >
-          {FAQS.map((faq, i) => (
-            <FAQItem key={faq.q} q={faq.q} a={faq.a} index={i} />
-          ))}
-        </motion.div>
-
-        {/* Contact nudge */}
-        <motion.p
-          className="mt-10 text-center text-sm text-slate-400"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          Ainda tem dúvidas?{" "}
-          <a
-            href="mailto:contato@prismanews.com.br"
-            className="text-purple-400 hover:text-purple-300 transition-colors font-medium underline underline-offset-2"
-          >
-            Entre em contato com a equipe
-          </a>
-        </motion.p>
+      <div className={styles.container}>
+        <div className={styles.faqLayout}>
+          <EditorialHeading id="faq-heading" title="Perguntas frequentes" />
+          <div>
+            {FAQS.map((faq, index) => <FAQItem key={faq.q} {...faq} index={index} />)}
+            <p className={styles.note}>Ainda tem dúvidas?<br />
+              <a href="mailto:suporteprismanews@gmail.com" className={styles.textLink}>Entre em contato com a equipe</a>
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );

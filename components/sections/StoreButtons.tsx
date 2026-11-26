@@ -2,6 +2,7 @@
 
 import { DownloadButtons } from "@/components/DownloadButtons";
 import { trackEvent } from "@/lib/analytics";
+import styles from "@/components/ui/Landing.module.css";
 
 type StoreButtonsProps = {
   location: string;
@@ -14,7 +15,7 @@ export function StoreButtons({ location, compact = false, className = "", showWe
   return (
     <DownloadButtons
       compact={compact}
-      className={className}
+      className={`${styles.stores} ${className}`}
       showWeb={showWeb}
       onStoreClick={(store) =>
         trackEvent("app_store_click", {

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope, Poppins } from "next/font/google";
+import { Manrope } from "next/font/google";
 import { Tracker } from "@/components/Tracker";
 import { PageStateRestoration } from "@/components/PageStateRestoration";
 import "./globals.css";
@@ -8,13 +8,6 @@ const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-});
-
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: "800",
   display: "swap",
 });
 
@@ -82,8 +75,9 @@ const jsonLd = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className={`${manrope.variable} ${poppins.variable} h-full site-theme`}>
+    <html lang="pt-BR" className={`${manrope.variable} h-full site-theme`} suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: `try{document.documentElement.dataset.theme=localStorage.getItem('@prisma/theme-mode')==='dark'?'dark':'light'}catch{document.documentElement.dataset.theme='light'}` }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body className="min-h-full antialiased">

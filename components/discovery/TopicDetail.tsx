@@ -2,13 +2,16 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
-import { ArrowLeft, ArrowUpRight, BadgeCheck, CircleHelp, LockKeyhole, RefreshCw } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ArrowLeft, ArrowUpRight, BadgeCheck, Check, ChevronDown, ChevronUp, CircleHelp, Copy, LockKeyhole, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { AppPremiumCTA } from "@/components/discovery/AppPremiumCTA";
 import { sanitizePremiumDetail, sanitizePublicDetail, type Topic, type TopicArticle } from "@/lib/topics";
 import { readTopicFeedSnapshot } from "@/lib/topicFeedState";
 import { TopicsLoading } from "@/components/discovery/TopicsLoading";
+import { NewsImage } from "./NewsImage";
+import { topicCopyText } from "@/lib/topicCopy";
+import { blindspotLabel, completeCoverageCounts } from "@/lib/topicPresentation";
 
 type ApiDetail = { topic?: unknown; access?: "preview" | "premium"; error?: string };
 
@@ -81,6 +84,13 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
   const [state, setState] = useState<"loading" | "ready" | "error">(initialTopic ? "ready" : "loading");
   const [premium, setPremium] = useState(initialPremium);
   const [activePerspective, setActivePerspective] = useState<DetailPerspective>("center");
+  const [coverageCounts, setCoverageCounts] = useState<Topic["perspectiveCounts"] | null>(initialTopic?.completePerspectiveCounts ?? null);
+  const [summaryExpanded, setSummaryExpanded] = useState(false);
+  const [shareMessage, setShareMessage] = useState("");
+  const [copyBusy, setCopyBusy] = useState(false);
+  const [copySucceeded, setCopySucceeded] = useState(false);
+  const [manualCopy, setManualCopy] = useState("");
+  const copying = useRef(false);
 
   const load = useCallback(async () => {
     setState("loading");
@@ -91,6 +101,7 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
       const next = payload.access === "premium" ? sanitizePremiumDetail(payload.topic) : sanitizePublicDetail(payload.topic);
       if (!next) throw new Error("invalid topic");
       setTopic(next);
+      setCoverageCounts(completeCoverageCounts(payload.topic));
       setPremium(payload.access === "premium");
       setState("ready");
     } catch {
@@ -107,24 +118,50 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
   if ((state === "error" && !topic) || !topic) return <main className="discovery-detail-shell"><div className="discovery-state discovery-state--error" role="alert"><p>Não foi possível abrir este tópico.</p><button className="discovery-button discovery-button--outline" onClick={() => void load()}><RefreshCw size={16} aria-hidden="true" /> Tentar novamente</button></div><Link className="discovery-text-link" href="/topicos"><ArrowLeft size={16} aria-hidden="true" /> Voltar aos tópicos</Link></main>;
 
   const selectedArticles = articlesForPerspective(topic, activePerspective);
+  const hasLockedArticles = !premium && (topic.lockedArticleCount ?? 0) > 0;
   const perspectiveLabel = PERSPECTIVES.find(({ key }) => key === activePerspective)?.label ?? "";
+  const blindspot = blindspotLabel(coverageCounts, premium);
+  async function copyTopic() {
+    if (!topic || copying.current) return;
+    const text = topicCopyText(topic.title, topic.summary);
+    copying.current = true;
+    setCopyBusy(true);
+    setCopySucceeded(false);
+    setShareMessage("");
+    setManualCopy("");
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopySucceeded(true);
+      setShareMessage("Título e resumo copiados. Cole onde quiser compartilhar.");
+    } catch {
+      setManualCopy(text);
+      setShareMessage("Seu navegador não permitiu a cópia automática. Selecione e copie o texto abaixo.");
+    } finally {
+      copying.current = false;
+      setCopyBusy(false);
+    }
+  }
 
   return (
     <main className="discovery-detail-shell">
-      <Link className="discovery-text-link" href="/topicos" onClick={(event) => {
-        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-        if (!readTopicFeedSnapshot(topicId)) return;
-        event.preventDefault();
-        router.back();
-      }}><ArrowLeft size={16} aria-hidden="true" /> Todos os tópicos</Link>
-      <article className="topic-detail">
+      <article className={`topic-detail${hasLockedArticles ? " topic-detail--locked" : ""}`}>
         <header className="topic-detail__header">
           <div className="topic-detail__image">
-            <Image src={topic.imageUrl || "/fallback.png"} alt={topic.imageUrl ? `Imagem relacionada a ${topic.title}` : "Identidade visual Prisma News"} width={1600} height={900} unoptimized />
+            <NewsImage src={topic.imageUrl} fallback="/fallback-banner.png" coverFallback alt={topic.imageUrl ? `Imagem relacionada a ${topic.title}` : ""} priority />
+            <Link className="topic-detail__back" href="/topicos" aria-label="Voltar aos tópicos" onClick={(event) => {
+              if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+              if (!readTopicFeedSnapshot(topicId)) return;
+              event.preventDefault();
+              router.back();
+            }}><ArrowLeft size={20} aria-hidden="true" /></Link>
+            <button className="topic-detail__share" type="button" aria-label={copyBusy ? "Copiando matéria" : "Copiar matéria"} title="Copiar título e resumo" disabled={copyBusy} onClick={() => void copyTopic()}>{copySucceeded ? <Check size={20} aria-hidden="true" /> : <Copy size={20} aria-hidden="true" />}</button>
           </div>
+          {shareMessage && <p className="topic-detail__share-message" role="status">{shareMessage}</p>}
+          {manualCopy && <div className="topic-detail__manual-copy"><label htmlFor="topic-copy-text">Texto para compartilhar</label><textarea id="topic-copy-text" readOnly value={manualCopy} rows={7} onFocus={(event) => event.currentTarget.select()} /></div>}
           <p className="discovery-eyebrow">{topic.categories.join(" · ") || "Cobertura em perspectiva"}</p>
           <h1>{topic.title}</h1>
-          {topic.summary && <p className="topic-detail__summary">{topic.summary}</p>}
+          {topic.summary && <><p className="topic-detail__summary" id="topic-summary">{summaryExpanded || topic.summary.length <= 320 ? topic.summary : `${topic.summary.slice(0, 319).trimEnd()}…`}</p>
+            {topic.summary.length > 320 && <button className="topic-summary-toggle" type="button" aria-expanded={summaryExpanded} aria-controls="topic-summary" onClick={() => setSummaryExpanded((value) => !value)}>{summaryExpanded ? "Recolher resumo" : "Ler resumo completo"}{summaryExpanded ? <ChevronUp size={18} aria-hidden="true" /> : <ChevronDown size={18} aria-hidden="true" />}</button>}</>}
           <div className="topic-detail__meta">
             {topic.publishedAt && <time>{dateLabel(topic.publishedAt)}</time>}
             {topic.publishedAt && topic.articleCount !== null && <span className="topic-detail__meta-separator" aria-hidden="true">•</span>}
@@ -133,7 +170,7 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
         </header>
 
         <section className="topic-perspectives" aria-label="Coberturas por perspectiva">
-          <div className="topic-section-heading"><div><p className="discovery-eyebrow">O mesmo fato, outros enquadramentos</p></div></div>
+          <div className="topic-section-heading topic-comparison-row"><h2 className="topic-comparison-heading">O mesmo fato, <span>outros enquadramentos...</span></h2>{blindspot && <p className="topic-blindspot-badge">{blindspot}</p>}</div>
           <div className="topic-perspective-tabs" role="tablist" aria-label="Filtrar veículos por perspectiva">
             {PERSPECTIVES.map(({ key, label }, index) => <button type="button" role="tab" key={key} id={`perspective-tab-${key}`} aria-controls="perspective-panel" aria-selected={activePerspective === key} tabIndex={activePerspective === key ? 0 : -1} onClick={() => setActivePerspective(key)} onKeyDown={(event) => {
               if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
@@ -143,18 +180,18 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
               setActivePerspective(nextKey);
               document.getElementById(`perspective-tab-${nextKey}`)?.focus();
             }}>
-              <span className={`topic-perspective-tabs__dot topic-perspective-tabs__dot--${key}`} aria-hidden="true" />{label}<span className="topic-perspective-tabs__count">{articlesForPerspective(topic, key).length}</span>
+              <span className={`topic-perspective-tabs__dot topic-perspective-tabs__dot--${key}`} aria-hidden="true" />{label}<span className="topic-perspective-tabs__count" aria-label={coverageCounts ? `${coverageCounts[key]} matérias no total` : `${articlesForPerspective(topic, key).length} matérias nesta resposta`}>{coverageCounts?.[key] ?? articlesForPerspective(topic, key).length}</span>
             </button>)}
           </div>
-          <div className={`topic-perspective-panel topic-perspective-panel--${activePerspective.replace("_", "-")}`} role="tabpanel" id="perspective-panel" aria-labelledby={`perspective-tab-${activePerspective}`}>
+          <div className={`topic-perspective-panel topic-perspective-panel--${activePerspective.replace("_", "-")}${selectedArticles.length === 0 ? " topic-perspective-panel--empty" : ""}`} role="tabpanel" id="perspective-panel" aria-labelledby={`perspective-tab-${activePerspective}`}>
             {topic.perspectives[activePerspective] && <p className="topic-perspective-panel__summary">{topic.perspectives[activePerspective]}</p>}
             {selectedArticles.length > 0 ? <div className="topic-article-list">
               {selectedArticles.map((article) => <ArticleRow article={article} premium={premium} key={article.id} />)}
-            </div> : <p className="topic-perspective-panel__empty">Nenhuma matéria de {perspectiveLabel.toLocaleLowerCase("pt-BR")} foi incluída na resposta deste tópico.</p>}
+            </div> : <p className="topic-perspective-panel__empty">Não há matérias de veículos de {perspectiveLabel.toLocaleLowerCase("pt-BR")} sobre este evento...</p>}
           </div>
         </section>
 
-        {!premium && (topic.lockedArticleCount ?? 0) > 0 && <aside className="topic-paywall-note"><LockKeyhole size={17} aria-hidden="true" /><p><strong>{topic.lockedArticleCount} matérias adicionais</strong> estão disponíveis no Prisma Premium. Esta prévia mostra até {topic.previewLimit ?? 2} matérias por perspectiva.</p></aside>}
+        {hasLockedArticles && <aside className="topic-paywall-note"><LockKeyhole size={17} aria-hidden="true" /><p><strong>{topic.lockedArticleCount} matérias adicionais</strong> estão disponíveis no Prisma Premium. Esta prévia mostra até {topic.previewLimit ?? 2} matérias por perspectiva.</p></aside>}
 
         {!premium && <AppPremiumCTA variant="detail" />}
       </article>

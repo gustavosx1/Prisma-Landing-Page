@@ -1,4 +1,5 @@
 import { sanitizePublicTopic, type Topic } from "@/lib/topics";
+import type { TopicSort } from "./topicPresentation";
 
 export const TOPIC_FEED_RETURN_KEY = "prisma_topic_feed_return_v1";
 const SNAPSHOT_MAX_AGE_MS = 30 * 60 * 1000;
@@ -20,6 +21,7 @@ export type TopicFeedSnapshot = {
   searchOpen: boolean;
   searchDraft: string;
   activeQuery: string;
+  sort: TopicSort;
 };
 
 const CATEGORIES: TopicFeedCategory[] = ["tudo", "economia", "política", "tecnologia", "mundo", "esportes"];
@@ -71,7 +73,7 @@ export function readTopicFeedSnapshot(topicId?: string): TopicFeedSnapshot | nul
       .slice(0, SNAPSHOT_MAX_TOPICS)
       .map(sanitizePublicTopic)
       .filter((topic): topic is Topic => topic !== null);
-    return { ...snapshot, topics } as TopicFeedSnapshot;
+    return { ...snapshot, topics, sort: snapshot.sort === "coverage" ? "coverage" : "latest" } as TopicFeedSnapshot;
   } catch {
     return null;
   }

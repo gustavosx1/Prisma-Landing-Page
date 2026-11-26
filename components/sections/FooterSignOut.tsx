@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { createSupabaseBrowserClient, isSupabaseBrowserConfigured } from "@/lib/supabase/browser";
 import { clearTopicFeedSnapshot } from "@/lib/topicFeedState";
+import styles from "@/components/ui/Landing.module.css";
 
 export function FooterSignOut({ compact = false }: { compact?: boolean }) {
   const router = useRouter();
@@ -49,7 +50,7 @@ export function FooterSignOut({ compact = false }: { compact?: boolean }) {
 
   return (
     <button
-      className={compact ? "topic-toolbar-sign-out" : "footer-sign-out"}
+      className={compact ? "topic-toolbar-sign-out" : styles.signOut}
       type="button"
       onClick={() => void signOut()}
       disabled={busy}
