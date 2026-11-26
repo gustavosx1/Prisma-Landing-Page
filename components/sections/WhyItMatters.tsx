@@ -75,7 +75,7 @@ export function WhyItMatters() {
 					))}
 				</div>
 				<div
-					className={styles.tableWrap}
+					  className={`${styles.tableWrap} ${styles.desktopComparison}`}
 					role="region"
 					aria-label="Comparação: Feed tradicional vs Prisma News"
 					tabIndex={0}

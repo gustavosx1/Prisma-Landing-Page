@@ -48,7 +48,7 @@ export function Premium() {
             <article key={plan.name} className={`${styles.plan} ${plan.highlight ? styles.planPremium : ""}`}>
               <h3>{plan.name}</h3>
               <p className={styles.planDescription}>{plan.description}</p>
-              <p className={styles.price}>{plan.highlight ? "R$ 9,90" : "Grátis"}</p>
+              <p className={styles.price}>{plan.highlight ? "R$ 9,90" : "R$ 0,00"}</p>
               <p className={styles.period}>{plan.period}</p>
               <ul className={styles.planFeatures} aria-label={`Funcionalidades do plano ${plan.name}`}>
                 {plan.features.map((feature) => (

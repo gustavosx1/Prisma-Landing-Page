@@ -10,6 +10,7 @@ import { sanitizePremiumDetail, sanitizePublicDetail, type Topic, type TopicArti
 import { readTopicFeedSnapshot } from "@/lib/topicFeedState";
 import { TopicsLoading } from "@/components/discovery/TopicsLoading";
 import { NewsImage } from "./NewsImage";
+import { SpectrumRuler } from "./SpectrumRuler";
 import { topicCopyText } from "@/lib/topicCopy";
 import { blindspotLabel, completeCoverageCounts } from "@/lib/topicPresentation";
 
@@ -147,7 +148,7 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
       <article className={`topic-detail${hasLockedArticles ? " topic-detail--locked" : ""}`}>
         <header className="topic-detail__header">
           <div className="topic-detail__image">
-            <NewsImage src={topic.imageUrl} fallback="/fallback-banner.png" coverFallback alt={topic.imageUrl ? `Imagem relacionada a ${topic.title}` : ""} priority />
+            <NewsImage src={topic.imageUrl} fallback="/fallback-banner.png" alt={topic.imageUrl ? `Imagem relacionada a ${topic.title}` : ""} priority />
             <Link className="topic-detail__back" href="/topicos" aria-label="Voltar aos tópicos" onClick={(event) => {
               if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
               if (!readTopicFeedSnapshot(topicId)) return;
@@ -170,7 +171,9 @@ export function TopicDetail({ topicId, initialTopic = null, initialPremium = fal
         </header>
 
         <section className="topic-perspectives" aria-label="Coberturas por perspectiva">
-          <div className="topic-section-heading topic-comparison-row"><h2 className="topic-comparison-heading">O mesmo fato, <span>outros enquadramentos...</span></h2>{blindspot && <p className="topic-blindspot-badge">{blindspot}</p>}</div>
+          <h2 className="sr-only">Compare a cobertura</h2>
+          {blindspot && <div className="topic-section-heading topic-comparison-row"><h2 className="topic-comparison-heading topic-blindspot-badge">{blindspot}</h2></div>}
+          {coverageCounts && <SpectrumRuler counts={coverageCounts} showLabels={false} />}
           <div className="topic-perspective-tabs" role="tablist" aria-label="Filtrar veículos por perspectiva">
             {PERSPECTIVES.map(({ key, label }, index) => <button type="button" role="tab" key={key} id={`perspective-tab-${key}`} aria-controls="perspective-panel" aria-selected={activePerspective === key} tabIndex={activePerspective === key ? 0 : -1} onClick={() => setActivePerspective(key)} onKeyDown={(event) => {
               if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;

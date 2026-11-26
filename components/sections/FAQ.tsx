@@ -70,7 +70,6 @@ const FAQS = [
     q: "Existe um aplicativo para iOS e Android?",
     a: "Sim. O Prisma News está disponível para iPhone e Android. Use os botões de download no site para abrir a página oficial do aplicativo na App Store ou no Google Play.",
   },
-
   {
     q: "Meus dados pessoais estão seguros?",
     a: "Sim. Seguimos a LGPD rigorosamente. Não vendemos dados pessoais a terceiros, não compartilhamos preferências de leitura para fins publicitários e armazenamos apenas o mínimo necessário para o funcionamento do serviço. O detalhamento completo está na nossa Política de Privacidade.",
