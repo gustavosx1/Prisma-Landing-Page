@@ -45,8 +45,8 @@ export function Solution() {
 				<div className={styles.rows}>
 					{STEPS.map(({ num, Icon, title, description, detail }) => (
 						<article key={num} className={styles.row}>
-							<div className={styles.step}><span>Passo {num}</span><Icon className={styles.icon} aria-hidden="true" /></div>
-							<h3>{title}</h3><p>{description}</p>{detail && <p className={styles.detail}>{detail}</p>}
+							<div className={styles.step}><span>Passo {num}</span></div>
+							<div className={styles.titleWithIcon}><Icon className={styles.icon} aria-hidden="true" /><h3>{title}</h3></div><p>{description}</p>{detail && <p className={styles.detail}>{detail}</p>}
 						</article>
 					))}
 				</div>

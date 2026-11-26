@@ -59,9 +59,8 @@ export function Features() {
 				<div className={styles.rows}>
 					{FEATURES.map(({ Icon, title, description, premium }) => (
 						<article key={title} className={styles.row}>
-							<Icon className={styles.icon} aria-hidden="true" />
 							<div className={styles.featureTitle}>
-								<h3>{title}</h3>
+								<div className={styles.titleWithIcon}><Icon className={styles.icon} aria-hidden="true" /><h3>{title}</h3></div>
 								{premium && <span className={styles.badge}>Premium</span>}
 							</div>
 							<p>{description}</p>

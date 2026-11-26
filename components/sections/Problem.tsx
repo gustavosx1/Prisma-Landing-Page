@@ -33,7 +33,7 @@ export function Problem() {
 				<div className={styles.rows}>
 					{PAINS.map(({ Icon, title, description }) => (
 						<article key={title} className={styles.row}>
-							<Icon className={styles.icon} aria-hidden="true" /><h3>{title}</h3><p>{description}</p>
+							<div className={styles.titleWithIcon}><Icon className={styles.icon} aria-hidden="true" /><h3>{title}</h3></div><p>{description}</p>
 						</article>
 					))}
 				</div>

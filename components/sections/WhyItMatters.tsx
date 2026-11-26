@@ -68,8 +68,7 @@ export function WhyItMatters() {
 				<div className={styles.rows}>
 					{OUTCOMES.map(({ Icon, title, desc }) => (
 						<article key={title} className={styles.row}>
-							<Icon className={styles.icon} aria-hidden="true" />
-							<h3>{title}</h3>
+							<div className={styles.titleWithIcon}><Icon className={styles.icon} aria-hidden="true" /><h3>{title}</h3></div>
 							<p>{desc}</p>
 						</article>
 					))}
