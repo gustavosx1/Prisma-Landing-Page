@@ -1,3 +1,5 @@
+import { completeCoverageCounts } from "./topicPresentation";
+
 export type Topic = {
   id: string;
   title: string;
@@ -7,6 +9,7 @@ export type Topic = {
   categories: string[];
   articleCount: number | null;
   perspectiveCounts: { left: number; center: number; right: number };
+  completePerspectiveCounts?: Topic["perspectiveCounts"] | null;
   perspectives: Partial<Record<ArticlePerspective, string>>;
   articles: Partial<Record<ArticlePerspective, TopicArticle[]>>;
   lockedArticleCount?: number;
@@ -160,6 +163,7 @@ export function sanitizePublicTopic(value: unknown): Topic | null {
     publishedAt: firstString(source, ["published_at", "publishedAt", "created_at", "date"]) || null,
     categories: strings(source.categories ?? source.tags),
     articleCount: typeof count === "number" && Number.isFinite(count) ? count : null,
+    completePerspectiveCounts: completeCoverageCounts(source),
     perspectiveCounts: {
       left: firstCount(blindspot.left_count, blindspot.left, spectrumCounts.left_count, spectrumCounts.left, spectrumCounts.esquerda, source.left_count, source.leftCount),
       center: firstCount(blindspot.center_count, blindspot.center, spectrumCounts.center_count, spectrumCounts.center, spectrumCounts.centro, source.center_count, source.centerCount),

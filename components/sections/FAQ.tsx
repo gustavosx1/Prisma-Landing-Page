@@ -6,6 +6,32 @@ import { trackEvent } from "@/lib/analytics";
 import { EditorialHeading } from "@/components/ui/EditorialHeading";
 import styles from "@/components/ui/Landing.module.css";
 
+const OUTLETS = [
+  "Jovem Pan",
+  "Crusoé",
+  "Revista Oeste",
+  "O Antagonista",
+  "Gazeta do Povo",
+  "Poder360",
+  "Veja",
+  "O Globo",
+  "Folha de S.Paulo",
+  "CNN Brasil",
+  "Metrópoles",
+  "UOL Notícias",
+  "G1 / Globo",
+  "Terra",
+  "Congresso em Foco",
+  "Agência Brasil",
+  "Pragmatismo Político",
+  "Nexo Jornal",
+  "Brasil de Fato",
+  "Revista Fórum",
+  "The Intercept Brasil",
+  "Opera Mundi",
+  "Brasil Paralelo",
+];
+
 const FAQS = [
   {
     q: "Como o Prisma News classifica as perspectivas editoriais?",
@@ -17,7 +43,8 @@ const FAQS = [
   },
   {
     q: "Quais fontes são utilizadas?",
-    a: "Acompanhamos 20 veículos jornalísticos brasileiros conhecidos. Entre os exemplos estão Brasil de Fato, Intercept, Folha, UOL, Metrópoles, O Antagonista e Jovem Pan. As categorias esquerda, centro e direita descrevem tendências editoriais aproximadas do veículo, não cada matéria individual.",
+    a: "As fontes utilizadas incluem os veículos abaixo. As categorias esquerda, centro e direita descrevem tendências editoriais aproximadas do veículo, não cada matéria individual.",
+    outlets: OUTLETS,
   },
   {
     q: "O que exatamente é um 'blindspot'?",
@@ -43,17 +70,14 @@ const FAQS = [
     q: "Existe um aplicativo para iOS e Android?",
     a: "Sim. O Prisma News está disponível para iPhone e Android. Use os botões de download no site para abrir a página oficial do aplicativo na App Store ou no Google Play.",
   },
-  {
-    q: "Com que frequência os eventos são atualizados?",
-    a: "Novas matérias são incorporadas à cobertura dos eventos acompanhados. As contagens são recalculadas em cada consulta ao detalhe, que pode usar cache de até 10 minutos. Uma tela de detalhe já aberta não recebe atualizações em tempo real.",
-  },
+
   {
     q: "Meus dados pessoais estão seguros?",
     a: "Sim. Seguimos a LGPD rigorosamente. Não vendemos dados pessoais a terceiros, não compartilhamos preferências de leitura para fins publicitários e armazenamos apenas o mínimo necessário para o funcionamento do serviço. O detalhamento completo está na nossa Política de Privacidade.",
   },
 ];
 
-function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
+function FAQItem({ q, a, outlets, index }: { q: string; a: string; outlets?: string[]; index: number }) {
   const [open, setOpen] = useState(false);
 
   const toggle = () => {
@@ -86,7 +110,14 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
       </button>
 
       <div id={`faq-answer-${index}`} role="region" aria-labelledby={`faq-question-${index}`} hidden={!open}>
-        <p className={styles.faqAnswer}>{a}</p>
+        <div className={styles.faqAnswer}>
+          <p>{a}</p>
+          {outlets && (
+            <ul className={styles.faqOutlets} aria-label="Veículos utilizados como fontes">
+              {outlets.map((outlet) => <li key={outlet}>{outlet}</li>)}
+            </ul>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -101,12 +132,11 @@ export function FAQ() {
     >
       <div className={styles.container}>
         <div className={styles.faqLayout}>
-          <EditorialHeading id="faq-heading" eyebrow="FAQ" title="Perguntas frequentes"
-            description="Tudo o que você precisa saber antes de começar." />
+          <EditorialHeading id="faq-heading" title="Perguntas frequentes" />
           <div>
             {FAQS.map((faq, index) => <FAQItem key={faq.q} {...faq} index={index} />)}
             <p className={styles.note}>Ainda tem dúvidas?<br />
-              <a href="mailto:contato@prismanews.com.br" className={styles.textLink}>Entre em contato com a equipe</a>
+              <a href="mailto:suporteprismanews@gmail.com" className={styles.textLink}>Entre em contato com a equipe</a>
             </p>
           </div>
         </div>

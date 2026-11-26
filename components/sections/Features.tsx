@@ -53,9 +53,8 @@ export function Features() {
 			<div className={styles.container}>
 				<EditorialHeading
 					id="features-heading"
-					eyebrow="Recursos"
-					title="Ferramentas para quem quer entender de verdade"
-					description="Cada funcionalidade foi criada para dar autonomia intelectual — não dependência editorial."
+					title="Mais contexto. Mais autonomia."
+					description="Ferramentas para explorar a cobertura sem abrir mão do seu olhar."
 				/>
 				<div className={styles.rows}>
 					{FEATURES.map(({ Icon, title, description, premium }) => (

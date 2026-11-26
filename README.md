@@ -2,7 +2,7 @@
 
 **Atualizado em: 2026-11-25.** Descreve o checkout local com a atualização editorial do site; não comprova deploy, migrações aplicadas, configuração Supabase/lojas ou disponibilidade de produção.
 
-Site Next.js **16.2.10**, React **19.2.4**, TypeScript e Tailwind 4, com App Router, Supabase Auth SSR e proxy server-side para a API Spectrum. Versões/scripts: [package.json](package.json). Não é só uma landing nem um backend alternativo de notícias.
+Site Next.js **16.4.6**, React **19.2.4**, TypeScript e Tailwind 4, com App Router, Supabase Auth SSR e proxy server-side para a API Spectrum. Versões/scripts: [package.json](package.json). Não é só uma landing nem um backend alternativo de notícias.
 
 ## Mapa do workspace para LLMs
 
@@ -93,6 +93,10 @@ Antes de publicar, verifique URL Spectrum acessível pelo servidor, env privado/
 
 Push não é recurso administrativo desta landing: o backend oferece disparos manuais admin com outbox, campanhas separadas e Beat para publicar outbox/consultar receipts; **não há digest automático na agenda atual**. Receipts aceitos não provam exibição no dispositivo. Consulte [../spectrum/README.md](../spectrum/README.md), [../spectrum/api/notifications/router.py](../spectrum/api/notifications/router.py) e a agenda atual antes de seguir exemplos históricos.
 
+## Segurança
+
+Veja [SECURITY_REVIEW.md](SECURITY_REVIEW.md): IDs públicos não concedem acesso, correções de dependências/redirecionamento/cabeçalhos e limites da revisão local. Next.js atualizado para 16.4.6 em 25/11/2026; execute `npm run test:security` e `npm audit` além da validação normal. A landing não exibe o alternador de tema; ele permanece nas telas de conta e tópicos.
+
 ## Rodar e validar
 
 Execute dentro deste repositório:
@@ -113,4 +117,4 @@ npm run build
 npm start
 ```
 
-Não há script de testes automatizados do site no manifest atual. `next/font/google` pode exigir rede no build para Manrope. Em **2026-11-25**, `npm run lint`, `npx tsc --noEmit`, `npm run build` e `git diff --check` passaram. Landing e formulário foram verificados no navegador em 320/390/768/1440px, com tema manual e persistência; feed/detalhe foram inspecionados com fixtures, não com uma conta Premium de produção. Suítes dos outros projetos não foram reexecutadas. Antes de release, valide login/callback/logout reais, free sem bypass/paginação, Premium/expiração, sanitização e cache privado contra o ambiente alvo. Resultados locais não comprovam produção.
+`npm run test:security` executa dez regressões locais com doubles, sem credenciais reais. `next/font/google` pode exigir rede no build para Manrope. Em **2026-11-25**, testes de segurança, `npm audit`, `npm run lint`, `npx tsc --noEmit`, `npm run build` e `git diff --check` passaram. Landing e formulário foram verificados no navegador em 320/390/768/1440px; feed/detalhe foram inspecionados com fixtures, não com uma conta Premium de produção. Suítes dos outros projetos não foram reexecutadas. Antes de release, valide login/callback/logout reais, free sem bypass/paginação, Premium/expiração, sanitização e cache privado contra o ambiente alvo. Resultados locais não comprovam produção.

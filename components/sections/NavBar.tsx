@@ -5,7 +5,6 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { StoreButtons } from "./StoreButtons";
 import { PrismaSignature } from "@/components/ui/PrismaSignature";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import styles from "@/components/ui/Landing.module.css";
 
 const NAV_LINKS = [
@@ -42,7 +41,6 @@ export function NavBar() {
 				<div className={styles.navActions}>
 					<StoreButtons location="navbar" compact />
 				</div>
-				<ThemeToggle />
 				<button
 					ref={toggle}
 					className={styles.menuToggle}

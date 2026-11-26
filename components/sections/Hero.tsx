@@ -2,10 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { CheckCircle2, ArrowRight } from "lucide-react";
+import { CheckCircle2, ArrowRight, MousePointer2 } from "lucide-react";
 import { initScrollDepth } from "@/lib/analytics";
 import { StoreButtons } from "./StoreButtons";
-import { Sunprint } from "@/components/ui/Sunprint";
 import styles from "@/components/ui/Landing.module.css";
 
 const PERSPECTIVES = [
@@ -51,16 +50,12 @@ export function Hero() {
 			<div className={styles.container}>
 				<div className={styles.heroGrid}>
 					<div className={styles.heroCopy}>
-						<p className={styles.eyebrow}>Inteligência editorial</p>
 						<h1 id="hero-heading" className={styles.heroTitle}>
-							Veja o evento inteiro, não só um lado da história.
+							Veja o evento inteiro, <span>não só um lado da história.</span>
 						</h1>
 						<p className={styles.lead}>
-							Compare perspectivas editoriais em segundos e descubra o que a
-							sua timeline escondia — com análise por espectro, detecção de
-							blindspots e busca assistida por LLM em fontes primárias oficiais
-							que possam ajudar a confirmar informações; essa busca não
-							substitui uma verificação editorial.
+							Um acontecimento, diferentes coberturas. Compare perspectivas,
+							entenda o contexto e forme sua própria opinião.
 						</p>
 						<StoreButtons location="hero" showWeb={false} />
 						<ul className={styles.proof}>
@@ -76,15 +71,12 @@ export function Hero() {
 					</div>
 					<div
 						className={styles.demo}
-						aria-label="Demonstração ilustrativa do produto Prisma News"
+						aria-label="Exemplo ilustrativo do Prisma News: textos e horário fictícios, não são citações dos veículos"
 					>
-						<Sunprint />
-						<p className={styles.meta}>
-							Exemplo ilustrativo · textos fictícios, não citações dos veículos
-						</p>
+						<div className={styles.demoLabel}><MousePointer2 size={16} aria-hidden="true" /> Exemplo Ilustrativo</div>
 						<h2>Reforma tributária aprovada pelo Congresso Nacional</h2>
 						<p className={styles.meta}>
-							Um mesmo evento. Três enquadramentos para comparar.
+							Hoje, 14h32 · cobertura entre os 20 veículos
 						</p>
 						<div
 							className={styles.tabs}
@@ -122,7 +114,7 @@ export function Hero() {
 										}
 									}}
 								>
-									{perspective.label}
+									<span className={styles.perspectiveDot} data-perspective={index} aria-hidden="true" />{perspective.label}
 								</button>
 							))}
 						</div>

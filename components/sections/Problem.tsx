@@ -27,9 +27,9 @@ export function Problem() {
 	return (
 		<section id="problema" className={styles.section} aria-labelledby="problem-heading">
 			<div className={styles.container}>
-				<EditorialHeading id="problem-heading" eyebrow="O problema"
-					title="Você está vendo fragmentos e acreditando que é o quadro completo."
-					description="O feed de notícias moderno não foi feito para te informar. Foi feito para te manter engajado — o que é muito diferente." />
+				<EditorialHeading id="problem-heading"
+					title="Seu feed mostra só parte da história."
+					description="Entre bolhas e manchetes, o contexto pode ficar de fora." />
 				<div className={styles.rows}>
 					{PAINS.map(({ Icon, title, description }) => (
 						<article key={title} className={styles.row}>
@@ -37,7 +37,7 @@ export function Problem() {
 						</article>
 					))}
 				</div>
-				<p className={styles.note}><strong>Existe uma forma melhor de entender o que acontece no mundo.</strong>E ela começa com ver o mesmo evento de múltiplos ângulos.</p>
+				<p className={`${styles.note} ${styles.problemConclusion}`}><strong>Existe uma forma melhor de entender o que acontece no mundo.</strong>E ela começa com ver o mesmo evento de múltiplos ângulos.</p>
 			</div>
 		</section>
 	);

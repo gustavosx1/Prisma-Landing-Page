@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
-export function NewsImage({ src, fallback = "/fallback.png", className = "", alt = "", coverFallback = false, priority = false }: {
+export function NewsImage({ src, fallback = "/fallback-banner.png", className = "", alt = "", coverFallback = false, priority = false }: {
   src: string | null; fallback?: string; className?: string; alt?: string; coverFallback?: boolean; priority?: boolean;
 }) {
   // Keying the remote layer resets loading/error state whenever its URL changes.

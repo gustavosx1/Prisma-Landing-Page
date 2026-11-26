@@ -243,23 +243,35 @@ html { scrollbar-color: var(--line) var(--background); }
 .topic-detail__back { left: 16px; }
 .topic-detail__share { right: 16px; }
 .topic-detail__share-message { color: var(--muted); font-size: 14px; }
+.topic-detail__manual-copy { display: grid; gap: 8px; margin-block: 16px; color: var(--muted); font-size: 14px; }
+.topic-detail__manual-copy textarea { width: 100%; padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--ink); resize: vertical; }
+.topic-summary-toggle { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--primary); font-size: 14px; font-weight: 600; }
+.topic-summary-toggle:hover { border-color: var(--primary); }
+.topic-summary-toggle svg { flex-shrink: 0; }
 .topic-detail__header h1 { max-width: 860px; margin: 0; color: var(--ink); font-size: clamp(24px, 3.5vw, 32px); font-weight: 600; letter-spacing: -.3px; line-height: 1.35; overflow-wrap: anywhere; }
 .topic-detail__summary { max-width: 70ch; margin: 16px 0; color: var(--ink); font-size: 16px; line-height: 1.75; }
 .topic-detail__meta { margin-top: 16px; font-size: 14px; }
-.topic-perspectives { padding-block: 32px; }
+.topic-perspectives { padding-block: 24px 16px; }
 .topic-section-heading h2 { margin: 0; color: var(--ink); font-size: 20px; font-weight: 600; line-height: 1.4; }
+.topic-section-heading .topic-comparison-heading { width: fit-content; padding: 8px 12px; border-left: 3px solid var(--primary); border-radius: 0 8px 8px 0; background: var(--secondary); color: var(--ink); font-size: 14px; font-weight: 500; letter-spacing: 0; line-height: 1.6; }
+.topic-comparison-heading span { color: var(--primary-dark); }
+.topic-comparison-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.topic-comparison-row .topic-blindspot-badge { margin: 0; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--primary-dark); font-size: 13px; font-weight: 500; line-height: 1.6; }
+.topics-ordering .topics-sort { margin-bottom: 8px; }
+.topics-ordering__note { margin: 0 0 20px; color: var(--muted); font-size: 12px; line-height: 1.5; }
 .topic-section-heading > p { max-width: 70ch; margin: 8px 0 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
 .topic-coverage { margin-top: 20px; }
 .topic-blindspot { margin-bottom: 10px; color: var(--ink); font-size: 14px; font-weight: 500; }
 .topic-coverage__note { margin-top: 8px; color: var(--muted); font-size: 12px; line-height: 1.5; }
 .topic-perspective-tabs { display: flex; gap: 4px; margin-top: 24px; border-bottom: 1px solid var(--line); }
 .topic-perspective-tabs button { display: inline-flex; flex: 1 1 0; min-width: 0; min-height: 44px; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; padding: 12px 8px; border: 0; border-bottom: 2px solid transparent; border-radius: 12px 12px 0 0; background: transparent; color: var(--muted); font-size: 14px; font-weight: 500; }
-.topic-perspective-tabs button[aria-selected="true"] { border-bottom-color: var(--primary); background: var(--surface); color: var(--ink); }
+.topic-perspective-tabs button[aria-selected="true"] { border-bottom-color: var(--primary); background: var(--secondary); color: var(--ink); }
 .topic-perspective-tabs button:hover { background: var(--surface); }
 .topic-perspective-tabs__count { padding: 2px 6px; border-radius: 999px; background: var(--surface); color: var(--ink); font-size: 12px; }
-.topic-perspective-panel { min-height: 180px; padding-top: 24px; color: var(--ink); }
+.topic-perspective-panel { padding-top: 16px; color: var(--ink); }
+.topic-perspective-panel--empty { min-height: 0; }
 .topic-perspective-panel__summary { max-width: 70ch; margin: 0 0 24px; color: var(--muted); font-size: 14px; line-height: 1.7; }
-.topic-perspective-panel__empty { padding-block: 24px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.topic-perspective-panel__empty { margin: 0; padding: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
 .topic-article-list { display: grid; }
 .topic-article { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 16px; padding-block: 20px; border-bottom: 1px solid var(--line); }
 .topic-article__outlet { display: grid; width: 44px; height: 44px; overflow: hidden; place-items: center; border-radius: 12px; background: var(--surface); color: var(--ink); font-size: 16px; font-weight: 600; }
@@ -277,6 +289,9 @@ html { scrollbar-color: var(--line) var(--background); }
 .topic-paywall-note, .topic-locked { display: flex; align-items: flex-start; gap: 12px; padding-block: 24px; border-top: 1px solid var(--line); color: var(--primary); }
 .topic-paywall-note svg, .topic-locked > svg { flex-shrink: 0; margin-top: 3px; }
 .topic-paywall-note p, .topic-locked p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.topic-detail--locked .topic-article:last-child { border-bottom: 0; padding-bottom: 0; }
+.topic-paywall-note { margin: 0; border-top: 1px solid var(--line); padding-block: 16px; }
+.topic-detail--locked .premium-app-cta--detail { margin-top: 0; padding-top: 16px; }
 .topic-locked h2 { margin: 0 0 8px; color: var(--ink); font-size: 20px; }
 .topic-premium-content { margin-block: 24px; padding-block: 24px; border-top: 1px solid var(--line); color: var(--ink); }
 .topic-premium-content h2 { font-size: 24px; font-weight: 600; }
@@ -330,6 +345,9 @@ html { scrollbar-color: var(--line) var(--background); }
 .store-button--web:hover { background: var(--primary-dark); color: var(--on-primary); }
 .store-buttons-compact .store-button { min-height: 44px; }
 .footer-sign-out, .topic-toolbar-sign-out { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 44px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 16px; background: var(--background); color: var(--primary); font-size: 14px; }
+.topic-toolbar-sign-out { width: 44px; height: 44px; padding: 0; background: var(--surface); color: var(--ink); }
+.topic-toolbar-sign-out:hover, .topic-search__trigger:hover { background: var(--secondary); color: var(--primary); }
+.auth-card__home { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
 
 /* Legacy legal / support markup still uses Tailwind colors and arbitrary backgrounds.
    These scoped semantic rules replace those colors without touching layout utilities. */

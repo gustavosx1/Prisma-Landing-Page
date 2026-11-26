@@ -16,7 +16,7 @@ export function AppPremiumCTA({ variant }: AppPremiumCTAProps) {
       <Crown className="premium-app-cta__crown" size={20} aria-hidden="true" />
       <div className="premium-app-cta__copy">
         <p className="premium-app-cta__eyebrow">Prisma Premium</p>
-        <h2 id={titleId}>{isDetail ? "Veja o quadro completo no Prisma Premium." : "Mais contexto para cada assunto."}</h2>
+        <h2 id={titleId}>{isDetail ? "Veja o quadro completo no Prisma Premium." : "No plano gratuito, você tem acesso aos 3 tópicos mais recentes."}</h2>
         <p className="premium-app-cta__description">
           {isDetail
             ? "A prévia deste tópico é só o começo. A cobertura completa e os recursos Premium ficam disponíveis no aplicativo."

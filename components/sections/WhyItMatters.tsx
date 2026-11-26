@@ -62,9 +62,8 @@ export function WhyItMatters() {
 			<div className={styles.container}>
 				<EditorialHeading
 					id="why-heading"
-					eyebrow="Por que importa"
-					title="Informação sem contexto é desinformação de outro jeito."
-					description="Decisões melhores, menos manipulação e entendimento cívico mais robusto — isso é o que acontece quando você vê o evento inteiro."
+					title="Entender mais muda a forma de decidir."
+					description="Diferentes perspectivas ajudam a reconhecer enquadramentos e ampliar o debate."
 				/>
 				<div className={styles.rows}>
 					{OUTCOMES.map(({ Icon, title, desc }) => (

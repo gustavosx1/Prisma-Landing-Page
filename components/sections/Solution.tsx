@@ -23,7 +23,7 @@ const STEPS = [
 		Icon: Lightbulb,
 		title: "Blindspots e convergências revelados",
 		description:
-			"O que pode estar faltando na cobertura? Onde as perspectivas convergem? O indicador de blindspot mostra quais grupos — esquerda, centro e direita — não têm matérias sobre o evento. A presença dos três grupos indica cobertura equilibrada, não igualdade no volume de matérias.",
+			"Compare convergências e veja quais grupos não cobriram o evento. Cobertura equilibrada indica presença de esquerda, centro e direita, não igual volume de matérias.",
 		detail: "Ferramenta exclusiva para leitores Premium. Dados ausentes não geram indicador.",
 	},
 ];
@@ -40,7 +40,8 @@ export function Solution() {
 	return (
 		<section id="como-funciona" className={`${styles.section} ${styles.soft}`} aria-labelledby="solution-heading">
 			<div className={styles.container}>
-				<EditorialHeading id="solution-heading" eyebrow="Como funciona" title="Três passos para o quadro completo" description="Da detecção à compreensão, em segundos." />
+				<EditorialHeading id="solution-heading" title="Do acontecimento às diferentes perspectivas."
+					description="Reunimos a cobertura para você comparar, contextualizar e compreender." />
 				<div className={styles.rows}>
 					{STEPS.map(({ num, Icon, title, description, detail }) => (
 						<article key={num} className={styles.row}>

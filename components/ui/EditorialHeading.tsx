@@ -1,16 +1,15 @@
+import { AnimatedSection } from "./AnimatedSection";
 import styles from "./Landing.module.css";
 
-export function EditorialHeading({ eyebrow, title, description, id }: {
-  eyebrow: string;
+export function EditorialHeading({ title, description, id }: {
   title: string;
-  description: string;
+  description?: string;
   id: string;
 }) {
   return (
-    <div className={styles.header}>
-      <p className={styles.eyebrow}>{eyebrow}</p>
+    <AnimatedSection className={styles.header}>
       <h2 id={id} className={styles.title}>{title}</h2>
-      <p className={styles.lead}>{description}</p>
-    </div>
+      {description && <p className={styles.lead}>{description}</p>}
+    </AnimatedSection>
   );
 }

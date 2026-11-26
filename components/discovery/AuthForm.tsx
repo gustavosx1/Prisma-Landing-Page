@@ -5,10 +5,8 @@ import { useMemo, useRef, useState, type FormEvent } from "react";
 import { DiscoveryHeader } from "./DiscoveryHeader";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
-
-function safeReturnTo(value: string | null) {
-  return value?.startsWith("/") && !value.startsWith("//") ? value : "/topicos";
-}
+import { safeReturnTo } from "@/lib/safeReturnTo";
+import { ArrowLeft } from "lucide-react";
 
 export function AuthForm() {
   const searchParams = useSearchParams();
@@ -104,7 +102,7 @@ export function AuthForm() {
           {message && <p id="auth-feedback" className="auth-message" role="status">{message}</p>}
           <button className="discovery-button discovery-button--primary auth-submit" type="submit" disabled={busy}>{busy ? "Aguarde…" : mode === "signin" ? "Entrar" : "Criar conta"}</button>
         </form>
-        <p className="auth-card__return">Depois de entrar, você volta para <Link href={returnTo}>a página que abriu este acesso</Link>.</p>
+        <p className="auth-card__return"><Link className="auth-card__home" href="/"><ArrowLeft size={16} aria-hidden="true" /> Voltar à página inicial</Link></p>
       </section>
     </div>
   );

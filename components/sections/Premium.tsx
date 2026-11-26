@@ -16,11 +16,11 @@ const PLANS: { name: string; period: string; description: string; highlight: boo
       { text: "Análise aprofundada", included: false },
       { text: "Busca assistida em fontes oficiais", included: false },
       { text: "Alertas temáticos personalizados", included: false },
-      { text: "Export de análises (PDF/Markdown)", included: false },
+      { text: "Busca por seus tópicos de interesse", included: false },
     ],
   },
   {
-    name: "Premium", period: "consulte na loja", description: "Para quem quer o quadro completo, sempre.", highlight: true,
+    name: "Premium", period: "por mês", description: "Para quem quer o quadro completo, sempre.", highlight: true,
     features: [
       { text: "Eventos ilimitados", included: true },
       { text: "Perspectivas esquerda/centro/direita", included: true },
@@ -30,7 +30,7 @@ const PLANS: { name: string; period: string; description: string; highlight: boo
       { text: "Análise aprofundada", included: true },
       { text: "Busca assistida em fontes oficiais", included: true },
       { text: "Alertas temáticos personalizados", included: true },
-      { text: "Export de análises (PDF/Markdown)", included: true },
+      { text: "Busca por seus tópicos de interesse", included: true },
     ],
   },
 ];
@@ -40,19 +40,15 @@ export function Premium() {
   return (
     <section id="precos" className={styles.section} aria-labelledby="pricing-heading">
       <div className={styles.container}>
-        <EditorialHeading id="pricing-heading" eyebrow="Planos" title="Simples, transparente, sem surpresas."
-          description="Comece grátis. Evolua quando precisar de mais profundidade." />
-        <aside className={styles.subscription} aria-label="Assinatura disponível nos aplicativos Prisma News">
-          <span className={styles.badge}>Disponível somente no aplicativo</span>
-          <h3>Escolha o Premium na sua loja de aplicativos</h3>
-          <p>Assinaturas são processadas pela App Store ou Google Play no aplicativo Prisma News. Confira o preço, a renovação e as condições diretamente na loja. Este site não processa compras.</p>
-        </aside>
+        <EditorialHeading id="pricing-heading" title="Escolha a profundidade da sua leitura."
+          description="Comece com a prévia gratuita. Explore mais com o Premium." />
+
         <div className={styles.plans}>
           {PLANS.map((plan) => (
             <article key={plan.name} className={`${styles.plan} ${plan.highlight ? styles.planPremium : ""}`}>
               <h3>{plan.name}</h3>
               <p className={styles.planDescription}>{plan.description}</p>
-              <p className={styles.price}>{plan.highlight ? "Na loja" : "Grátis"}</p>
+              <p className={styles.price}>{plan.highlight ? "R$ 9,90" : "Grátis"}</p>
               <p className={styles.period}>{plan.period}</p>
               <ul className={styles.planFeatures} aria-label={`Funcionalidades do plano ${plan.name}`}>
                 {plan.features.map((feature) => (

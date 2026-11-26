@@ -10,6 +10,7 @@ import { TopicsLoading } from "@/components/discovery/TopicsLoading";
 import { FooterSignOut } from "@/components/sections/FooterSignOut";
 import { DiscoveryHeader } from "./DiscoveryHeader";
 import { NewsImage } from "./NewsImage";
+import { sortTopics, type TopicSort } from "@/lib/topicPresentation";
 
 type FeedState = "loading" | "ready" | "empty" | "error";
 type SearchMessage = "" | "validation" | "access" | "error";
@@ -94,17 +95,22 @@ export function TopicsFeed() {
   const [searchDraft, setSearchDraft] = useState("");
   const [activeQuery, setActiveQuery] = useState("");
   const [searchMessage, setSearchMessage] = useState<SearchMessage>("");
-  const [sort, setSort] = useState<"latest" | "coverage">("latest");
+  const [sort, setSort] = useState<TopicSort>("latest");
   const activeQueryRef = useRef("");
   const requestId = useRef(0);
   const activeRequest = useRef<AbortController | null>(null);
   const restoreScrollY = useRef<number | null>(null);
-  const visibleTopics = topics.filter((topic) => matchesCategory(topic.categories, category));
+  const visibleTopics = sortTopics(topics.filter((topic) => matchesCategory(topic.categories, category)), sort);
   const carouselTopics = visibleTopics.slice(0, 5);
   const featuredTopic = carouselTopics[featuredIndex % Math.max(carouselTopics.length, 1)];
-  const regularTopics = visibleTopics.slice(carouselTopics.length).sort((a, b) => sort === "coverage"
-    ? (b.articleCount ?? 0) - (a.articleCount ?? 0)
-    : (Date.parse(b.publishedAt ?? "") || 0) - (Date.parse(a.publishedAt ?? "") || 0));
+  const regularTopics = visibleTopics.slice(carouselTopics.length);
+  const carouselTrack = useRef<HTMLDivElement>(null);
+
+  function changeSort(next: TopicSort) {
+    setSort(next);
+    setFeaturedIndex(0);
+    carouselTrack.current?.scrollTo({ left: 0, behavior: "instant" });
+  }
 
   const load = useCallback(async (nextOffset = 0, searchTerm = "") => {
     const search = searchTerm.trim();
@@ -185,6 +191,7 @@ export function TopicsFeed() {
 
       clearTopicFeedSnapshot();
       setCategory(snapshot.category);
+      setSort(snapshot.sort);
       setFeaturedIndex(snapshot.featuredIndex);
       setSearchOpen(snapshot.searchOpen);
       setSearchDraft(snapshot.searchDraft);
@@ -295,6 +302,7 @@ export function TopicsFeed() {
       searchOpen,
       searchDraft,
       activeQuery,
+      sort,
     });
   }
 
@@ -336,10 +344,18 @@ export function TopicsFeed() {
         {state === "loading" && topics.length === 0 && <TopicsLoading />}
         {state === "error" && <div className="discovery-state discovery-state--error" role="alert"><p>Não foi possível carregar os tópicos agora.</p><button className="discovery-button discovery-button--outline" onClick={() => void load()}><RefreshCw size={16} aria-hidden="true" /> Tentar novamente</button></div>}
         {state === "empty" && <div className="discovery-state">{activeQuery ? `Nenhum tópico encontrado para “${activeQuery}”.` : "Ainda não há tópicos publicados. Volte em breve."}</div>}
-        {state === "ready" && topics.length > 0 && visibleTopics.length === 0 && <div className="discovery-state">Nenhum tópico nesta categoria por enquanto. Escolha outro tema para continuar explorando.</div>}
+        {state === "ready" && topics.length > 0 && visibleTopics.length === 0 && <div className="discovery-state">Nenhum tópico nesta categoria por enquanto. Escolha outro tema para continuar explorando...</div>}
+
+        {visibleTopics.length > 1 && <div className="topics-ordering">
+          <div className="topics-sort" role="group" aria-label="Ordenar notícias">
+            <button type="button" aria-pressed={sort === "latest"} onClick={() => changeSort("latest")}>Mais recentes</button>
+            <button type="button" aria-pressed={sort === "coverage"} onClick={() => changeSort("coverage")}>Mais cobertura</button>
+          </div>
+          <p className="topics-ordering__note" role="status">{sort === "coverage" ? "Maior número de matérias primeiro" : "Publicações mais recentes primeiro"} · tópicos carregados</p>
+        </div>}
 
         {featuredTopic && <section className="featured-carousel" aria-label="Tópicos em destaque" aria-roledescription="carrossel">
-          <div className="featured-carousel__track" onScroll={(event) => {
+          <div ref={carouselTrack} className="featured-carousel__track" onScroll={(event) => {
             const track = event.currentTarget;
             if (window.matchMedia("(max-width: 600px)").matches && track.firstElementChild) {
               const width = track.firstElementChild.getBoundingClientRect().width + 12;
@@ -369,10 +385,6 @@ export function TopicsFeed() {
           </div>}
         </section>}
 
-        {regularTopics.length > 0 && <div className="topics-sort" role="group" aria-label="Ordenar notícias">
-          <button type="button" aria-pressed={sort === "latest"} onClick={() => setSort("latest")}>Mais recentes</button>
-          <button type="button" aria-pressed={sort === "coverage"} onClick={() => setSort("coverage")}>Mais cobertura</button>
-        </div>}
         {regularTopics.length > 0 && (
           <div className="discovery-grid" aria-live="polite">
             {regularTopics.map((topic, index) => (

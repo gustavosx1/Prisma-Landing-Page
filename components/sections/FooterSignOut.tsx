@@ -50,7 +50,7 @@ export function FooterSignOut({ compact = false }: { compact?: boolean }) {
 
   return (
     <button
-      className={styles.signOut}
+      className={compact ? "topic-toolbar-sign-out" : styles.signOut}
       type="button"
       onClick={() => void signOut()}
       disabled={busy}
